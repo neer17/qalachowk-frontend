@@ -7,6 +7,7 @@ const nextConfig = {
       "www.nicobar.com",
       "images.cltstatic.com",
       "fufjeihntairffrizntr.supabase.co",
+      "lh3.googleusercontent.com",
     ],
   },
 };

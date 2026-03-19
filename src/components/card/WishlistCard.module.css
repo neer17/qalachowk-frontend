@@ -19,7 +19,7 @@
   border-radius: 50%;
   width: 25px;
   height: 25px;
-  background-color: white;
+  background-color: var(--brand-warm-white);
   opacity: 0.5;
 }
 
@@ -32,18 +32,18 @@
   position: relative;
   bottom: 3rem;
   margin: 0 8px 0 8px;
-  background-color: white;
-  color: black;
+  background-color: var(--brand-warm-white);
+  color: var(--text-primary);
   cursor: pointer;
 }
 
 .addToCartButtonContainer button {
   width: 100%;
   padding: 8px 8px 8px 8px;
-  background-color: white;
-  color: black;
+  background-color: var(--brand-warm-white);
+  color: var(--text-primary);
   border: none;
-  border-radius: 2px;
+  border-radius: 12px;
   font-weight: 700;
   text-transform: uppercase;
   cursor: pointer;
@@ -53,7 +53,7 @@
   position: relative;
   bottom: 10px;
   display: flex;
-  color: black;
+  color: var(--text-primary);
 }
 
 .detailsContainer {
@@ -73,7 +73,7 @@
   justify-content: space-between;
   align-items: center;
   height: fit-content;
-  border: 0.5px solid grey;
+  border: 0.5px solid var(--border-primary);
   padding: 2px;
   padding-left: 8px;
   padding-right: 8px;

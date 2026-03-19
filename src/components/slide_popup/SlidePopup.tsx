@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import styles from "./SlidePopup.module.css";
-import CrossButton from "../buttons/Cross";
 import { useCart } from "@/context/CartContext";
 import CartProductCard from "../card/CartProductCard";
 import { useRouter } from "next/navigation";
@@ -62,6 +61,8 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
     console.info("Cart data changed:", cartData);
   }, [cartData]);
 
+  const cartTotal = getTotalPrice();
+
   return (
     <>
       {isOpen && (
@@ -75,53 +76,73 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
         className={`${styles.slidePanel} ${isOpen ? styles.open : ""}`}
         aria-expanded={isOpen}
       >
-        <div className={styles.panelHeader}>
-          <h1>Cart</h1>
-          <div>
-            <CrossButton onClickCallback={backdropClickCallback} />
-          </div>
+        <div className={styles.topSection}>
+          <header className={styles.panelHeader}>
+            <h2>Your Cart</h2>
+            <button onClick={backdropClickCallback} aria-label="Close cart">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </header>
+
+          <main className={styles.productsList}>
+            {Array.from(cartData.values()).map(
+              ({
+                id,
+                name,
+                price,
+                quantity,
+                images,
+                category,
+                slug,
+                material,
+                description,
+              }) => (
+                <CartProductCard
+                  key={id}
+                  id={id}
+                  name={name}
+                  price={price}
+                  quantity={quantity}
+                  images={images}
+                  slug={slug}
+                  material={material}
+                  description={description}
+                  category={category}
+                  incrementCallback={handleIncrementItemQuantity}
+                  decrementCallback={handleDecrementItemQuantity}
+                  deleteCartItem={handleDeleteCartItem}
+                  imageSizes="10vw"
+                />
+              ),
+            )}
+          </main>
         </div>
 
-        <div className={styles.productsList}>
-          {Array.from(cartData.values()).map(
-            ({
-              id,
-              name,
-              price,
-              quantity,
-              images,
-              category,
-              slug,
-              material,
-              description,
-            }) => (
-              <CartProductCard
-                key={id}
-                id={id}
-                name={name}
-                price={price}
-                quantity={quantity}
-                images={images}
-                slug={slug}
-                material={material}
-                description={description}
-                category={category}
-                incrementCallback={handleIncrementItemQuantity}
-                decrementCallback={handleDecrementItemQuantity}
-                deleteCartItem={handleDeleteCartItem}
-                imageSizes="10vw"
-              />
-            ),
-          )}
-        </div>
-
-        <div className={styles.checkoutContainer}>
-          <div className={styles.checkoutButton}>
-            <button onClick={navigateToCheckoutPage}>Checkout</button>
-            <span>.</span>
-            <span>{getTotalPrice()}</span>{" "}
+        <footer className={styles.checkoutContainer}>
+          <div className={styles.amountRow}>
+            <p className={styles.amountLabel}>Total Amount</p>
+            <p className={styles.amountValue}>₹ {cartTotal}</p>
           </div>
-        </div>
+          <button
+            className={styles.checkoutButton}
+            onClick={navigateToCheckoutPage}
+          >
+            <span className={styles.checkoutBtnText}>Proceed to Checkout</span>
+            <span className={styles.checkoutBtnPrice}>₹ {cartTotal}</span>
+          </button>
+        </footer>
       </div>
     </>
   );

@@ -4,7 +4,7 @@
   background-color: inherit;
   padding-right: 0.5rem;
   padding-bottom: 0.5rem;
-  color: black;
+  color: var(--text-primary);
 }
 
 .imageContainer {
@@ -45,7 +45,10 @@
 }
 
 .emblaDot {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(
+    var(--brand-dark-espresso-rgb),
+    var(--opacity-visible)
+  );
   border: none;
   border-radius: 50%;
   width: 8px;
@@ -55,11 +58,11 @@
 }
 
 .emblaDot:hover {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--brand-dark-espresso-rgb), var(--opacity-strong));
 }
 
 .emblaDotSelected {
-  background-color: #294a70;
+  background-color: var(--brand-primary);
 }
 
 .textContainer {

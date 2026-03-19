@@ -14,7 +14,7 @@
   left: 50%;
   width: 20px; /* Width of the cross line */
   height: 2px; /* Thickness of the cross line */
-  background-color: black; /* Color of the cross */
+  background-color: var(--text-primary);
   transform-origin: center;
   transform: translate(-50%, -50%) rotate(45deg); /* Rotate for the cross */
 }
@@ -24,6 +24,6 @@
 }
 
 .crossButton:hover {
-  background-color: #f2f2f2; /* Background on hover */
+  background-color: var(--brand-old-lace);
   border-radius: 4px; /* Slight rounded corners */
 }

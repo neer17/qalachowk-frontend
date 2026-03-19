@@ -8,10 +8,8 @@ import Rupee from "@/components/symbols/Rupee";
 import { useMediaQuery } from "@mantine/hooks";
 import { AuthProvider as SupabaseAuthProvider } from "@/context/SupabaseAuthContext";
 import {
-  Paper,
   Grid,
   Box,
-  Title,
   Stack,
   TextInput,
   Group,
@@ -33,8 +31,7 @@ import { OrderService } from "@/lib/api/orderService";
 import { DeliveryFormValues } from "@/types/ui/checkoutForm";
 
 export default function Checkout() {
-  const { cartData, deleteCartData, getTotalPrice, getTotalQuantity } =
-    useCart();
+  const { cartData, deleteCartData, getTotalPrice } = useCart();
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>("");
 
   const [appliedDiscountResponse, setAppliedDiscountResponse] =
@@ -481,9 +478,9 @@ export default function Checkout() {
     return (
       <SupabaseAuthProvider>
         <div className={styles.container}>
-          <Paper p="xl" pb={50}>
-            <Text>Loading...</Text>
-          </Paper>
+          <Box py={50} px={{ base: "md", md: "xl" }}>
+            <Text>Loading Checkout...</Text>
+          </Box>
         </div>
       </SupabaseAuthProvider>
     );
@@ -492,8 +489,11 @@ export default function Checkout() {
   return (
     <SupabaseAuthProvider>
       <div className={styles.container}>
-        <Paper p={{ base: "sm", md: "xl" }} pb={isSmallerThan1024 ? 80 : 50}>
-          <Grid gutter={{ base: "sm", md: "md" }}>
+        <h1 className={styles.pageHeader}>Qala Chowk</h1>
+
+        <Box className={styles.checkoutWrapper}>
+          <Grid gutter={{ base: "xl", lg: 80 }} justify="center">
+            {/* Left side: Forms */}
             <Grid.Col span={{ base: 12, lg: 7 }}>
               <CheckoutForm
                 ref={formRef}
@@ -507,135 +507,175 @@ export default function Checkout() {
                 onOtpExpired={handleOtpExpired}
                 otpRequestTimeoutError={otpRequestTimeoutError}
               />
+
               {!isSmallerThan1024 && (
-                <Group mt={32}>
-                  <Button
-                    type="button"
-                    size="md"
-                    fullWidth
-                    onClick={handleFormSubmit}
-                  >
-                    Pay Now
-                  </Button>
-                </Group>
+                <button
+                  type="button"
+                  className={styles.payNowButton}
+                  onClick={handleFormSubmit}
+                  style={{ marginTop: "3rem" }}
+                  aria-label="Pay Now Checkout"
+                >
+                  Pay Now
+                </button>
               )}
             </Grid.Col>
-            <Grid.Col span={{ base: 12, lg: 5 }} p={{ base: 0, md: "md" }}>
-              <Stack>
-                <Title order={2}>Order Summary</Title>
 
-                <Box
-                  pl={0}
-                  mb={32}
-                  pr="sm"
-                  style={{
-                    overflowY: "auto",
-                    maxHeight: "50vh",
-                  }}
+            {/* Right side: Order Summary */}
+            <Grid.Col span={{ base: 12, lg: 5 }}>
+              <Box className={styles.summaryWrapper}>
+                <h2>Order Summary</h2>
+
+                <Stack gap="lg" mb={32} mt="md">
+                  {Array.from(cartData.values()).map((item) => (
+                    <CartProductCard
+                      key={item.id}
+                      {...item}
+                      isOrderSummaryCard
+                      crossButtonWidth="10px"
+                      crossButtonHeight="10px"
+                      deleteCartItem={handleDeleteItem}
+                    />
+                  ))}
+                </Stack>
+
+                <div className={styles.mandanaDivider}></div>
+
+                <Group
+                  justify="space-between"
+                  align="center"
+                  mb={24}
+                  wrap="nowrap"
                 >
-                  {Array.from(cartData.values()).map(
-                    ({
-                      id,
-                      name,
-                      price,
-                      quantity,
-                      category,
-                      images,
-                      slug,
-                      material,
-                      description,
-                    }) => (
-                      <CartProductCard
-                        key={id}
-                        id={id}
-                        name={name}
-                        price={price}
-                        slug={slug}
-                        material={material}
-                        description={description}
-                        images={images}
-                        quantity={quantity}
-                        category={category}
-                        isOrderSummaryCard
-                        crossButtonWidth="10px"
-                        crossButtonHeight="10px"
-                        deleteCartItem={handleDeleteItem}
-                      />
-                    ),
-                  )}
-                </Box>
+                  <TextInput
+                    flex={1}
+                    placeholder="Discount code (e.g. UTSAV10)"
+                    onChange={handleDiscountCouponInputChange}
+                    aria-label="Discount Code"
+                  />
+                  <Button
+                    disabled={!appliedDiscountCode}
+                    onClick={handleApplyDiscountCoupon}
+                  >
+                    Apply
+                  </Button>
+                </Group>
 
-                <Box h={100}>
-                  <Stack>
-                    <Group justify="space-between">
-                      <TextInput
-                        flex={1}
-                        placeholder="Discount code or gift card"
-                        onChange={handleDiscountCouponInputChange}
-                      />
+                {appliedDiscountResponse ? (
+                  appliedDiscountResponse.isValid ? (
+                    <Text c="green" mb="lg">
+                      Discount applied successfully
+                    </Text>
+                  ) : (
+                    <Text c="red" mb="lg">
+                      Invalid discount coupon
+                    </Text>
+                  )
+                ) : null}
 
-                      <Button
-                        disabled={!appliedDiscountCode}
-                        onClick={handleApplyDiscountCoupon}
-                      >
-                        Apply
-                      </Button>
-                    </Group>
-                    {appliedDiscountResponse ? (
-                      appliedDiscountResponse.isValid ? (
-                        <Text c="green">Discount coupon applied</Text>
-                      ) : (
-                        <Text c="red">Invalid discount coupon</Text>
-                      )
-                    ) : null}
-                  </Stack>
-                </Box>
-
-                <Box mt={16}>
-                  <Group justify="space-between" mb={16}>
-                    <Text>Subtotal . {getTotalQuantity()}</Text>
-                    <Text>
+                <Stack gap="md" mt={32}>
+                  <Group justify="space-between">
+                    <Text className={styles.summaryLabel}>Subtotal</Text>
+                    <Text className={styles.summaryValue}>
+                      <Rupee />
                       {getTotalPrice() -
                         (appliedDiscountResponse?.discountAmount || 0)}
                     </Text>
                   </Group>
-                  <Group justify="space-between" mb={16}>
-                    <Text>Shipping</Text>
-                    <Text fw={700}>Free</Text>
+                  <Group justify="space-between">
+                    <Text className={styles.summaryLabel}>Shipping</Text>
+                    <Text
+                      className={styles.summaryValue}
+                      fs="italic"
+                      opacity={0.7}
+                    >
+                      Complimentary
+                    </Text>
                   </Group>
 
+                  <div
+                    className={styles.mandanaDivider}
+                    style={{ margin: "1.5rem 0" }}
+                  ></div>
+
                   <Group justify="space-between" align="start">
-                    <Text fw={700}>Total</Text>
-                    <Stack align="end">
-                      <Text fw={700}>
-                        {<Rupee />}
+                    <Text className={styles.summaryTotalLabel}>
+                      Grand Total
+                    </Text>
+                    <Stack align="end" gap={0}>
+                      <Text className={styles.summaryTotalValue}>
+                        <Rupee />
                         {getTotalPrice() -
                           (appliedDiscountResponse?.discountAmount || 0)}
                       </Text>
-                      <Text fw={700} size="xs">
+                      <Text
+                        size="xs"
+                        opacity={0.6}
+                        style={{
+                          letterSpacing: "0.1em",
+                          textTransform: "uppercase",
+                          marginTop: "4px",
+                        }}
+                      >
                         Inclusive of all taxes
                       </Text>
                     </Stack>
                   </Group>
-                </Box>
-              </Stack>
+                </Stack>
+
+                <Group justify="center" mt={60} opacity={0.4}>
+                  <Text
+                    size="xs"
+                    style={{
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      display: "flex",
+                      gap: "8px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="11"
+                        width="18"
+                        height="11"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    Secure Encrypted Checkout
+                  </Text>
+                </Group>
+              </Box>
             </Grid.Col>
           </Grid>
-        </Paper>
+        </Box>
+
         {isSmallerThan1024 && (
-          <Button
+          <div
             style={{
               position: "fixed",
-              bottom: 10,
-              left: "50%",
-              transform: "translateX(-50%)",
+              bottom: 0,
+              left: 0,
+              width: "100%",
               zIndex: 1000,
-              width: "calc(100% - 32px)",
             }}
-            onClick={handleFormSubmit}
           >
-            Pay Now
-          </Button>
+            <button className={styles.payNowButton} onClick={handleFormSubmit}>
+              Pay Now
+            </button>
+          </div>
         )}
       </div>
     </SupabaseAuthProvider>

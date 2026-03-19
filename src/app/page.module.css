@@ -1,150 +1,253 @@
 .page {
-  --gray-rgb: 0, 0, 0;
-  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
+  --color-brand: #6a2901;
+  --color-paper: #f5efe6;
+  --color-linen: #e8d9c5;
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  gap: 64px;
-  padding-top: 65px;
-  font-family: var(--font-geist-sans);
-  background-color: white;
-  color: black;
+  background-color: var(--color-paper);
+  color: var(--color-brand);
+  font-family: var(--font-dm-sans), sans-serif;
+  min-height: 100vh;
 }
 
-.page section {
-  /* margin-bottom: 1rem; */
+/* Typography Helpers */
+.fontSerif {
+  font-family: var(--font-playfair-display), serif;
 }
 
-/* Navbar Section */
-.navbar_container {
-  display: flex;
+/* Generic Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.mandanaPattern {
+  background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 0 L40 20 L20 40 L0 20 Z" fill="none" stroke="%236a2901" stroke-width="1"/></svg>');
+  background-repeat: repeat-x;
+  background-size: 32px;
+  height: 32px;
   width: 100%;
+  opacity: 0.4;
 }
 
 /* Hero Section */
 .heroSection {
-  display: flex;
-  width: 100%;
-  height: 80vh;
+  position: relative;
+  background-color: var(--color-linen);
+  overflow: hidden;
 }
-.textContainer {
+
+.heroContent {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background-color: #f7f0ea;
-  text-align: center;
+  align-items: center;
+  gap: 3rem;
 }
 
-.textContainer span:first-child {
+@media (min-width: 768px) {
+  .heroContent {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+    flex-direction: row;
+  }
+}
+
+.heroText {
+  width: 100%;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .heroText {
+    width: 50%;
+  }
+}
+
+.heroTitle {
   font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
 }
 
-.textContainer span:last-child {
-  font-size: 14px;
+@media (min-width: 768px) {
+  .heroTitle {
+    font-size: 4.5rem;
+  }
+}
+
+.heroDescription {
+  font-size: 1.125rem;
+  margin-bottom: 2.5rem;
+  max-width: 28rem;
+  opacity: 0.9;
+  line-height: 1.625;
+}
+
+@media (min-width: 768px) {
+  .heroDescription {
+    font-size: 1.25rem;
+  }
+}
+
+.heroButton {
+  display: inline-block;
+  border: 1px solid var(--color-brand);
+  padding: 1rem 2.5rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: var(--color-brand);
+}
+
+.heroButton:hover {
+  background-color: var(--color-brand);
+  color: var(--color-paper);
+}
+
+.heroImageContainer {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .heroImageContainer {
+    width: 50%;
+  }
+}
+
+.heroImageWrapper {
+  background-color: var(--color-linen);
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .heroImage {
-  flex: 1 1 50%;
-  width: 50%;
-  height: auto;
-  aspect-ratio: 1/1;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.discountContainer {
-  flex: 1 1 50%;
+/* Collections Section */
+.collectionsSection {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.collectionsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+@media (min-width: 768px) {
+  .collectionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.collectionCard {
+  cursor: pointer;
+}
+
+.collectionCard:hover .collectionImage {
+  transform: scale(1.05);
+}
+
+.collectionImageWrapper {
+  aspect-ratio: 4 / 5;
+  background-color: var(--color-linen);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.collectionImage {
+  width: 100%;
   height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
 }
 
-/* Best Sellers Section */
-
-.bestSellersSection {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 36px;
+.collectionTitle {
+  font-size: 1.875rem;
+  margin-bottom: 0.5rem;
 }
 
-.bestSellersSection .cardsContainer {
+.collectionSubtitle {
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* Brand Story Section */
+.brandStorySection {
+  background-color: var(--color-brand);
+  color: var(--color-paper);
+  padding: 6rem 1.5rem;
+  margin-top: 3rem;
+}
+
+.brandStoryContent {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.brandStoryIcon {
   display: flex;
   justify-content: center;
-  width: 100%;
+  margin-bottom: 2rem;
+  opacity: 0.4;
 }
 
-/* Variety Section */
-.varietySection {
-  width: 100%;
+.brandStoryTitle {
+  font-size: 2.25rem;
+  margin-bottom: 2rem;
 }
 
-/* Gifts Section */
-.giftsSection {
+@media (min-width: 768px) {
+  .brandStoryTitle {
+    font-size: 3rem;
+  }
+}
+
+.brandStoryText {
+  font-size: 1.125rem;
+  font-weight: 300;
+  line-height: 1.625;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
 }
 
-.giftsCardsContainer {
-  display: flex;
+.brandStoryButtonWrapper {
+  margin-top: 3rem;
 }
 
-.giftsCardsContainer > div {
-  margin: 0 16px;
-}
-
-/* Shipping Info Section */
-.shippingInfoSection {
-  display: flex;
-  flex-direction: column;
-  background-color: black;
-  color: white;
-  padding: 40px 24px;
-}
-
-.shippingInfoSection span {
-  margin-bottom: 1rem;
-}
-
-.shippingInfoSection span:first-child {
-  font-size: 2rem;
-}
-
-.shippingInfoSection span:last-child {
+.brandStoryButton {
+  display: inline-block;
+  border: 1px solid var(--color-paper);
+  padding: 0.75rem 2rem;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: var(--color-paper);
 }
 
-/* iPad View */
-@media (max-width: 1024px) {
-  .bestSellersSection .cardsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-  }
-  .heroSection {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-
-  .heroImage {
-    flex: 1 1 55%;
-    width: 100vw;
-    height: 100%;
-  }
-
-  .textContainer {
-    flex: 1 1 45%;
-  }
-
-  .giftsCardsContainer {
-    flex-direction: column;
-  }
-
-  .giftsCardsContainer > div {
-    margin: 0;
-    margin-bottom: 1rem;
-  }
-}
-
-/* Mobile View */
-@media (max-width: 767px) {
+.brandStoryButton:hover {
+  background-color: var(--color-paper);
+  color: var(--color-brand);
 }

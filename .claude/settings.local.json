@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn build:*)",
+      "Bash(yarn install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(export PATH=\"$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.nvm/versions/node/*/bin:/usr/local/bin:/opt/homebrew/bin:$PATH\")",
+      "Bash(npx --yes next build:*)",
+      "Bash(brew install:*)",
+      "Bash(/opt/homebrew/bin/pdftoppm:*)",
+      "Bash(grep:*)",
+      "Bash(yarn lint:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run build:*)",
+      "WebFetch(domain:mantine.dev)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(export:*)",
+      "Bash([ -s \"$NVM_DIR/nvm.sh\" ])",
+      "Bash(. \"$NVM_DIR/nvm.sh\")"
+    ]
+  }
+}

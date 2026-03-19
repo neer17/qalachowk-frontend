@@ -17,7 +17,7 @@
 
 .headingContainer > span {
   font-size: 12px;
-  color: var(--accentColor);
+  color: var(--brand-warm-gold);
   cursor: pointer;
 }
 
@@ -52,5 +52,5 @@
 .expandableContainer li,
 .expandableContainerExpanded li {
   font-size: 13px;
-  color: var(--label);
+  color: var(--text-secondary);
 }

@@ -11,13 +11,14 @@
   text-align: center;
   text-transform: uppercase;
   margin: 0;
-  color: #111;
+  color: var(--brand-deep-umber);
   margin-bottom: 8px;
   letter-spacing: -0.1rem;
+  font-family: "Playfair Display", var(--font-playfair-display), serif;
 }
 
 .bannerContainer span:first-child {
   font-size: 14px;
   text-align: center;
-  color: #111;
+  color: var(--brand-deep-umber);
 }

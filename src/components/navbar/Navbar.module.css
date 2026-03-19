@@ -1,21 +1,164 @@
 .navbar {
   position: fixed;
-  top: 30px;
+  top: 0;
   left: 0;
-  right: 0;
-  background-color: white;
-  z-index: 999;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 120px;
+  background-color: #f5efe6;
+  border-bottom: 0.75px solid rgba(106, 41, 1, 0.2);
+  z-index: 50;
+  display: flex;
+  align-items: center;
 }
 
 .navbarContainer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  height: 64px;
-  padding: 0 16px;
+  width: 100%;
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0 3rem;
+  height: 100%;
 }
 
+.desktopLeftMenu {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.navLink {
+  color: rgba(106, 41, 1, 0.7);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    color 0.3s ease,
+    transform 0.1s ease;
+}
+
+.navLink:hover {
+  color: #b8860b;
+}
+
+.navLink:active {
+  transform: scale(0.95);
+}
+
+.brandNameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brandName {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 1.875rem;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  color: #6a2901;
+  text-decoration: none;
+}
+
+.desktopRightActions {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.actionButtonContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.actionButton {
+  background: transparent;
+  border: none;
+  color: #6a2901;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition:
+    color 0.3s ease,
+    transform 0.1s ease;
+}
+
+.actionButton:hover {
+  color: #b8860b;
+}
+
+.actionButton:active {
+  transform: scale(0.95);
+}
+
+.cartButtonContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.cartBadge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 8px;
+  background-color: #6a2901;
+  color: #fff;
+  border-radius: 9999px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.accountDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #f5efe6;
+  border: 1px solid rgba(106, 41, 1, 0.2);
+  padding: 0.5rem 0;
+  min-width: 150px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.accountDropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.accountDropdown li {
+  padding: 0.5rem 1rem;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.875rem;
+  color: #6a2901;
+  cursor: pointer;
+}
+
+.accountDropdown li:hover {
+  background-color: rgba(106, 41, 1, 0.05);
+}
+
+/*
+* Mobile Specifics
+*/
 .mobileMenuButton {
+  display: none;
   background: none;
   border: none;
   cursor: pointer;
@@ -23,7 +166,7 @@
 
 .hamburgerIcon {
   width: 24px;
-  height: 24px;
+  height: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -32,19 +175,7 @@
 .hamburgerBar {
   width: 100%;
   height: 2px;
-  background-color: #333;
-}
-
-.brandName {
-  color: black;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.desktopMenu .menuItems {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  background-color: #6a2901;
 }
 
 .mobileMenu {
@@ -53,7 +184,7 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: white;
+  background-color: #f5efe6;
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
@@ -67,13 +198,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
+  padding: 24px;
+  border-bottom: 1px solid rgba(106, 41, 1, 0.2);
 }
 
 .menuTitle {
   font-size: 1.25rem;
+  font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
+  color: #6a2901;
 }
 
 .closeButton {
@@ -89,7 +222,7 @@
   position: absolute;
   width: 100%;
   height: 2px;
-  background-color: #333;
+  background-color: #6a2901;
   top: 50%;
   left: 0;
   transform-origin: center;
@@ -103,234 +236,35 @@
   transform: rotate(-45deg);
 }
 
-.menuItems {
+.menuItemsMobile {
   display: flex;
   flex-direction: column;
 }
 
-.menuItem {
-  position: relative;
-  display: inline-block;
-  padding: 16px;
+.menuItemMobile {
+  padding: 16px 24px;
+  font-family: var(--font-dm-sans), sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   font-size: 1.25rem;
   text-decoration: none;
-  color: #333;
-  border: none;
+  color: #6a2901;
+  border-bottom: 1px solid rgba(106, 41, 1, 0.1);
 }
 
-.menuItem:hover .underline-animation {
-  width: 100%;
-  left: 0;
-}
-
-.underline-animation {
-  position: absolute;
-  bottom: -5px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background-color: currentColor;
-  transition:
-    width 0.4s ease,
-    left 0.4s ease;
-}
-
-.signinContainer {
-  margin-right: 1rem;
-}
-.wishlistContainer {
-  position: relative;
-  margin-right: 1rem;
-}
-
-.cartContainer {
-  position: relative;
-}
-.cartItemsIndicator {
-  position: absolute;
-  top: 0;
-  right: -5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 15px;
-  height: 15px;
-  background-color: red;
-  color: white;
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 50%;
-}
-
-/* 
-* Desktop
-*/
-@media (min-width: 768px) {
-  .mobileMenuButton {
-    display: none;
-  }
-
-  .mobileMenu {
-    display: none;
-  }
-
-  .desktopMenu {
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    align-items: center;
-  }
-
-  /* TODO: The animation form top to bottom sliding is not working */
-  .desktopMenuItemPanel {
-    width: 100%;
-    max-height: 0;
-    opacity: 0;
-    overflow: hidden;
-    /* transform: translateY(0px); */
-    transition:
-      max-height 0.5s ease,
-      opacity 0.5s ease,
-      transform 0.5s ease;
-  }
-  .menuItemNameContainer:hover + .desktopMenuItemPanel {
-    max-height: 500px;
-    opacity: 1;
-    /* transform: translateY(20px); */
-  }
-
-  .desktopMenuItemPanel .desktopMenuItemPanelGrid {
-    position: absolute;
-    left: 0;
-    top: 64px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* Four columns */
-    gap: 20px;
-    width: 100%;
-    margin: 0 auto; /* Center content */
-    padding: 20px 20px;
-    background-color: white;
-  }
-  /* Styling for each column */
-  .desktopMenuItemPanel .desktopMenuItemPanelColumn h3 {
-    font-size: 14px;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #888; /* Light grey for header text */
-    margin-bottom: 10px;
-  }
-
-  .desktopMenuItemPanel .desktopMenuItemPanelColumn ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .desktopMenuItemPanel .desktopMenuItemPanelColumn li {
-    font-size: 16px;
-    margin-bottom: 8px; /* Spacing between list items */
-    color: #333; /* Darker color for list items */
-  }
-
-  /* Image column styling */
-  .desktopMenuItemPanel .desktopMenuItemPanelImageColumn {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  .desktopMenuItemPanel .desktopMenuItemPanelFeaturedImage {
-    object-fit: cover;
-  }
-
-  .desktopMenuItemPanel .desktopMenuItemPanelCaption {
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 10px;
-    color: #333;
-  }
-}
-
-/*
-* Mobile
-*/
 @media (max-width: 1024px) {
-  .mobileMenuButton {
-    display: block;
+  .navbarContainer {
+    padding: 0 1.5rem;
   }
-  .mobileMenu {
-    display: block;
-  }
-  .desktopMenu {
+  .desktopLeftMenu {
     display: none;
   }
-  .brandName {
-    margin-left: auto;
-    margin-right: auto;
+  .mobileMenuButton {
+    display: block;
+    flex: 1;
   }
-
-  .mobileMenu .menuItems {
-    overflow-y: auto;
-  }
-
-  .mobileMenuItemExpandablePanel {
-    height: 50vh;
-    margin-top: 20px;
-  }
-
-  .mobileMenuItemExpandablePanel .imagesContainer {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    grid-template-rows: repeat(2, 1fr); /* 2 rows */
-    gap: 10px;
-    justify-items: center; /* Center items horizontally */
-    align-items: center;
-  }
-
-  .mobileMenuItemExpandablePanel .imagesContainer .image {
-    width: 150px;
-    height: 150px;
-    background-color: grey;
-  }
-
-  .mobileMenuItemExpandablePanel .moreFiltersPanel {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2 columns of equal width */
-    gap: 20px; /* Space between columns */
-    padding: 20px;
-  }
-
-  .mobileMenuItemExpandablePanel .moreFiltersPanel .moreFilterContainer h3 {
-    font-size: 16px;
-    font-weight: bold;
-    position: relative;
-    margin-bottom: 10px;
-    display: inline-block;
-  }
-
-  .mobileMenuItemExpandablePanel
-    .moreFiltersPanel
-    .moreFilterContainer
-    h3::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 100%;
-    width: 50px;
-    height: 1px;
-    background-color: #ccc; /* Line color */
-    margin-left: 10px;
-  }
-
-  .mobileMenuItemExpandablePanel .moreFiltersPanel .moreFilterContainer ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .mobileMenuItemExpandablePanel .moreFiltersPanel .moreFilterContainer li {
-    font-size: 14px;
-    margin-bottom: 5px; /* Space between list items */
+  .brandNameContainer {
+    flex: 2;
+    text-align: center;
   }
 }

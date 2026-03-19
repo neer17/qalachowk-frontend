@@ -21,17 +21,20 @@
 }
 
 .productCard {
-  background: white;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--brand-warm-white);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: transform 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   height: 100%;
 }
 
-/* .productCard:hover {
-  transform: translateY(-5px);
-} */
+.productCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
 
 .productImage {
   width: 100%;
@@ -49,7 +52,7 @@
 .productInfo h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #333;
+  color: var(--brand-deep-umber);
   margin-bottom: 8px;
 }
 
@@ -57,7 +60,7 @@
   margin: 0;
   font-size: 1.2rem;
   font-weight: bold;
-  color: #2c5282;
+  color: var(--brand-primary);
 }
 
 /* CHANGE: Responsive breakpoints using CSS media queries instead of Swiper breakpoints */

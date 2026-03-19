@@ -103,3 +103,36 @@ export const environments = {
   STAGING: "Staging",
   PRODUCTION: "Production",
 };
+
+export const collections = {
+  BLUE_POTTERY: {
+    RINGS: [
+      {
+        id: "bpr-01",
+        name: "ring-1",
+        description: "blue pottery ring desc 1",
+        images: [
+          "https://images.cltstatic.com/media/product/350/AR00495-SS0000-bidai-ring-in-gold-plated--silver-prd-1-model.jpg",
+          "https://images.cltstatic.com/media/product/350/AR00495-SS0000-bidai-ring-in-gold-plated--silver-prd-1-base.jpg",
+          "https://images.cltstatic.com/media/product/350/AR00495-SS0000-bidai-ring-in-gold-plated--silver-prd-1-base.jpg",
+          "https://images.cltstatic.com/media/product/350/AR00495-SS0000-bidai-ring-in-gold-plated--silver-prd-3-pd.jpg",
+        ],
+        video:
+          "https://images.cltstatic.com/media/product/video/AR00495-SS0000-bidai-ring-in-gold-plated--silver-prd-1-video.mp4",
+      },
+      {
+        id: "bpr-02",
+        name: "ring-2",
+        description: "blue pottery ring desc 2",
+        images: [
+          "https://images.cltstatic.com/media/product/350/AR00366-SS0000-bridechilla-ring-in-gold-plated--silver-prd-1-model.jpg",
+          "https://images.cltstatic.com/media/product/350/AR00366-SS0000-bridechilla-ring-in-gold-plated--silver-prd-1-base.jpg ",
+          "https://images.cltstatic.com/media/product/350/AR00366-SS0000-bridechilla-ring-in-gold-plated--silver-prd-2-base.jpg",
+          "https://images.cltstatic.com/media/product/350/AR00366-SS0000-bridechilla-ring-in-gold-plated--silver-prd-3-pd.jpg",
+        ],
+        video:
+          "https://images.cltstatic.com/media/product/video/AR00366-SS0000-bridechilla-ring-in-gold-plated--silver-prd-1-video.mp4",
+      },
+    ],
+  },
+};

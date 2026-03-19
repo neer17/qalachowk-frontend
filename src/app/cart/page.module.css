@@ -17,16 +17,16 @@
 .shippingDetailsContainer {
   width: 100%;
   height: 50px;
-  background-color: #f7f7f8;
-  color: black;
+  background-color: var(--brand-old-lace);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
 .orderDetailsContainer {
   width: 100%;
-  background-color: #f7f7f8;
+  background-color: var(--brand-old-lace);
   margin-bottom: 1rem;
-  color: black;
+  color: var(--text-primary);
   padding: 1rem 2rem 1rem 2rem;
 }
 
@@ -40,9 +40,9 @@
   padding: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  color: white;
+  color: var(--brand-warm-white);
   text-transform: uppercase;
-  background-color: black;
+  background-color: var(--brand-primary);
   border: none;
   text-align: center;
   font-size: 18px;
@@ -52,8 +52,8 @@
 .queryContainer {
   width: 100%;
   height: 150px;
-  background-color: #f7f7f8;
-  color: black;
+  background-color: var(--brand-old-lace);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -64,7 +64,7 @@
 .goBackToShoppingContainer {
   display: flex;
   align-items: center;
-  color: black;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 18px;
   margin-bottom: 1.5rem;
@@ -89,7 +89,7 @@
 @media (max-width: 767px) {
   .cartDetailsContainer {
     flex-direction: column;
-    background-color: white;
+    background-color: var(--brand-warm-white);
     padding: 0;
     padding-top: 1.5rem;
     height: calc(100vh - 194px);
@@ -114,8 +114,8 @@
     width: 100%;
     height: 80px;
     padding: 2rem;
-    border-top: 1px solid grey;
-    background-color: white;
+    border-top: 1px solid var(--border-primary);
+    background-color: var(--brand-warm-white);
     z-index: 999;
   }
 

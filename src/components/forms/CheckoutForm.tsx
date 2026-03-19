@@ -360,12 +360,13 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
     }
 
     return (
-      <Box>
+      <Box className={styles.mandanaForm}>
         <form onSubmit={form.onSubmit(handleFormSubmit)}>
           <Stack gap="lg">
             {submitError && <Alert color="red">{submitError}</Alert>}
 
             <Stack gap="md">
+              <Title order={2}>Contact Information</Title>
               <Select
                 label="Country/Region"
                 placeholder="India"
@@ -403,6 +404,9 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
                 type="email"
               />
 
+              <Title order={2} mt="md">
+                Shipping Address
+              </Title>
               <TextInput
                 label="Address"
                 placeholder="Enter your address"

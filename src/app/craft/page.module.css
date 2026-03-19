@@ -1,0 +1,342 @@
+.page {
+  --color-brand: #6a2901;
+  --color-paper: #f5efe6;
+  --color-linen: #e8d9c5;
+
+  background-color: var(--color-paper);
+  color: var(--color-brand);
+  font-family: var(--font-dm-sans), sans-serif;
+  min-height: 100vh;
+}
+
+/* Typography Helpers */
+.fontSerif {
+  font-family: var(--font-playfair-display), serif;
+}
+.italic {
+  font-style: italic;
+}
+
+/* Generic Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.mandanaDivider {
+  background-image: url('data:image/svg+xml;utf8,<svg width="100" height="20" viewBox="0 0 100 20" xmlns="http://www.w3.org/2000/svg"><path d="M0 10 Q 25 0, 50 10 T 100 10" stroke="%236a2901" fill="none" stroke-width="1"/></svg>');
+  background-repeat: repeat-x;
+  height: 20px;
+  width: 100%;
+  opacity: 0.4;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Hero Section */
+.heroHeader {
+  padding-top: 8rem;
+  padding-bottom: 5rem;
+  text-align: center;
+}
+
+.heroContent {
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .heroTitle {
+    font-size: 4.5rem;
+  }
+}
+
+.heroDescription {
+  font-size: 1.125rem;
+  line-height: 1.625;
+  max-width: 42rem;
+  margin: 0 auto;
+  opacity: 0.7;
+}
+
+@media (min-width: 768px) {
+  .heroDescription {
+    font-size: 1.25rem;
+  }
+}
+
+/* Narrative Section */
+.narrativeSection {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin-bottom: 5rem;
+}
+
+.narrativeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .narrativeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.narrativeImageWrapper {
+  order: 2;
+}
+
+@media (min-width: 768px) {
+  .narrativeImageWrapper {
+    order: 1;
+  }
+}
+
+.narrativeImage {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  filter: grayscale(100%);
+  transition: filter 0.7s ease;
+}
+
+.narrativeImage:hover {
+  filter: grayscale(0%);
+}
+
+.narrativeTextWrapper {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .narrativeTextWrapper {
+    order: 2;
+  }
+}
+
+.narrativeTitle {
+  font-size: 1.875rem;
+}
+
+.narrativeParagraph {
+  line-height: 2;
+  opacity: 0.8;
+}
+
+.semibold {
+  font-weight: 600;
+}
+
+.narrativeQuote {
+  border-left: 4px solid var(--color-brand);
+  padding-left: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.quoteText {
+  font-size: 1.5rem;
+  color: var(--color-brand);
+}
+
+/* Art Styles Section */
+.artStylesSection {
+  background-color: rgba(106, 41, 1, 0.05);
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.artStylesHeader {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+
+.artStylesTitle {
+  font-size: 2.25rem;
+  margin-bottom: 1rem;
+}
+
+.artStylesSubtitle {
+  opacity: 0.6;
+}
+
+.artStylesGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .artStylesGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.artStyleCard {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(106, 41, 1, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.artStyleCard:hover {
+  border-color: rgba(106, 41, 1, 0.3);
+}
+
+.artStyleIcon {
+  display: flex;
+  justify-content: center;
+  color: var(--color-brand);
+  margin-bottom: 1.5rem;
+}
+
+.artStyleName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.artStyleDescription {
+  font-size: 0.875rem;
+  line-height: 1.625;
+  opacity: 0.7;
+}
+
+/* Philosophy Section */
+.philosophySection {
+  max-width: 56rem;
+  margin: 5rem auto;
+  text-align: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.philosophyBox {
+  display: inline-block;
+  padding: 3rem;
+  border: 1px solid rgba(106, 41, 1, 0.2);
+  border-radius: 8px;
+  position: relative;
+}
+
+.philosophyCornerTopLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  border-top: 2px solid var(--color-brand);
+  border-left: 2px solid var(--color-brand);
+  border-top-left-radius: 8px;
+}
+
+.philosophyCornerBottomRight {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  border-bottom: 2px solid var(--color-brand);
+  border-right: 2px solid var(--color-brand);
+  border-bottom-right-radius: 8px;
+}
+
+.philosophyLabel {
+  font-size: 0.875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 2rem;
+}
+
+.philosophyTitle {
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.philosophyDescription {
+  opacity: 0.8;
+  line-height: 2;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+.philosophyDivider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.philosophyLine {
+  width: 3rem;
+  height: 1px;
+  background-color: rgba(106, 41, 1, 0.3);
+}
+
+.philosophySymbol {
+  color: var(--color-brand);
+}
+
+/* Visual Showcase */
+.showcaseSection {
+  padding-bottom: 6rem;
+}
+
+.showcaseGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .showcaseGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.showcaseImageWrapper {
+  height: 16rem;
+  background-color: #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.showcaseImageOffset {
+  margin-top: 0;
+}
+
+@media (min-width: 768px) {
+  .showcaseImageOffset {
+    margin-top: 2rem;
+  }
+}
+
+.showcaseImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

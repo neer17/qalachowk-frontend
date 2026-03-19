@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import styles from "./Navbar.module.css";
 import Link from "next/link";
-import CartSVG from "@/app/svgs/cart.svg";
-import WishlistSVG from "@/app/svgs/wishlist.svg";
-import UserSVG from "@/app/svgs/user.svg";
-import { useCart, useWishlist } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
+import SlidePopup from "@/components/slide_popup/SlidePopup";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/SupabaseAuthContext";
 import { v4 as uuid } from "uuid";
 import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
@@ -21,52 +20,32 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { name: "Collections", path: "/" },
-  { name: "Earrings", path: "/shop" },
-  { name: "Rings", path: "/new-launch" },
-  { name: "Pendants", path: "/navratri-special" },
+  { name: "The Craft", path: "/craft" },
+  { name: "Our Story", path: "/" },
 ];
 
 const NavigationBar: React.FC = () => {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [showOTPModal, setShowOTPModal] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [showAccountPanel, setShowAccountPanel] = useState(false);
+  const router = useRouter();
+
   const { cartData } = useCart();
-  const { wishlistData } = useWishlist();
+  const { user } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [mobileMenuItemExpanded, setMobileMenuItemExpanded] = useState<
-    string | null
-  >(null);
-  const [desktopMenuItemHovered, setDesktopMenuItemHovered] = useState<
-    string | null
-  >(null);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     document.body.style.overflow = isMenuOpen ? "unset" : "hidden";
   };
 
-  const handleMobileMenuItemsExpand = (menuItemName: string) => {
-    if (mobileMenuItemExpanded === menuItemName) {
-      return setMobileMenuItemExpanded(null);
-    }
-    setMobileMenuItemExpanded(menuItemName);
-  };
-
-  const handleDesktopMenuItemsMouseOver = (menuItemName: string) => {
-    if (desktopMenuItemHovered == menuItemName) {
-      return setDesktopMenuItemHovered(null);
-    }
-    setDesktopMenuItemHovered(menuItemName);
-  };
-
-  const handleDesktopMenuItemsMouseOut = () => {
-    setDesktopMenuItemHovered(null);
-  };
-
-  const handleUserSignIn = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleUserSignIn = (
+    e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
+  ) => {
     e.preventDefault();
-
     setShowSignInModal(true);
   };
 
@@ -81,7 +60,6 @@ const NavigationBar: React.FC = () => {
       console.error("Error in sending OTP: ", { error });
       throw error;
     }
-
     setShowOTPModal(true);
   };
 
@@ -117,7 +95,7 @@ const NavigationBar: React.FC = () => {
     <>
       <nav className={styles.navbar}>
         <div className={styles.navbarContainer}>
-          {/* Hamburger button */}
+          {/* Hamburger button for Mobile */}
           <button
             onClick={toggleMenu}
             className={styles.mobileMenuButton}
@@ -130,108 +108,105 @@ const NavigationBar: React.FC = () => {
             </div>
           </button>
 
-          <div className={styles.brandName}>
-            <Link href="/">Qala Chowk</Link>
+          {/* Left: Navigation Links (Desktop) */}
+          <div className={styles.desktopLeftMenu}>
+            {menuItems.map((item) => (
+              <Link href={item.path} key={uuid()} className={styles.navLink}>
+                {item.name}
+              </Link>
+            ))}
           </div>
 
-          {/* Desktop navbar menu items */}
-          <div className={styles.desktopMenu}>
-            <div className={styles.menuItems}>
-              {menuItems.map((item) => (
-                <span className={styles.menuItemContainer} key={uuid()}>
-                  <div
-                    className={styles.menuItemNameContainer}
-                    onMouseEnter={(e) => {
-                      e.preventDefault();
-                      handleDesktopMenuItemsMouseOver(item.name);
-                    }}
-                    onMouseLeave={handleDesktopMenuItemsMouseOut}
-                  >
-                    <Link href={item.path} className={styles.menuItem}>
-                      {item.name}
-                    </Link>
-                    <div className="underline-animation"></div>
-                  </div>
+          {/* Center: Brand Identity */}
+          <div className={styles.brandNameContainer}>
+            <Link href="/" className={styles.brandName}>
+              Qala Chowk
+            </Link>
+          </div>
 
-                  {desktopMenuItemHovered === item.name && (
-                    <div className={styles.desktopMenuItemPanel}>
-                      <div className={styles.desktopMenuItemPanelGrid}>
-                        <div className={styles.desktopMenuItemPanelColumn}>
-                          <h3>SHOP BY SIZE</h3>
-                          <ul>
-                            <li>Carry-Ons</li>
-                            <li>Checked</li>
-                            <li>Compare Carry-Ons</li>
-                            <li>Compare checked</li>
-                          </ul>
-                        </div>
-                        <div className={styles.desktopMenuItemPanelColumn}>
-                          <h3>SHOP BY MATERIAL</h3>
-                          <ul>
-                            <li>Hardside</li>
-                            <li>Softside</li>
-                            <li>Aluminum</li>
-                            <li>Compare materials</li>
-                          </ul>
-                        </div>
-                        <div className={styles.desktopMenuItemPanelColumn}>
-                          <h3>FEATURED</h3>
-                          <ul>
-                            <li>Save on luggage sets</li>
-                            <li>The Café Edit</li>
-                            <li>Softside luggage</li>
-                            <li>Flex: Expandable luggage</li>
-                          </ul>
-                        </div>
-                        <div
-                          className={
-                            styles.mobileMenuItemExpandablePanelImageColumn
-                          }
-                        >
-                          <Image
-                            width={300}
-                            height={200}
-                            src="https://images.pexels.com/photos/60597/dahlia-red-blossom-bloom-60597.jpeg?auto=compress&cs=tinysrgb&w=1200&h=750&dpr=2"
-                            alt="Luggage image"
-                            className={styles.desktopMenuItemPanelFeaturedImage}
-                          ></Image>
-                          <p
-                            className={
-                              styles.mobileMenuItemExpandablePanelCaption
-                            }
-                          >
-                            FIT FOR EVERY TRIP. SHOP SUITCASES &rarr;
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </span>
-              ))}
+          {/* Right: Search & Actions */}
+          <div className={styles.desktopRightActions}>
+            {user ? (
+              <div
+                className={styles.actionButtonContainer}
+                onMouseEnter={() => setShowAccountPanel(true)}
+                onMouseLeave={() => setShowAccountPanel(false)}
+              >
+                <button className={styles.actionButton}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
+                    fill="currentColor"
+                  >
+                    <path d="M480-480q-66 0-113-47t-113-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
+                  </svg>
+                </button>
+                {showAccountPanel && (
+                  <div className={styles.accountDropdown}>
+                    <ul>
+                      <li onClick={() => router.push("/order-details")}>
+                        Orders
+                      </li>
+                      <li>Tracking link</li>
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.actionButtonContainer}>
+                <button
+                  className={styles.actionButton}
+                  onClick={handleUserSignIn}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
+                    fill="currentColor"
+                  >
+                    <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
+                  </svg>
+                </button>
+              </div>
+            )}
+
+            <button
+              className={styles.actionButton}
+              onClick={() => router.push("/wishlist")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                fill="currentColor"
+              >
+                <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-640q0-90 60-150t150-60q61 0 114.5 28.5T480-738q34-55 87.5-83.5T670-850q90 0 150 60t60 150q0 46-15.5 90T810-447.5Q771-382 705-316T538-172l-58 52Z" />
+              </svg>
+            </button>
+
+            <div
+              className={styles.cartButtonContainer}
+              onClick={() => setIsCartOpen(true)}
+              style={{ cursor: "pointer" }}
+            >
+              <button className={styles.actionButton}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="currentColor"
+                >
+                  <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
+                </svg>
+              </button>
+              <span className={styles.cartBadge}>{cartData.size}</span>
             </div>
           </div>
-
-          <Link href="/signin" className={styles.signinContainer}>
-            <Image
-              src={UserSVG}
-              alt="Sign In"
-              width={25}
-              height={25}
-              onClick={handleUserSignIn}
-            />
-          </Link>
-
-          <Link href="/wishlist" className={styles.wishlistContainer}>
-            <Image src={WishlistSVG} alt="Wishlist" width={25} height={25} />
-            <span className={styles.cartItemsIndicator}>
-              {wishlistData.size}
-            </span>
-          </Link>
-
-          <Link href="/cart" className={styles.cartContainer}>
-            <Image src={CartSVG} alt="Cart" width={25} height={25} />
-            <span className={styles.cartItemsIndicator}>{cartData.size}</span>
-          </Link>
         </div>
       </nav>
 
@@ -249,53 +224,16 @@ const NavigationBar: React.FC = () => {
           </button>
         </div>
 
-        <div className={styles.menuItems}>
+        <div className={styles.menuItemsMobile}>
           {menuItems.map((item) => (
-            <span
+            <Link
+              href={item.path}
               key={uuid()}
-              className={styles.menuItem}
-              onClick={() => handleMobileMenuItemsExpand(item.name)}
+              className={styles.menuItemMobile}
+              onClick={toggleMenu}
             >
-              <div className={styles.mobileMenuItem}>
-                <div>
-                  <span>{item.name} &#9660;</span>
-                </div>
-
-                {mobileMenuItemExpanded === item.name && (
-                  <div className={styles.mobileMenuItemExpandablePanel}>
-                    <div className={styles.imagesContainer}>
-                      <span className={styles.image}></span>
-                      <span className={styles.image}></span>
-                      <span className={styles.image}></span>
-                      <span className={styles.image}></span>
-                    </div>
-
-                    <div>
-                      <div className={styles.moreFiltersPanel}>
-                        <div className={styles.moreFilterContainer}>
-                          <h3>SHOP BY METAL</h3>
-                          <ul>
-                            <li>Silver Bracelets</li>
-                            <li>Brass Bracelets</li>
-                          </ul>
-                        </div>
-                        <div className={styles.moreFilterContainer}>
-                          <h3>CURATED BY</h3>
-                          <ul>
-                            <li>Everyday Bracelets</li>
-                            <li>Cuff Bracelets</li>
-                            <li>Gold Plated Bracelets</li>
-                            <li>Palm Cuffs</li>
-                            <li>Black Bead Bracelets</li>
-                            <li>Bracelets Under 2K</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </span>
+              {item.name}
+            </Link>
           ))}
         </div>
       </div>
@@ -316,6 +254,12 @@ const NavigationBar: React.FC = () => {
           verifyOtpCallback={handleVerifyOtp}
         />
       )}
+
+      {/* Slide Cart Panel */}
+      <SlidePopup
+        isOpen={isCartOpen}
+        backdropClickCallback={() => setIsCartOpen(false)}
+      />
     </>
   );
 };

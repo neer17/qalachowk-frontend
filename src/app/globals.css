@@ -1,23 +1,72 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --value: #424954;
-  --label: #565e6a;
-  --buttonBackgroundDark: #2d333d;
-  --backgroundGrey: #f7f9f8;
-  --backgroundGrey1: #f4f4f5;
-  --accentColor: #57b3b2;
+  /* === PRIMARY COLORS (Brand Guide Page 3) === */
+  --brand-primary: #6a2901; /* Primary Brown - main brand color */
+  --brand-deep-umber: #3d1800; /* Deep Umber - dark accent */
+  --brand-saddle-brown: #8b4513; /* Saddle Brown - medium tone */
+  --brand-warm-gold: #c8956c; /* Warm Gold - highlight color */
 
+  /* === NEUTRALS (Brand Guide Page 3) === */
+  --brand-old-lace: #fdf5e6; /* Old Lace - lightest background */
+  --brand-champagne: #f5e6cc; /* Champagne - light background */
+  --brand-bone: #e8d0d0; /* Bone - FIXED per brand guide */
+  --brand-warm-white: #fffaf5; /* Warm White - primary background */
+
+  /* === ACCENTS (Brand Guide Page 3) === */
+  --brand-terracotta: #a05920; /* Terracotta - FIXED per brand guide */
+  --brand-dark-espresso: #2e1503; /* Dark Espresso - primary text */
+  --brand-sage: #a3a67c; /* Sage - NEW accent color */
+
+  /* === RGB DECOMPOSITIONS (for rgba usage) === */
+  --brand-primary-rgb: 106, 41, 1;
+  --brand-deep-umber-rgb: 61, 24, 0;
+  --brand-dark-espresso-rgb: 46, 21, 3;
+  --brand-bone-rgb: 232, 208, 208;
+
+  /* === OPACITY SCALE === */
+  --opacity-subtle: 0.05;
+  --opacity-light: 0.1;
+  --opacity-medium: 0.15;
+  --opacity-visible: 0.3;
+  --opacity-strong: 0.5;
+
+  /* === SEMANTIC COLORS === */
+  --background: var(--brand-warm-white);
+  --foreground: var(--brand-dark-espresso);
+  --text-primary: var(--brand-dark-espresso);
+  --text-secondary: var(--brand-saddle-brown);
+  --text-accent: var(--brand-warm-gold);
+  --border-primary: var(--brand-bone);
+  --border-focus: var(--brand-primary);
+
+  /* === SHADOWS === */
+  --shadow-sm: 0 2px 4px rgba(var(--brand-deep-umber-rgb), var(--opacity-light));
+  --shadow-md: 0 4px 6px
+    rgba(var(--brand-deep-umber-rgb), var(--opacity-medium));
+  --shadow-lg: 0 8px 16px
+    rgba(var(--brand-deep-umber-rgb), var(--opacity-medium));
+  --shadow-popup: -2px 0 5px
+    rgba(var(--brand-dark-espresso-rgb), var(--opacity-light));
+
+  /* === INTERACTIVE STATES === */
+  --brand-bone-hover: #d4c4b0;
+  --brand-primary-hover: #501f01;
+
+  /* === LEGACY ALIASES (backward compatibility - will be removed in Phase 4) === */
+  --backgroundGrey: var(--brand-old-lace);
+  --backgroundGrey1: var(--brand-champagne);
+  --backgroundGreyDark: var(--brand-bone);
+  --accentColor: var(--brand-warm-gold);
+  --buttonBackgroundDark: var(--brand-primary);
+  --value: var(--brand-deep-umber);
+  --label: var(--brand-saddle-brown);
+
+  /* === TYPOGRAPHY === */
+  --font-hindi-heading: var(--font-tiro-devanagari), serif;
+  --font-hindi-body: var(--font-noto-serif-devanagari), serif;
+
+  /* === LAYOUT === */
   --pageTopMargin: 94px;
 }
-
-/* Media query for dark mode */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #1a1a1a;    
-    --foreground: #2a2a2a;
-  }
-} */
 
 html,
 body {
@@ -28,7 +77,7 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "DM Sans", var(--font-dm-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
@@ -46,10 +95,4 @@ body {
 a {
   color: inherit;
   text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
 }

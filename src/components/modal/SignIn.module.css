@@ -20,7 +20,7 @@
   letter-spacing: 3px;
   text-align: center;
   margin-bottom: 24px;
-  color: #333;
+  color: var(--text-secondary);
 }
 
 .heading {
@@ -29,7 +29,7 @@
   font-family: "Playfair Display", serif;
   text-align: center;
   margin-bottom: 12px;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .subheading {
@@ -37,7 +37,7 @@
   font-weight: 400;
   text-align: center;
   margin-bottom: 30px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .form {
@@ -48,24 +48,24 @@
 }
 
 .input {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-primary);
   border-radius: 4px;
   padding: 12px 16px;
   font-size: 14px;
-  color: #666;
+  color: var(--brand-deep-umber);
 }
 
 .input::placeholder {
-  color: #999;
+  color: var(--brand-warm-gold);
 }
 
 .input:focus {
-  border-color: #333;
+  border-color: var(--brand-primary);
 }
 
 .continueButton {
-  background-color: #d4d4d4;
-  color: #999;
+  background-color: var(--border-primary);
+  color: var(--text-secondary);
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -77,18 +77,18 @@
 }
 
 .continueButton:hover {
-  background-color: #c0c0c0;
+  background-color: var(--brand-bone-hover);
 }
 
 .dividerLabel {
   font-size: 13px;
-  color: #999;
+  color: var(--brand-warm-gold);
   font-weight: 400;
 }
 
 .googleButton {
-  border: 1px solid #e0e0e0;
-  color: #333;
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
@@ -98,28 +98,28 @@
 }
 
 .googleButton:hover {
-  background-color: #f8f8f8;
-  border-color: #333;
+  background-color: var(--brand-old-lace);
+  border-color: var(--brand-primary);
 }
 
 .terms {
   font-size: 12px;
   text-align: center;
-  color: #666;
+  color: var(--text-secondary);
   margin-top: 24px;
   line-height: 1.6;
 }
 
 .link {
-  color: #333;
+  color: var(--brand-primary);
   text-decoration: underline;
   transition: color 0.2s ease;
 }
 
 .link:hover {
-  color: #000;
+  color: var(--brand-deep-umber);
 }
 .validButton {
-  background-color: black !important;
-  color: white;
+  background-color: var(--brand-primary) !important;
+  color: var(--brand-warm-white);
 }

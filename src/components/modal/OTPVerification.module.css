@@ -20,7 +20,7 @@
   letter-spacing: 3px;
   text-align: center;
   margin-bottom: 24px;
-  color: #333;
+  color: var(--text-secondary);
 }
 
 .heading {
@@ -29,7 +29,7 @@
   font-family: "Playfair Display", serif;
   text-align: center;
   margin-bottom: 12px;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .subheading {
@@ -37,7 +37,7 @@
   font-weight: 400;
   text-align: center;
   margin-bottom: 20px;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -52,13 +52,13 @@
 .phoneNumber {
   font-size: 16px;
   font-weight: 500;
-  color: #00a8a8;
+  color: var(--brand-warm-gold);
 }
 
 .editButton {
   background: none;
   border: none;
-  color: #00a8a8;
+  color: var(--brand-warm-gold);
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
@@ -68,7 +68,7 @@
 }
 
 .editButton:hover {
-  color: #008888;
+  color: var(--brand-primary);
 }
 
 .otpContainer {
@@ -81,40 +81,40 @@
 .otpInput {
   width: 45px !important;
   height: 55px !important;
-  border: 1px solid #e0e0e0 !important;
+  border: 1px solid var(--border-primary) !important;
   border-radius: 4px !important;
   font-size: 20px !important;
   font-weight: 500 !important;
   text-align: center !important;
-  color: #333 !important;
+  color: var(--text-primary) !important;
 }
 
 .otpInput:focus {
-  border-color: #333 !important;
+  border-color: var(--brand-primary) !important;
 }
 
 .otpInputError {
   width: 45px !important;
   height: 55px !important;
-  border: 1px solid #e74c3c !important;
+  border: 1px solid var(--brand-terracotta) !important;
   border-radius: 4px !important;
   font-size: 20px !important;
   font-weight: 500 !important;
   text-align: center !important;
-  color: #333 !important;
+  color: var(--text-primary) !important;
 }
 
 .errorText {
   font-size: 13px;
-  color: #e74c3c;
+  color: var(--brand-terracotta);
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.6;
 }
 
 .continueButton {
-  background-color: #d4d4d4;
-  color: #999;
+  background-color: var(--border-primary);
+  color: var(--text-secondary);
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -127,7 +127,7 @@
 }
 
 .continueButton:hover {
-  background-color: #c0c0c0;
+  background-color: var(--brand-bone-hover);
 }
 
 .goBackButton {
@@ -136,7 +136,7 @@
   gap: 8px;
   background: none;
   border: none;
-  color: #333;
+  color: var(--brand-primary);
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
@@ -145,7 +145,7 @@
 }
 
 .goBackButton:hover {
-  color: #000;
+  color: var(--brand-deep-umber);
 }
 
 .goBackButton span {
@@ -153,6 +153,6 @@
 }
 
 .validButton {
-  background-color: black !important;
-  color: white;
+  background-color: var(--brand-primary) !important;
+  color: var(--brand-warm-white);
 }

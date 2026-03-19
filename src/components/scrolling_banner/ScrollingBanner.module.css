@@ -1,5 +1,5 @@
 .wrapper {
-  background-color: black;
+  background-color: var(--brand-deep-umber);
   height: 45px;
   padding-top: 10px;
 }
@@ -8,8 +8,8 @@
   width: max-content;
   overflow: hidden;
   overflow-x: scroll;
-  background-color: black;
-  color: white;
+  background-color: var(--brand-deep-umber);
+  color: var(--brand-warm-white);
   margin-top: auto;
   margin-bottom: auto;
 }

@@ -2,6 +2,8 @@
   margin-top: var(--pageTopMargin);
   padding-left: 1rem;
   padding-right: 1rem;
+  background-color: #f5efe6;
+  min-height: 100vh;
 }
 
 @media (min-width: 768px) {
@@ -9,4 +11,129 @@
     padding-left: 3rem;
     padding-right: 3rem;
   }
+}
+
+.checkoutWrapper {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.pageHeader {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 2.5rem;
+  color: #6a2901;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.mandanaDivider {
+  height: 12px;
+  background-image: radial-gradient(circle, #6a2901 1px, transparent 1px);
+  background-size: 12px 12px;
+  opacity: 0.3;
+  margin: 2rem 0;
+}
+
+/* Right side summary overrides */
+.summaryWrapper {
+  background-color: transparent;
+}
+
+.summaryWrapper h2 {
+  font-family: var(--font-cormorant-garamond), serif !important;
+  color: #6a2901 !important;
+  border-bottom: 1px solid rgba(106, 41, 1, 0.2) !important;
+  padding-bottom: 0.25rem !important;
+  margin-bottom: 1rem !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.summaryLabel {
+  color: #64748b; /* slate-500 */
+  font-family: var(--font-dm-sans), sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.summaryValue {
+  font-family: var(--font-dm-sans), sans-serif;
+  color: #6a2901;
+  font-weight: 500;
+}
+
+.summaryTotalLabel {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 1.5rem;
+  color: #6a2901;
+}
+
+.summaryTotalValue {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 1.5rem;
+  color: #6a2901;
+  font-weight: 700;
+}
+
+/* Discount Input Override */
+.summaryWrapper :global(.mantine-TextInput-root) label {
+  display: none;
+}
+
+.summaryWrapper :global(.mantine-TextInput-input) {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(106, 41, 1, 0.3) !important;
+  border-radius: 0 !important;
+  padding: 0.5rem 0 !important;
+  font-family: var(--font-dm-sans), sans-serif !important;
+  color: #221610 !important;
+  font-size: 1rem !important;
+}
+
+.summaryWrapper :global(.mantine-TextInput-input):focus {
+  border-bottom: 2px solid #6a2901 !important;
+  outline: none !important;
+}
+
+.summaryWrapper :global(.mantine-TextInput-input)::placeholder {
+  color: rgba(106, 41, 1, 0.5) !important;
+  font-family: var(--font-cormorant-garamond), serif !important;
+}
+
+.summaryWrapper :global(.mantine-Button-root) {
+  background-color: transparent !important;
+  border: 1px solid #6a2901 !important;
+  color: #6a2901 !important;
+  font-family: var(--font-cormorant-garamond), serif !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.2s;
+}
+
+.summaryWrapper :global(.mantine-Button-root):hover {
+  background-color: #6a2901 !important;
+  color: #fff !important;
+}
+
+/* Pay Now Button (Main Block) */
+.payNowButton {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  background-color: #6a2901 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-family: var(--font-cormorant-garamond), serif !important;
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em;
+  border-radius: 0 !important;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.payNowButton:hover {
+  opacity: 0.9;
 }

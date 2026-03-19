@@ -6,8 +6,8 @@
   width: 100%;
   height: 30px;
   overflow: hidden;
-  background-color: #294a70;
-  color: white;
+  background-color: var(--brand-primary);
+  color: var(--brand-warm-white);
 }
 
 .textContainer {

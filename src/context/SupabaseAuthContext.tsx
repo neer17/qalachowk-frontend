@@ -83,6 +83,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const newUser = session?.user ?? null;
+
+        console.info("onAuthStateChanged", { user: newUser });
         setUser(newUser);
 
         if (newUser) {
@@ -112,43 +114,56 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
     if (!clientId) return;
 
-    // Load Google One Tap
-    const script = document.createElement("script");
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = () => {
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        callback: async (response: any) => {
-          const { credential } = response;
-          // Send token to backend or directly to Supabase for verification
-          const { data, error } = await supabase.auth.signInWithIdToken({
-            provider: "google",
-            token: credential,
-          });
+    // Generate a nonce for Google One Tap + Supabase
+    const rawNonce = crypto.randomUUID();
+    const encodedNonce = new TextEncoder().encode(rawNonce);
+    crypto.subtle.digest("SHA-256", encodedNonce).then((hashBuffer) => {
+      const hashedNonce = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
 
-          if (error) {
-            console.error("Google sign-in error:", error);
-          } else if (data.user) {
-            setUser(data.user);
-            // Save to IDB after successful Google sign-in
-            await saveUserState(data.user);
-          }
-        },
-      });
-      // Show the prompt
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
-      window.google.accounts.id.prompt();
-    };
-    document.body.appendChild(script);
+      // Load Google One Tap
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          nonce: hashedNonce,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          callback: async (response: any) => {
+            const { credential } = response;
+            const { data, error } = await supabase.auth.signInWithIdToken({
+              provider: "google",
+              token: credential,
+              nonce: rawNonce,
+            });
+
+            if (error) {
+              console.error("Google sign-in error:", error);
+            } else if (data.user) {
+              setUser(data.user);
+              // Save to IDB after successful Google sign-in
+              await saveUserState(data.user);
+            }
+          },
+        });
+        // Show the prompt
+        // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+        window.google.accounts.id.prompt();
+      };
+      document.body.appendChild(script);
+    });
 
     // Cleanup script on unmount
     return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      const gsiScript = document.querySelector(
+        'script[src="https://accounts.google.com/gsi/client"]',
+      );
+      if (gsiScript?.parentNode) {
+        gsiScript.parentNode.removeChild(gsiScript);
       }
     };
   }, [isUserLoaded, user]);
