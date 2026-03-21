@@ -3,46 +3,30 @@
 import React from "react";
 import styles from "./page.module.css";
 import { useCart, useWishlist } from "@/context/CartContext";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import LeftArrow from "@/app/svgs/left_arrow.svg";
+import Image from "next/image";
 
 export default function Wishlist() {
-  const { wishlistData, removeWishlistItem } = useWishlist();
+  const { wishlistData, removeWishlistItem, isLoading } = useWishlist();
   const { setCartData } = useCart();
   const router = useRouter();
 
-  const handleAddToCart = async (id: string) => {
+  const handleMoveToCart = async (id: string) => {
     const item = wishlistData.get(id);
-
-    if (item === undefined) {
-      console.error(`${id} does not exist in the wishlist`);
-      return;
-    }
-
+    if (!item) return;
     await removeWishlistItem(id);
     await setCartData(item);
   };
 
   const handleRemoveItem = async (id: string) => {
-    const item = wishlistData.get(id);
-
-    if (item === undefined) {
-      console.error(`${id} does not exist in the wishlist`);
-      return;
-    }
-
     await removeWishlistItem(id);
-  };
-
-  const handleGoBack = () => {
-    router.back();
   };
 
   return (
     <main className={styles.mainContainer}>
       <div className={styles.contentWrapper}>
-        <div className={styles.goBackContainer} onClick={handleGoBack}>
+        <div className={styles.goBackContainer} onClick={() => router.back()}>
           <Image
             height={20}
             width={20}
@@ -62,11 +46,18 @@ export default function Wishlist() {
           <div className={styles.divider}></div>
         </div>
 
-        {/* Wishlist Grid */}
-        <div className={styles.wishlistGrid}>
-          {Array.from(wishlistData.values()).map(
-            ({ id, name, price, images, description }) => {
-              return (
+        {isLoading ? (
+          <div className={styles.loadingState}>
+            <p>Loading your wishlist…</p>
+          </div>
+        ) : wishlistData.size === 0 ? (
+          <div className={styles.emptyState}>
+            <p>Your wishlist is currently empty.</p>
+          </div>
+        ) : (
+          <div className={styles.wishlistGrid}>
+            {Array.from(wishlistData.values()).map(
+              ({ id, name, price, images }) => (
                 <div key={id} className={styles.productCard}>
                   <div className={styles.imageContainer}>
                     <button
@@ -76,9 +67,9 @@ export default function Wishlist() {
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        height="24px"
+                        height="20px"
                         viewBox="0 -960 960 960"
-                        width="24px"
+                        width="20px"
                         fill="currentColor"
                       >
                         <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -93,29 +84,20 @@ export default function Wishlist() {
                   </div>
 
                   <div className={styles.productInfo}>
-                    <div className={styles.titleRow}>
-                      <h3 className={styles.productTitle}>{name}</h3>
-                      <span className={styles.productPrice}>₹ {price}</span>
-                    </div>
-                    <p className={styles.productDescription}>
-                      {description || "Handcrafted Qala Chowk heirloom."}
-                    </p>
+                    <h3 className={styles.productTitle}>{name}</h3>
+                    <span className={styles.productPrice}>
+                      ₹ {price.toLocaleString("en-IN")}
+                    </span>
                     <button
-                      className={styles.addToCartButton}
-                      onClick={() => handleAddToCart(id)}
+                      className={styles.moveToCartButton}
+                      onClick={() => handleMoveToCart(id)}
                     >
                       Move to Cart
                     </button>
                   </div>
                 </div>
-              );
-            },
-          )}
-        </div>
-
-        {wishlistData.size === 0 && (
-          <div className={styles.emptyState}>
-            <p>Your wishlist is currently empty.</p>
+              ),
+            )}
           </div>
         )}
 

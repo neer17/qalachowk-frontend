@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import Footer from "@/components/footer/Footer";
+import HeroImage from "@/images/hero_image.png";
 
 export default function Home() {
   return (
@@ -9,8 +9,8 @@ export default function Home() {
       <main>
         {/* Hero Section */}
         <section className={styles.heroSection}>
-          <div className={`${styles.container} ${styles.heroContent}`}>
-            <div className={styles.heroText}>
+          <div className={styles.heroContentFull}>
+            {/* <div className={styles.heroText}>
               <h1 className={`${styles.fontSerif} ${styles.heroTitle}`}>
                 The Art of the Every Square
               </h1>
@@ -21,14 +21,14 @@ export default function Home() {
               <Link href="#" className={styles.heroButton}>
                 Explore Collections
               </Link>
-            </div>
+            </div> */}
             <div className={styles.heroImageContainer}>
               <div className={styles.heroImageWrapper}>
                 <Image
                   className={styles.heroImage}
                   width={800}
                   height={600}
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMs2uFTnEWoOfyix5b7PPqcFQFAxuLom6CCILhG50-Gsvor_8490ylY8sP8O-HMhzlDaNrdtfPuXyfK8Yt0KiI2_lX_5a4ln3DW-wGge9ulRvHXFIzqS1bieBWuxXM1u2TKCnvaVJDZIS3G4NuxhsBQECBfJHKDRoPc9T6zvHanEp4JvhxFxJStFHNf8oy975cSMBWvrV4-npuQQvaR21kjgYIgnNA34lxZfPCkWR2mDYC60hHCMtSF1fqkPZbWjHmmZNrmws_gSQP"
+                  src={HeroImage}
                   alt="Featured Jewelry"
                   sizes="(min-width: 768px) 50vw, 100vw"
                   priority
@@ -124,9 +124,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* Existing Footer (we can update this later if needed) */}
-      <Footer />
     </div>
   );
 }

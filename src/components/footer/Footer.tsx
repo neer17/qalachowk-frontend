@@ -23,16 +23,16 @@ export default function Footer() {
             <h4 className={styles.heading}>Explore</h4>
             <ul className={styles.list}>
               <li>
-                <Link href="#">Earrings</Link>
+                <Link href="/categories/earrings">Earrings</Link>
               </li>
               <li>
-                <Link href="#">Necklaces</Link>
+                <Link href="/categories/necklaces">Necklaces</Link>
               </li>
               <li>
-                <Link href="#">Bracelets</Link>
+                <Link href="/categories/rings">Rings</Link>
               </li>
               <li>
-                <Link href="#">Collections</Link>
+                <Link href="/categories/collections">Collections</Link>
               </li>
             </ul>
           </div>

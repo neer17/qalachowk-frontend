@@ -63,6 +63,8 @@ export const metadata: Metadata = {
   },
 };
 
+import Footer from "@/components/footer/Footer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -94,7 +96,7 @@ export default function RootLayout({
               </div>
               <main
                 style={{
-                  paddingTop: "120px",
+                  paddingTop: "80px",
                   display: "flex",
                   flexDirection: "column",
                   minHeight: "100vh",
@@ -102,6 +104,7 @@ export default function RootLayout({
               >
                 {children}
               </main>
+              <Footer />
             </CartProvider>
           </AuthProvider>
         </MantineProvider>

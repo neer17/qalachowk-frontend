@@ -189,58 +189,47 @@
 .productInfo {
   display: flex;
   flex-direction: column;
-  flex: 1;
-}
-
-.titleRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  text-align: center;
 }
 
 .productTitle {
   font-family: var(--font-cormorant-garamond), serif;
-  font-size: 1.25rem;
-  color: #1d1b16;
-  padding-right: 1rem;
-  margin: 0;
-  font-weight: 500;
+  font-size: 1.5rem;
+  color: #471900;
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .productPrice {
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 0.875rem;
-  color: #54433b;
+  color: #b8860b;
   letter-spacing: 0.1em;
-  margin-top: 0.25rem;
-  white-space: nowrap;
-}
-
-.productDescription {
-  font-family: var(--font-dm-sans), sans-serif;
-  font-size: 0.75rem;
-  color: rgba(84, 67, 59, 0.7);
   margin-bottom: 1.5rem;
-  flex: 1;
 }
 
-.addToCartButton {
+.moveToCartButton {
   width: 100%;
-  padding: 1.25rem 0;
-  background-color: #6a2901;
-  color: #ffffff;
+  padding: 1rem 0;
+  background-color: transparent;
+  color: #471900;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  border: none;
+  border: 1px solid #471900;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-.addToCartButton:hover {
-  background-color: #583413;
+.moveToCartButton:hover {
+  background-color: #471900;
+  color: #ffffff;
 }
 
 .emptyState {
@@ -249,6 +238,15 @@
   color: #54433b;
   padding: 4rem 0;
   font-size: 1.25rem;
+}
+
+.loadingState {
+  text-align: center;
+  font-family: var(--font-dm-sans), sans-serif;
+  color: #54433b;
+  padding: 4rem 0;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
 }
 
 .mandanaDivider {

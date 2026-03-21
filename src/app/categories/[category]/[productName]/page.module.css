@@ -35,6 +35,66 @@
   object-fit: cover;
 }
 
+.desktopImageGrid {
+  display: none;
+}
+@media (min-width: 768px) {
+  .desktopImageGrid {
+    display: block;
+  }
+}
+
+.mobileImageCarousel {
+  display: block;
+}
+@media (min-width: 768px) {
+  .mobileImageCarousel {
+    display: none;
+  }
+}
+
+.embla {
+  overflow: hidden;
+}
+
+.emblaContainer {
+  display: flex;
+}
+
+.emblaSlide {
+  flex: 0 0 100%;
+  min-width: 0;
+  position: relative;
+  aspect-ratio: 4 / 5;
+}
+
+.emblaDots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 0.5rem;
+  position: absolute;
+  bottom: 1rem;
+  width: 100%;
+}
+
+.emblaDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.emblaDotSelected {
+  background-color: #6a2901;
+  transform: scale(1.2);
+}
+
 .productInfoPanel {
   display: flex;
   flex-direction: column;

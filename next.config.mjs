@@ -8,6 +8,7 @@ const nextConfig = {
       "images.cltstatic.com",
       "fufjeihntairffrizntr.supabase.co",
       "lh3.googleusercontent.com",
+      "gemini.google.com",
     ],
   },
 };

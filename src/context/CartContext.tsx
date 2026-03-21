@@ -10,6 +10,10 @@ import React, {
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 
 import { Product } from "@/utils/types";
+import {
+  WishlistService,
+  type WishlistApiItem,
+} from "@/lib/api/wishlistService";
 
 // Props for the CartProvider
 interface CartProviderProps {
@@ -31,6 +35,7 @@ interface WishlistContextType {
   wishlistData: Map<string, Product>;
   addWishlistItem: (wishlistObject: Product) => Promise<void>;
   removeWishlistItem: (itemId: string) => Promise<void>;
+  isLoading: boolean;
 }
 
 // Define the database schema
@@ -51,6 +56,27 @@ const WishlistContext = createContext<WishlistContextType | undefined>(
   undefined,
 );
 
+// Map API wishlist item to the local Product shape used in IndexedDB / state
+function apiItemToProduct(item: WishlistApiItem): Product {
+  return {
+    id: item.productId,
+    name: item.productName,
+    price: item.productPrice,
+    images: item.productImages.map((img, index) => ({
+      id: `${item.productId}-img-${index}`,
+      url: img.url,
+      alt: img.alt ?? item.productName,
+      isMain: img.isMain,
+      sortOrder: index,
+    })),
+    description: "",
+    material: "",
+    quantity: 1,
+    category: { id: "", name: "", slug: "", description: "" },
+    slug: "",
+  };
+}
+
 // Initialize IndexedDB only if in the browser
 let dbPromise: Promise<IDBPDatabase<CartDB>> | undefined;
 if (typeof window !== "undefined") {
@@ -69,6 +95,9 @@ export default function CartProvider({ children }: CartProviderProps) {
   const [wishlistData, setWishlistDataState] = useState<Map<string, Product>>(
     new Map(),
   );
+  const [isWishlistLoading, setIsWishlistLoading] = useState(true);
+  // Tracks whether the current session has a valid backend auth cookie
+  const [isApiMode, setIsApiMode] = useState(false);
 
   useEffect(() => {
     // console.info({
@@ -94,19 +123,51 @@ export default function CartProvider({ children }: CartProviderProps) {
     };
 
     const loadWishlistData = async () => {
-      if (!dbPromise) return;
-
+      setIsWishlistLoading(true);
       try {
-        const db = await dbPromise;
-        const allWishlistItems = await db.getAll("wishlistStore");
-        const initialWishlistData = new Map<string, Product>();
-        allWishlistItems.forEach((item) =>
-          initialWishlistData.set(item.id, item),
+        // Try API first – succeeds when backend session cookie is present
+        const { data: apiItems } = await WishlistService.getWishlist();
+        const apiMap = new Map<string, Product>();
+        apiItems.forEach((item) =>
+          apiMap.set(item.productId, apiItemToProduct(item)),
         );
-        setWishlistDataState(initialWishlistData);
-        console.info("Wishlist data loaded from IndexedDB");
-      } catch (error) {
-        console.error("Failed to load wishlist data:", error);
+        setWishlistDataState(apiMap);
+        setIsApiMode(true);
+
+        // Sync API state into IndexedDB as the local cache
+        if (dbPromise) {
+          const db = await dbPromise;
+          await db.clear("wishlistStore");
+          await Promise.all(
+            Array.from(apiMap.values()).map((p) => db.put("wishlistStore", p)),
+          );
+        }
+        console.info("Wishlist data loaded from API and synced to IndexedDB");
+      } catch (apiError) {
+        const isAuthError =
+          apiError instanceof Error &&
+          (apiError.message === "AUTH_REQUIRED" ||
+            apiError.message.includes("401"));
+        if (isAuthError) {
+          // User not authenticated with backend – use IndexedDB (guest mode)
+          console.info("No backend session; loading wishlist from IndexedDB");
+        } else {
+          console.warn("API unavailable; falling back to IndexedDB:", apiError);
+        }
+        if (dbPromise) {
+          try {
+            const db = await dbPromise;
+            const allWishlistItems = await db.getAll("wishlistStore");
+            const idbMap = new Map<string, Product>();
+            allWishlistItems.forEach((item) => idbMap.set(item.id, item));
+            setWishlistDataState(idbMap);
+            console.info("Wishlist data loaded from IndexedDB");
+          } catch (idbError) {
+            console.error("Failed to load wishlist from IndexedDB:", idbError);
+          }
+        }
+      } finally {
+        setIsWishlistLoading(false);
       }
     };
 
@@ -121,7 +182,10 @@ export default function CartProvider({ children }: CartProviderProps) {
       const newCartData = new Map(cartData);
       if (newCartData.has(cartItem.id)) {
         const existingItem = newCartData.get(cartItem.id)!;
-        existingItem.quantity++;
+        newCartData.set(cartItem.id, {
+          ...existingItem,
+          quantity: existingItem.quantity + (cartItem.quantity || 1),
+        });
       } else {
         newCartData.set(cartItem.id, cartItem);
       }
@@ -142,9 +206,10 @@ export default function CartProvider({ children }: CartProviderProps) {
       if (newCartData.has(itemId)) {
         const item = newCartData.get(itemId)!;
         if (item.quantity > 1) {
-          item.quantity--;
+          const updatedItem = { ...item, quantity: item.quantity - 1 };
+          newCartData.set(itemId, updatedItem);
           const db = await dbPromise;
-          await db.put("cartStore", item);
+          await db.put("cartStore", updatedItem);
         } else {
           newCartData.delete(itemId);
           const db = await dbPromise;
@@ -184,36 +249,61 @@ export default function CartProvider({ children }: CartProviderProps) {
   };
 
   const addWishlistItem = async (wishlistItem: Product) => {
-    if (!dbPromise) return;
+    // Optimistic update: reflect change immediately in UI and IndexedDB
+    const newWishlistData = new Map(wishlistData);
+    newWishlistData.set(wishlistItem.id, wishlistItem);
+    setWishlistDataState(newWishlistData);
 
-    console.info({
-      wishlistItem,
-    });
-    try {
-      const newWishlistData = new Map(wishlistData);
-      newWishlistData.set(wishlistItem.id, wishlistItem);
+    if (dbPromise) {
+      try {
+        const db = await dbPromise;
+        await db.put("wishlistStore", wishlistItem);
+      } catch (error) {
+        console.error("Failed to write wishlist item to IndexedDB:", error);
+      }
+    }
 
-      const db = await dbPromise;
-      await db.put("wishlistStore", wishlistItem);
-      setWishlistDataState(newWishlistData);
-    } catch (error) {
-      console.error("Failed to add wishlist item:", error);
+    if (isApiMode) {
+      try {
+        await WishlistService.addToWishlist(wishlistItem.id);
+      } catch (error) {
+        if (error instanceof Error && error.message === "AUTH_REQUIRED") {
+          setIsApiMode(false);
+        } else if (
+          error instanceof Error &&
+          !error.message.includes("409") // 409 = already in wishlist, that's fine
+        ) {
+          console.warn("API wishlist add failed (non-auth):", error.message);
+        }
+      }
     }
   };
 
   const removeWishlistItem = async (itemId: string) => {
-    if (!dbPromise) return;
+    // Optimistic update
+    const newWishlistData = new Map(wishlistData);
+    newWishlistData.delete(itemId);
+    setWishlistDataState(newWishlistData);
 
-    try {
-      const newWishlistData = new Map(wishlistData);
-      if (newWishlistData.has(itemId)) {
-        newWishlistData.delete(itemId);
+    if (dbPromise) {
+      try {
         const db = await dbPromise;
         await db.delete("wishlistStore", itemId);
+      } catch (error) {
+        console.error("Failed to remove wishlist item from IndexedDB:", error);
       }
-      setWishlistDataState(newWishlistData);
-    } catch (error) {
-      console.error("Failed to remove wishlist item:", error);
+    }
+
+    if (isApiMode) {
+      try {
+        await WishlistService.removeFromWishlist(itemId);
+      } catch (error) {
+        if (error instanceof Error && error.message === "AUTH_REQUIRED") {
+          setIsApiMode(false);
+        } else {
+          console.warn("API wishlist remove failed:", error);
+        }
+      }
     }
   };
 
@@ -249,7 +339,12 @@ export default function CartProvider({ children }: CartProviderProps) {
       }}
     >
       <WishlistContext.Provider
-        value={{ wishlistData, addWishlistItem, removeWishlistItem }}
+        value={{
+          wishlistData,
+          addWishlistItem,
+          removeWishlistItem,
+          isLoading: isWishlistLoading,
+        }}
       >
         {children}
       </WishlistContext.Provider>

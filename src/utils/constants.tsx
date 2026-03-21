@@ -50,6 +50,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/orders/create",
     METHOD: "POST",
   },
+  ORDER_GET: {
+    URL: "/v1/orders",
+    METHOD: "GET",
+  },
   VALIDATE_DISCOUNT_CODE: {
     URL: "/v1/orders/validate-discount-code",
     METHOD: "POST",
@@ -86,6 +90,18 @@ export const API_ENDPOINTS = {
   USER_SIGNIN: {
     URL: "/v1/users/sign-in",
     METHOD: "POST",
+  },
+  WISHLIST_GET: {
+    URL: "/v1/wishlist",
+    METHOD: "GET",
+  },
+  WISHLIST_ADD: {
+    URL: "/v1/wishlist",
+    METHOD: "POST",
+  },
+  WISHLIST_REMOVE: {
+    URL: "/v1/wishlist",
+    METHOD: "DELETE",
   },
 };
 

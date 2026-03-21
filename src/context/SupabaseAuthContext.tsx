@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { createClient, SupabaseClient, User } from "@supabase/supabase-js";
 import {
   loadUserState,
@@ -15,12 +16,24 @@ const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 type AuthContextType = {
   user: User | null;
   supabase: SupabaseClient;
+  login: (backendUser: BackendAuthResponse) => Promise<void>;
   logout: () => Promise<void>;
+};
+
+export type BackendAuthResponse = {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  accessToken: string;
+  refreshToken: string;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   supabase,
+  login: async () => {},
   logout: async () => {},
 });
 
@@ -51,6 +64,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  // Login function for backend phone OTP sign-in
+  const login = async (backendUser: BackendAuthResponse): Promise<void> => {
+    const syntheticUser: User = {
+      id: backendUser.userId,
+      email: backendUser.email,
+      phone: backendUser.phone,
+      app_metadata: { provider: "phone" },
+      user_metadata: {
+        firstName: backendUser.firstName,
+        lastName: backendUser.lastName,
+      },
+      aud: "authenticated",
+      created_at: new Date().toISOString(),
+    };
+
+    setUser(syntheticUser);
+    await saveUserState(syntheticUser);
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -79,21 +111,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     initializeAuth();
 
-    // Listen for auth state changes
+    // Listen for auth state changes (only for Supabase-managed sessions like Google sign-in)
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         const newUser = session?.user ?? null;
 
-        console.info("onAuthStateChanged", { user: newUser });
-        setUser(newUser);
+        console.info("onAuthStateChanged", { event, user: newUser });
 
         if (newUser) {
-          // Save user to IDB when authenticated
+          // Supabase session exists — update state and persist
+          setUser(newUser);
           await saveUserState(newUser);
-        } else {
-          // Clear IDB when user logs out
+        } else if (event === "SIGNED_OUT") {
+          // Only clear on explicit sign-out, not on missing session
+          // (phone OTP users have no Supabase session, so session is always null for them)
+          setUser(null);
           await clearUserState();
         }
+        // For other events with null session (INITIAL_SESSION, TOKEN_REFRESHED, etc.),
+        // do nothing — preserve any phone-authenticated user already in state/IDB.
       },
     );
 
@@ -114,8 +150,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
     if (!clientId) return;
 
+    // Gracefully disable Google One Tap natively if the local dev server is running
+    // over a non-secure HTTP context where the Web Crypto API is forcefully undefined.
+    if (typeof window !== "undefined" && !window.crypto?.subtle) {
+      console.warn(
+        "Web Crypto API (crypto.subtle) is unavailable. Disabling Google One Tap. (Are you running on HTTP?)",
+      );
+      return;
+    }
+
     // Generate a nonce for Google One Tap + Supabase
-    const rawNonce = crypto.randomUUID();
+    const rawNonce = uuidv4();
     const encodedNonce = new TextEncoder().encode(rawNonce);
     crypto.subtle.digest("SHA-256", encodedNonce).then((hashBuffer) => {
       const hashedNonce = Array.from(new Uint8Array(hashBuffer))
@@ -169,7 +214,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [isUserLoaded, user]);
 
   return (
-    <AuthContext.Provider value={{ user, supabase, logout }}>
+    <AuthContext.Provider value={{ user, supabase, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -8,6 +8,17 @@ export type UserSignInRequest = components["schemas"]["SignInRequest"];
 export type UserSignInResponse = components["schemas"]["UserAuthResponse"];
 
 export const UserService = {
+  getDbUserId: async (
+    provider: string | undefined,
+    supabaseId: string,
+    phone?: string,
+  ): Promise<string> => {
+    const payload: UserSignInRequest =
+      provider === "google" ? { googleAuthId: supabaseId } : { phone: phone! };
+    const response = await UserService.signIn(payload);
+    return response.userId;
+  },
+
   createUser: async (
     userData: CreateUserRequest,
   ): Promise<CreateUserResponse> => {

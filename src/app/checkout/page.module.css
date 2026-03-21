@@ -1,5 +1,4 @@
 .container {
-  margin-top: var(--pageTopMargin);
   padding-left: 1rem;
   padding-right: 1rem;
   background-color: #f5efe6;
@@ -136,4 +135,30 @@
 
 .payNowButton:hover {
   opacity: 0.9;
+}
+
+/* Desktop inline button — hidden on mobile */
+.payNowDesktop {
+  display: none;
+}
+
+@media (min-width: 1026px) {
+  .payNowDesktop {
+    display: block;
+  }
+}
+
+/* Mobile fixed button — hidden on desktop */
+.payNowMobileWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+@media (min-width: 1026px) {
+  .payNowMobileWrapper {
+    display: none;
+  }
 }

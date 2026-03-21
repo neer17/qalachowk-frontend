@@ -1,11 +1,12 @@
 "use client";
-
-import React from "react";
+import { Suspense } from "react";
 import styles from "./page.module.css";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function OrderConfirmed() {
+function OrderConfirmedContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
 
   return (
     <main className={styles.mainContainer}>
@@ -31,7 +32,9 @@ export default function OrderConfirmed() {
         <h2 className={styles.heading}>Thank you for your order!</h2>
 
         {/* Order Info */}
-        <p className={styles.orderNumber}>Order #QC-98234</p>
+        <p className={styles.orderNumber}>
+          {orderId ? `Order #${orderId}` : "Order Confirmed"}
+        </p>
         <p className={styles.deliveryDate}>Arriving by March 24th</p>
 
         {/* Mandana Divider */}
@@ -78,7 +81,7 @@ export default function OrderConfirmed() {
 
         <button
           className={styles.secondaryActionText}
-          onClick={() => router.push("/order-details")}
+          onClick={() => router.push(`/order-details?orderId=${orderId}`)}
         >
           View Order Details
         </button>
@@ -95,5 +98,13 @@ export default function OrderConfirmed() {
         />
       </div>
     </main>
+  );
+}
+
+export default function OrderConfirmed() {
+  return (
+    <Suspense>
+      <OrderConfirmedContent />
+    </Suspense>
   );
 }

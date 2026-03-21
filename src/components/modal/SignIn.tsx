@@ -71,12 +71,17 @@ export default function SignInModal({
       centered
       size="md"
       padding="xl"
-      radius="md"
+      radius={0}
       classNames={{
         body: styles.modalBody,
         header: styles.modalHeader,
+        content: styles.modalContent,
       }}
       withCloseButton
+      overlayProps={{
+        backgroundOpacity: 0.55,
+        blur: 3,
+      }}
     >
       <Box className={styles.container}>
         <Text className={styles.logo}>QALA CHOWK</Text>
@@ -85,12 +90,13 @@ export default function SignInModal({
 
         <Text className={styles.subheading}>Sign in with</Text>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
           <TextInput
             placeholder="Email ID / Mobile number"
             size="md"
             value={input}
             onChange={handleInputChange}
+            radius={0}
             classNames={{
               input: styles.input,
             }}
@@ -99,12 +105,10 @@ export default function SignInModal({
           <Button
             fullWidth
             size="lg"
+            radius={0}
             className={`${styles.continueButton} ${isValid ? styles.validButton : ""}`}
             variant="filled"
             disabled={!isValid}
-            style={{
-              backgroundColor: isValid ? "black" : undefined,
-            }}
             onClick={() => sendOTPCallback(input)}
           >
             CONTINUE
@@ -117,12 +121,14 @@ export default function SignInModal({
           my="xl"
           classNames={{
             label: styles.dividerLabel,
+            root: styles.divider,
           }}
         />
 
         <Button
           fullWidth
           size="lg"
+          radius={0}
           variant="outline"
           leftSection={
             <Image src={Google} width={20} height={20} alt="Google logo" />

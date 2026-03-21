@@ -12,10 +12,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-    "lint:fix": "next lint --fix",
-    "lint:strict": "next lint '*/**/*.{js,jsx,ts,tsx}'",
+    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx}'",
     "format": "prettier --write .",
-    "prettier:fix": "prettier --write src",
+    "prettier:fix": "prettier --write --log-level warn src",
     "prepare": "husky"
   },
   "dependencies": {
@@ -43,7 +42,6 @@
     "@typescript-eslint/eslint-plugin": "^8.21.0",
     "@typescript-eslint/parser": "^8.21.0",
     "eslint": "^8",
-    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-next": "^15.1.6",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.32.0",

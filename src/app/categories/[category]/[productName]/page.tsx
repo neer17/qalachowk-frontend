@@ -1,18 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styles from "./page.module.css";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import ScrollbarCarouselCards from "@/components/card/ScrollbarCarouselCards";
 import RegularCard from "@/components/card/Card";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
+import { SimpleGrid } from "@mantine/core";
+import useEmblaCarousel from "embla-carousel-react";
+import { EmblaCarouselType } from "embla-carousel";
 import { Product } from "@/utils/types";
 import { API_ENDPOINTS } from "@/utils/constants";
+import { useCart } from "@/context/CartContext";
 
 export default function ProductDetails() {
   const params = useParams();
   const slug = params.productName as string;
+  const { setCartData } = useCart();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [productCollectionId, setProductCollectionId] = useState<string | null>(
@@ -20,6 +25,38 @@ export default function ProductDetails() {
   );
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [showCartPopup, setShowCartPopup] = useState<boolean>(false);
+
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    dragFree: false,
+    containScroll: "trimSnaps",
+  });
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  const scrollTo = useCallback(
+    (index: number) => emblaApi && emblaApi.scrollTo(index),
+    [emblaApi],
+  );
+
+  const onInit = useCallback((emblaApi: EmblaCarouselType) => {
+    setScrollSnaps(emblaApi.scrollSnapList());
+  }, []);
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onInit(emblaApi);
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onInit);
+    emblaApi.on("select", onSelect);
+  }, [emblaApi, onInit, onSelect]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -59,7 +96,22 @@ export default function ProductDetails() {
     if (productCollectionId) fetchSimilarProducts();
   }, [productCollectionId]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
+    if (!product) return;
+
+    const productToAdd = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      images: product.images,
+      category: product.category,
+      slug: product.slug,
+      material: product.material || "",
+      description: product.description || "",
+    };
+
+    await setCartData(productToAdd);
     toggleCartPopup();
   };
 
@@ -84,25 +136,106 @@ export default function ProductDetails() {
         {/* Left: Product Image */}
         <div className={styles.productImageFocus}>
           {product.images && product.images.length > 0 ? (
-            product.images[0].url.includes(".mp4") ? (
-              <video
-                width={1920}
-                height={1080}
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                src={product.images[0].url}
-                autoPlay
-                muted
-                loop
-              />
-            ) : (
-              <Image
-                src={product.images[0].url}
-                alt={product.images[0].alt || product.name}
-                className={styles.productImageCover}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            )
+            <>
+              {/* Desktop Grid */}
+              <div className={styles.desktopImageGrid}>
+                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                  {product.images.map((img) => (
+                    <div
+                      key={img.id}
+                      style={{
+                        position: "relative",
+                        width: "100%",
+                        height: "100%",
+                        minHeight: "400px",
+                      }}
+                    >
+                      {img.url.includes(".mp4") ? (
+                        <video
+                          width={1920}
+                          height={1080}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                          }}
+                          src={img.url}
+                          autoPlay
+                          muted
+                          loop
+                        />
+                      ) : (
+                        <Image
+                          src={img.url}
+                          alt={img.alt || product.name}
+                          className={styles.productImageCover}
+                          fill
+                          style={{ objectFit: "cover" }}
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                        />
+                      )}
+                    </div>
+                  ))}
+                </SimpleGrid>
+              </div>
+
+              {/* Mobile Carousel */}
+              <div className={styles.mobileImageCarousel}>
+                <div className={styles.embla} ref={emblaRef}>
+                  <div className={styles.emblaContainer}>
+                    {product.images.map((img) => (
+                      <div className={styles.emblaSlide} key={img.id}>
+                        {img.url.includes(".mp4") ? (
+                          <video
+                            width={1920}
+                            height={1080}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                            }}
+                            src={img.url}
+                            autoPlay
+                            muted
+                            loop
+                          />
+                        ) : (
+                          <Image
+                            src={img.url}
+                            alt={img.alt || product.name}
+                            className={styles.productImageCover}
+                            fill
+                            style={{ objectFit: "cover" }}
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {product.images.length > 1 && (
+                  <div className={styles.emblaDots}>
+                    {scrollSnaps.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`${styles.emblaDot} ${
+                          index === selectedIndex ? styles.emblaDotSelected : ""
+                        }`}
+                        type="button"
+                        onClick={() => scrollTo(index)}
+                        aria-label={`Go to slide ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <div className={styles.placeholderImg}></div>
           )}
@@ -111,7 +244,6 @@ export default function ProductDetails() {
         {/* Right: Info Panel */}
         <div className={styles.productInfoPanel}>
           <header>
-            <nav className={styles.breadcrumb}>Home / Jewelry / Necklaces</nav>
             <h1 className={`${styles.fontSerif} ${styles.productTitle}`}>
               {product.name}
             </h1>
@@ -126,9 +258,6 @@ export default function ProductDetails() {
             <button className={styles.addToCartBtn} onClick={handleAddToCart}>
               <span>ADD TO CART</span>
               <span className={styles.dot}></span>
-            </button>
-            <button className={styles.enquireButton}>
-              ENQUIRE ABOUT CUSTOMIZATION
             </button>
           </div>
 
@@ -261,7 +390,7 @@ export default function ProductDetails() {
 
       <SlidePopup
         isOpen={showCartPopup}
-        backdropClickCallback={handleAddToCart}
+        backdropClickCallback={toggleCartPopup}
       />
     </div>
   );

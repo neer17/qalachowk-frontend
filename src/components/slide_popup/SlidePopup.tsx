@@ -54,6 +54,7 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
   };
 
   const navigateToCheckoutPage = () => {
+    backdropClickCallback();
     router.push("/checkout");
   };
 

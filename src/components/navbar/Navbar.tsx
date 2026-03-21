@@ -12,6 +12,7 @@ import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
 import { OtpService } from "@/lib/api/otpService";
 import { UserService } from "@/lib/api/userService";
+import { notifications } from "@mantine/notifications";
 
 interface MenuItem {
   name: string;
@@ -32,7 +33,7 @@ const NavigationBar: React.FC = () => {
   const router = useRouter();
 
   const { cartData } = useCart();
-  const { user } = useAuth();
+  const { user, login, logout } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
@@ -42,10 +43,8 @@ const NavigationBar: React.FC = () => {
     document.body.style.overflow = isMenuOpen ? "unset" : "hidden";
   };
 
-  const handleUserSignIn = (
-    e: React.MouseEvent<HTMLButtonElement | HTMLDivElement>,
-  ) => {
-    e.preventDefault();
+  const handleUserSignIn = (e?: React.MouseEvent<HTMLElement>) => {
+    e?.preventDefault();
     setShowSignInModal(true);
   };
 
@@ -55,12 +54,25 @@ const NavigationBar: React.FC = () => {
 
   const handleSendOtp = async (phoneNumber: string) => {
     try {
-      await OtpService.sendOtp({ phone: phoneNumber });
-    } catch (error) {
+      const response = await OtpService.sendOtp({ phone: phoneNumber });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Invalid phone number or rate limit reached.",
+        );
+      }
+      setShowOTPModal(true);
+    } catch (error: any) {
       console.error("Error in sending OTP: ", { error });
-      throw error;
+      notifications.show({
+        title: "Error Sending OTP",
+        message:
+          error?.message ||
+          "Failed to send authentication code. Please try again.",
+        color: "red",
+        radius: 0,
+      });
     }
-    setShowOTPModal(true);
   };
 
   const handleModalClose = () => {
@@ -83,9 +95,7 @@ const NavigationBar: React.FC = () => {
       throw error;
     }
 
-    console.info({
-      signInResponse,
-    });
+    await login(signInResponse);
 
     setShowSignInModal(false);
     setShowOTPModal(false);
@@ -126,52 +136,57 @@ const NavigationBar: React.FC = () => {
 
           {/* Right: Search & Actions */}
           <div className={styles.desktopRightActions}>
-            {user ? (
-              <div
-                className={styles.actionButtonContainer}
-                onMouseEnter={() => setShowAccountPanel(true)}
-                onMouseLeave={() => setShowAccountPanel(false)}
+            <div
+              className={styles.actionButtonContainer}
+              onMouseEnter={() => setShowAccountPanel(true)}
+              onMouseLeave={() => setShowAccountPanel(false)}
+            >
+              <button
+                className={styles.actionButton}
+                onClick={() => setShowAccountPanel((prev) => !prev)}
               >
-                <button className={styles.actionButton}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 -960 960 960"
-                    width="24px"
-                    fill="currentColor"
-                  >
-                    <path d="M480-480q-66 0-113-47t-113-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
-                  </svg>
-                </button>
-                {showAccountPanel && (
-                  <div className={styles.accountDropdown}>
-                    <ul>
-                      <li onClick={() => router.push("/order-details")}>
-                        Orders
-                      </li>
-                      <li>Tracking link</li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className={styles.actionButtonContainer}>
-                <button
-                  className={styles.actionButton}
-                  onClick={handleUserSignIn}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="currentColor"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 -960 960 960"
-                    width="24px"
-                    fill="currentColor"
-                  >
-                    <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
-                  </svg>
-                </button>
-              </div>
-            )}
+                  <path d="M480-480q-66 0-113-47t-113-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
+                </svg>
+              </button>
+              {showAccountPanel && (
+                <div className={styles.accountDropdown}>
+                  <ul>
+                    {user ? (
+                      <>
+                        <li onClick={() => router.push("/order-details")}>
+                          Orders
+                        </li>
+                        <li>Tracking link</li>
+                        <li
+                          onClick={() => {
+                            setShowAccountPanel(false);
+                            logout();
+                          }}
+                        >
+                          Logout
+                        </li>
+                      </>
+                    ) : (
+                      <li
+                        onClick={() => {
+                          setShowAccountPanel(false);
+                          handleUserSignIn();
+                        }}
+                      >
+                        Sign In
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
 
             <button
               className={styles.actionButton}
@@ -235,6 +250,45 @@ const NavigationBar: React.FC = () => {
               {item.name}
             </Link>
           ))}
+          {user ? (
+            <button
+              className={styles.menuItemMobile}
+              style={{
+                textAlign: "left",
+                background: "none",
+                border: "none",
+                width: "100%",
+                cursor: "pointer",
+                color: "#6A2901",
+                padding: "1.5rem",
+              }}
+              onClick={() => {
+                toggleMenu();
+                logout();
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <button
+              className={styles.menuItemMobile}
+              style={{
+                textAlign: "left",
+                background: "none",
+                border: "none",
+                width: "100%",
+                cursor: "pointer",
+                color: "#6A2901",
+                padding: "1.5rem",
+              }}
+              onClick={() => {
+                toggleMenu();
+                handleUserSignIn();
+              }}
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </div>
 

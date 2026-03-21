@@ -5,7 +5,7 @@ import styles from "./page.module.css";
 import CheckoutForm from "@/components/forms/CheckoutForm";
 import { DeliveryFormRef } from "@/components/forms/CheckoutForm";
 import Rupee from "@/components/symbols/Rupee";
-import { useMediaQuery } from "@mantine/hooks";
+import { useRouter } from "next/navigation";
 import { AuthProvider as SupabaseAuthProvider } from "@/context/SupabaseAuthContext";
 import {
   Grid,
@@ -18,6 +18,7 @@ import {
 } from "@mantine/core";
 import { useCart } from "@/context/CartContext";
 import CartProductCard from "@/components/card/CartProductCard";
+import { notifications } from "@mantine/notifications";
 import { ACTIVE_COUNTRIES, environments, USER_ROLES } from "@/utils/constants";
 import { saveCheckoutState, loadCheckoutState } from "@/utils/idb/checkout.idb";
 import { OtpService } from "@/lib/api/otpService";
@@ -31,7 +32,8 @@ import { OrderService } from "@/lib/api/orderService";
 import { DeliveryFormValues } from "@/types/ui/checkoutForm";
 
 export default function Checkout() {
-  const { cartData, deleteCartData, getTotalPrice } = useCart();
+  const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
+  const router = useRouter();
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>("");
 
   const [appliedDiscountResponse, setAppliedDiscountResponse] =
@@ -51,8 +53,6 @@ export default function Checkout() {
 
   // Loading state for IDB operations
   const [isStateLoaded, setIsStateLoaded] = useState(false);
-
-  const isSmallerThan1024 = useMediaQuery("(max-width: 1025px)");
 
   // Create ref for the CheckoutForm
   const formRef = useRef<DeliveryFormRef>(null);
@@ -285,13 +285,11 @@ export default function Checkout() {
   ) => {
     // For development purposes
     const environment = process.env.NEXT_PUBLIC_ENVIRONMENT;
-    const skipOtpVerification = Boolean(
-      process.env.NEXT_PUBLIC_SKIP_OTP_VERIFICATION,
-    );
+    const skipOtpVerification = process.env.NEXT_PUBLIC_SKIP_OTP_VERIFICATION;
 
     if (
       environment === environments.DEVELOPMENT &&
-      skipOtpVerification === true
+      skipOtpVerification === "true"
     ) {
       return setIsVerificationCodeVerified(true);
     }
@@ -414,6 +412,12 @@ export default function Checkout() {
       });
     } catch (error) {
       console.error("Error in user creation: ", { error });
+      notifications.show({
+        title: "Error",
+        message: "Failed to save your details. Please try again.",
+        color: "red",
+        position: "top-right",
+      });
       return;
     }
 
@@ -455,10 +459,23 @@ export default function Checkout() {
     };
 
     try {
-      await OrderService.createOrder(orderData);
+      const orderDetails = await OrderService.createOrder(orderData);
+      const orderId = orderDetails.orderId;
+
+      // Clear cart after successful order
+      await clearCart();
+
+      // redirect
+      router.push(`/order-confirmed?orderId=${orderId}`);
     } catch (error) {
       console.error("Error in order creation: ", { error });
-      throw error;
+      notifications.show({
+        title: "Error",
+        message: "Failed to place your order. Please try again.",
+        color: "red",
+        position: "top-right",
+      });
+      return;
     }
 
     // Clear saved checkout form and cart data on successful order creation
@@ -489,8 +506,6 @@ export default function Checkout() {
   return (
     <SupabaseAuthProvider>
       <div className={styles.container}>
-        <h1 className={styles.pageHeader}>Qala Chowk</h1>
-
         <Box className={styles.checkoutWrapper}>
           <Grid gutter={{ base: "xl", lg: 80 }} justify="center">
             {/* Left side: Forms */}
@@ -508,17 +523,15 @@ export default function Checkout() {
                 otpRequestTimeoutError={otpRequestTimeoutError}
               />
 
-              {!isSmallerThan1024 && (
-                <button
-                  type="button"
-                  className={styles.payNowButton}
-                  onClick={handleFormSubmit}
-                  style={{ marginTop: "3rem" }}
-                  aria-label="Pay Now Checkout"
-                >
-                  Pay Now
-                </button>
-              )}
+              <button
+                type="button"
+                className={`${styles.payNowButton} ${styles.payNowDesktop}`}
+                onClick={handleFormSubmit}
+                style={{ marginTop: "3rem" }}
+                aria-label="Pay Now Checkout"
+              >
+                Pay Now
+              </button>
             </Grid.Col>
 
             {/* Right side: Order Summary */}
@@ -549,7 +562,7 @@ export default function Checkout() {
                 >
                   <TextInput
                     flex={1}
-                    placeholder="Discount code (e.g. UTSAV10)"
+                    placeholder="Discount code"
                     onChange={handleDiscountCouponInputChange}
                     aria-label="Discount Code"
                   />
@@ -662,21 +675,11 @@ export default function Checkout() {
           </Grid>
         </Box>
 
-        {isSmallerThan1024 && (
-          <div
-            style={{
-              position: "fixed",
-              bottom: 0,
-              left: 0,
-              width: "100%",
-              zIndex: 1000,
-            }}
-          >
-            <button className={styles.payNowButton} onClick={handleFormSubmit}>
-              Pay Now
-            </button>
-          </div>
-        )}
+        <div className={styles.payNowMobileWrapper}>
+          <button className={styles.payNowButton} onClick={handleFormSubmit}>
+            Pay Now
+          </button>
+        </div>
       </div>
     </SupabaseAuthProvider>
   );

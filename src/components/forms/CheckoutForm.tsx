@@ -38,7 +38,7 @@ interface DeliveryFormProps {
     phoneNumber: string,
     verificationCode: string,
   ) => Promise<void>;
-  onPayNow: (data: DeliveryFormValues) => void;
+  onPayNow: (data: DeliveryFormValues) => Promise<void> | void;
   otpExpiryTime?: number | null;
   timeRemaining?: number;
   onOtpExpired?: () => void;
@@ -288,7 +288,7 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
     };
 
     // Final form submit handler
-    const handleFormSubmit = (values: DeliveryFormValues) => {
+    const handleFormSubmit = async (values: DeliveryFormValues) => {
       // If phone not verified, block submit
       if (!isVerificationCodeVerified) {
         notifications.show({
@@ -321,7 +321,7 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
       };
 
       setSubmitError(null);
-      onPayNow(finalData);
+      await onPayNow(finalData);
     };
 
     // Expose methods to parent via ref
