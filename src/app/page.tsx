@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import HeroImage from "@/images/hero_image.png";
 
 export default function Home() {
   return (
@@ -28,7 +27,7 @@ export default function Home() {
                   className={styles.heroImage}
                   width={800}
                   height={600}
-                  src={HeroImage}
+                  src="https://res.cloudinary.com/makerinc/c_fill,g_auto,f_auto,q_auto:best,fl_preserve_transparency,dpr_1,w_2730,h_1300/maker-live/uploads/3160743cc156315bbac0e5488ba25081/2c868688d5086e14a6703420c81b079c/FF.png"
                   alt="Featured Jewelry"
                   sizes="(min-width: 768px) 50vw, 100vw"
                   priority
