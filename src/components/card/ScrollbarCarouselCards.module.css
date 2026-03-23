@@ -1,10 +1,10 @@
+/* ════ SCROLLBAR CAROUSEL CARDS ════ */
 .carouselContainer {
   position: relative;
   width: 100%;
   padding-bottom: 2rem;
 }
 
-/* CHANGE: Replace Swiper container with Embla carousel styles */
 .emblaContainer {
   overflow: hidden;
   width: 100%;
@@ -16,28 +16,26 @@
 }
 
 .emblaSlide {
-  flex: 0 0 83.33%; /* CHANGE: Equivalent to slidesPerView: 1.2 */
+  flex: 0 0 83.33%;
   min-width: 0;
 }
 
 .productCard {
-  background: var(--brand-warm-white);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  background: var(--p);
+  border-radius: 8px;
+  border: 0.5px solid var(--bo);
   overflow: hidden;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: border-color var(--transition-fast);
   height: 100%;
 }
 
 .productCard:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+  border-color: var(--t);
 }
 
 .productImage {
   width: 100%;
+  background-color: var(--l);
 }
 
 .productImage img {
@@ -46,38 +44,38 @@
 }
 
 .productInfo {
-  padding: 15px;
+  padding: 12px 14px;
 }
 
 .productInfo h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  color: var(--brand-deep-umber);
-  margin-bottom: 8px;
+  margin: 0 0 4px;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--s);
 }
 
 .price {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--brand-primary);
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  color: var(--g);
 }
 
-/* CHANGE: Responsive breakpoints using CSS media queries instead of Swiper breakpoints */
 @media (min-width: 640px) {
   .emblaSlide {
-    flex: 0 0 calc(50% - 10px); /* 2 slides per view */
+    flex: 0 0 calc(50% - 10px);
   }
 }
 
 @media (min-width: 768px) {
   .emblaSlide {
-    flex: 0 0 calc(33.333% - 13.33px); /* 3 slides per view */
+    flex: 0 0 calc(33.333% - 13.33px);
   }
 }
 
 @media (min-width: 1024px) {
   .emblaSlide {
-    flex: 0 0 calc(25% - 15px); /* 4 slides per view */
+    flex: 0 0 calc(25% - 15px);
   }
 }

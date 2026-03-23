@@ -1,0 +1,190 @@
+.page {
+  background: var(--p);
+  color: var(--c);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+  padding-top: var(--pageTopMargin);
+}
+
+/* ── State (loading / sign-in prompt) ── */
+.stateContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 60vh;
+  text-align: center;
+  padding: 40px 24px;
+}
+
+.stateText {
+  font-size: 16px;
+  color: var(--br);
+}
+
+/* ── Page Header ── */
+.pageHeader {
+  padding: 48px 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--bo);
+}
+
+@media (min-width: 768px) {
+  .pageHeader {
+    padding: 48px 64px 32px;
+  }
+}
+
+.eyebrow {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--t);
+  margin-bottom: 8px;
+}
+
+.pageTitle {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  color: var(--s);
+  margin: 0;
+}
+
+/* ── Content Grid ── */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+@media (min-width: 768px) {
+  .contentGrid {
+    padding: 40px 64px 80px;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.profileSection,
+.linksSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Section Card ── */
+.sectionCard {
+  background: var(--l);
+  border: 1px solid var(--bo);
+  border-radius: 4px;
+  padding: 28px;
+}
+
+.sectionTitle {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--s);
+  margin: 0 0 20px;
+}
+
+.sectionDesc {
+  font-size: 14px;
+  color: var(--br);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+/* ── Profile Fields ── */
+.fieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--bo);
+  gap: 16px;
+}
+
+.fieldRow:last-child {
+  border-bottom: none;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--t);
+  flex-shrink: 0;
+}
+
+.fieldValue {
+  font-size: 15px;
+  color: var(--c);
+  text-align: right;
+}
+
+/* ── Buttons ── */
+.btnPrimary {
+  background: var(--s);
+  color: var(--p);
+  border: none;
+  padding: 12px 28px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background: var(--br);
+}
+
+.btnOutline {
+  display: inline-block;
+  border: 1px solid var(--s);
+  color: var(--s);
+  padding: 11px 24px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btnOutline:hover {
+  background: var(--s);
+  color: var(--p);
+}
+
+.btnLogout {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--bo);
+  color: var(--br);
+  padding: 12px 24px;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btnLogout:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}

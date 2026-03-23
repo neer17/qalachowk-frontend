@@ -519,14 +519,6 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
                 </Group>
               )}
             </Stack>
-
-            {/* Payment Section - preserve your CSS */}
-            <Stack className={styles.sectionMarginTop}>
-              <Box bg="grey" w="100%" h={300}>
-                Payment Section
-              </Box>
-            </Stack>
-
             {/* Billing Address - preserve your CSS */}
             <Stack gap="md" className={styles.sectionMarginTop}>
               <Title order={2}>Billing Address</Title>

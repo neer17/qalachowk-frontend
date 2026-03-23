@@ -1,5 +1,6 @@
+/* ════ SCROLLING BANNER ════ */
 .wrapper {
-  background-color: var(--brand-deep-umber);
+  background-color: var(--s);
   height: 45px;
   padding-top: 10px;
 }
@@ -8,8 +9,13 @@
   width: max-content;
   overflow: hidden;
   overflow-x: scroll;
-  background-color: var(--brand-deep-umber);
-  color: var(--brand-warm-white);
+  background-color: var(--s);
+  color: var(--p);
   margin-top: auto;
   margin-bottom: auto;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }

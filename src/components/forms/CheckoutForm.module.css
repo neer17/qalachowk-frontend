@@ -1,75 +1,83 @@
+/* ════ CHECKOUT FORM ════ */
 .mantine-Notifications-root {
   position: absolute;
   top: -50px;
 }
+
 .sectionMarginTop {
   margin-top: 32px;
 }
 
-/* Qala Chowk Input Overrides */
+/* ── Mantine input overrides ── */
 .mandanaForm :global(.mantine-TextInput-root) label,
 .mandanaForm :global(.mantine-Select-root) label {
   text-transform: uppercase !important;
-  letter-spacing: 0.1em !important;
-  font-size: 0.75rem !important;
-  opacity: 0.7 !important;
-  color: #6a2901 !important;
+  letter-spacing: 0.15em !important;
+  font-size: 9px !important;
+  color: var(--t) !important;
   font-family: var(--font-dm-sans), sans-serif !important;
-  font-weight: 500 !important;
-  margin-bottom: 0.25rem !important;
+  font-weight: 300 !important;
+  margin-bottom: 4px !important;
 }
 
 .mandanaForm :global(.mantine-TextInput-input),
 .mandanaForm :global(.mantine-Select-input) {
   background: transparent !important;
   border: none !important;
-  border-bottom: 1px solid rgba(106, 41, 1, 0.3) !important;
+  border-bottom: 0.5px solid var(--bo) !important;
   border-radius: 0 !important;
-  padding: 0.5rem 0 !important;
+  padding: 8px 0 !important;
   font-family: var(--font-dm-sans), sans-serif !important;
-  color: #221610 !important;
-  font-size: 1rem !important;
+  font-weight: 300 !important;
+  color: var(--c) !important;
+  font-size: 14px !important;
 }
 
 .mandanaForm :global(.mantine-TextInput-input):focus,
 .mandanaForm :global(.mantine-Select-input):focus {
-  border-bottom: 2px solid #6a2901 !important;
+  border-bottom: 1px solid var(--s) !important;
   outline: none !important;
 }
 
 .mandanaForm :global(.mantine-TextInput-input)::placeholder,
 .mandanaForm :global(.mantine-Select-input)::placeholder {
-  color: rgba(106, 41, 1, 0.5) !important;
+  color: var(--t) !important;
+  opacity: 0.55 !important;
   font-family: var(--font-cormorant-garamond), serif !important;
+  font-style: italic !important;
 }
 
 .mandanaForm h2 {
   font-family: var(--font-cormorant-garamond), serif !important;
-  color: #6a2901 !important;
-  border-bottom: 1px solid rgba(106, 41, 1, 0.2) !important;
-  padding-bottom: 0.25rem !important;
-  margin-bottom: 1rem !important;
-  font-size: 1.5rem !important;
   font-weight: 600 !important;
+  font-size: 22px !important;
+  color: var(--s) !important;
+  border-bottom: 0.5px solid var(--bo) !important;
+  padding-bottom: 8px !important;
+  margin-bottom: 14px !important;
 }
 
 .mandanaForm :global(.mantine-Radio-label) {
   font-family: var(--font-dm-sans), sans-serif !important;
-  color: #6a2901 !important;
+  font-weight: 300 !important;
+  color: var(--s) !important;
+  font-size: 13px !important;
 }
 
 .mandanaForm :global(.mantine-Button-root) {
   background-color: transparent !important;
-  border: 1px solid #6a2901 !important;
-  color: #6a2901 !important;
-  font-family: var(--font-cormorant-garamond), serif !important;
-  border-radius: 0 !important;
+  border: 0.5px solid var(--bo) !important;
+  color: var(--s) !important;
+  font-family: var(--font-dm-sans), sans-serif !important;
+  font-weight: 300 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.15em !important;
+  border-radius: 2px !important;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .mandanaForm :global(.mantine-Button-root):hover {
-  background-color: #6a2901 !important;
-  color: #fff !important;
+  background-color: var(--s) !important;
+  color: var(--p) !important;
 }

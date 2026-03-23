@@ -1,0 +1,252 @@
+.page {
+  background: var(--p);
+  color: var(--s);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+.header {
+  position: relative;
+  background: var(--s);
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 64px 40px 48px;
+  gap: 32px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding: 80px 80px 60px;
+  }
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+}
+
+.headerRight {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.eyebrow {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--t);
+  margin-bottom: 12px;
+}
+
+.pageTitle {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 400;
+  color: var(--p);
+  line-height: 1.1;
+  margin: 0 0 16px;
+}
+
+.pageTitle em {
+  font-style: italic;
+  color: var(--t);
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: rgba(245, 239, 230, 0.7);
+  line-height: 1.7;
+  max-width: 440px;
+  margin: 0;
+}
+
+/* ── Glass Pill ── */
+.glassPill {
+  background: rgba(245, 239, 230, 0.08);
+  border: 1px solid rgba(200, 149, 108, 0.3);
+  border-radius: 4px;
+  padding: 20px 28px;
+  text-align: center;
+  backdrop-filter: blur(8px);
+}
+
+.pillLabel {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--t);
+  margin-bottom: 8px;
+}
+
+.pillCount {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 2rem;
+  color: var(--p);
+}
+
+/* ── Mandana Bar ── */
+.mandanaBar {
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--s) 0px,
+    var(--s) 8px,
+    var(--t) 8px,
+    var(--t) 16px
+  );
+}
+
+/* ── Content ── */
+.content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding: 40px 40px 80px;
+  }
+}
+
+/* ── Category Tabs ── */
+.categoryTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.categoryTab {
+  padding: 7px 18px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: none;
+  border: 1px solid var(--bo);
+  color: var(--br);
+  cursor: pointer;
+  border-radius: 2px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.categoryTab:hover {
+  border-color: var(--s);
+  color: var(--s);
+}
+
+.categoryTabActive {
+  background: var(--s);
+  border-color: var(--s);
+  color: var(--p);
+}
+
+/* ── Sort Bar ── */
+.sortBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 24px;
+  border-bottom: 1px solid var(--bo);
+  margin-bottom: 32px;
+  gap: 16px;
+}
+
+.pieceCount {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--t);
+}
+
+.sortControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sortLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--br);
+  white-space: nowrap;
+}
+
+.sortSelect {
+  background: var(--p);
+  border: 1px solid var(--bo);
+  color: var(--c);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-family: var(--font-dm-sans), sans-serif;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+/* ── States ── */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 80px 0;
+}
+
+.loadingDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--t);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+.loadingText {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--t);
+}
+
+.errorState {
+  padding: 60px 0;
+  text-align: center;
+}
+
+.errorText {
+  font-size: 14px;
+  color: var(--br);
+}
+
+.emptyState {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: var(--br);
+  letter-spacing: 0.05em;
+}

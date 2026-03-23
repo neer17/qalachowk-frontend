@@ -1,27 +1,19 @@
+/* ════ CART PRODUCT CARD ════ */
 .contentsContainer {
   display: flex;
-  gap: 1rem;
+  gap: 20px;
   align-items: center;
   position: relative;
-  padding-bottom: 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(106, 41, 1, 0.1);
-}
-
-.contentsContainer:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  padding: 20px 0;
 }
 
 .imageContainer {
-  flex: 0 0 96px;
-  width: 96px;
-  height: 96px;
-  border-radius: 0.5rem;
+  flex: 0 0 88px;
+  width: 88px;
+  height: 88px;
   overflow: hidden;
-  background-color: #ffffff;
-  border: 1px solid rgba(106, 41, 1, 0.05);
+  background-color: var(--l);
+  border: 0.5px solid var(--bo);
 }
 
 .imageContainer img {
@@ -34,34 +26,33 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .productTitle {
-  font-family: var(--font-playfair-display), serif;
-  font-size: 1.125rem;
-  color: #6a2901;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--s);
   margin: 0;
-  font-weight: 500;
+  line-height: 1.2;
 }
 
 .productPrice {
-  color: #b8860b;
-  font-weight: 300;
-  font-size: 1rem;
-  letter-spacing: 0.025em;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  color: var(--g);
   margin: 0;
 }
 
 .quantityWrapper {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(106, 41, 1, 0.2);
-  border-radius: 9999px;
-  padding: 0.25rem 0.75rem;
-  gap: 1rem;
+  border: 0.5px solid var(--bo);
+  padding: 4px 12px;
+  gap: 14px;
   width: max-content;
-  margin-top: 0.25rem;
+  margin-top: 6px;
 }
 
 .qtyBtn {
@@ -71,39 +62,41 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #6a2901;
+  color: var(--s);
   padding: 0;
-  transition: opacity 0.2s;
+  transition: opacity var(--transition-fast);
 }
 
 .qtyBtn:hover {
-  opacity: 0.7;
+  opacity: 0.6;
 }
 
 .qtyValue {
-  font-family: var(--font-manrope), sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 13px;
+  color: var(--c);
+  letter-spacing: 0.05em;
 }
 
 .crossButtonContainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #94a3b8; /* slate-400 */
+  color: var(--bo);
   cursor: pointer;
-  transition: color 0.2s;
-  padding: 0.5rem;
+  transition: color var(--transition-fast);
+  padding: 8px;
   background: transparent;
   border: none;
 }
 
 .crossButtonContainer:hover {
-  color: #6a2901;
+  color: var(--s);
 }
 
 .crossButtonContainer svg {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   stroke: currentColor;
 }

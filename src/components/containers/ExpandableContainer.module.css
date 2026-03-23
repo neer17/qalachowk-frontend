@@ -1,3 +1,4 @@
+/* ════ EXPANDABLE CONTAINER ════ */
 .headingContainer {
   display: flex;
   align-items: center;
@@ -16,13 +17,25 @@
 }
 
 .headingContainer > span {
-  font-size: 12px;
-  color: var(--brand-warm-gold);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--t);
   cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.headingContainer > span:hover {
+  color: var(--s);
 }
 
 .containerHeading {
-  font-size: 1rem;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--s);
 }
 
 .expandableContainer {
@@ -32,12 +45,11 @@
   transition:
     max-height 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
-  border-radius: 4px;
   margin-top: 0.5rem;
 }
 
 .expandableContainerExpanded {
-  max-height: 500px; /* Adjust based on content */
+  max-height: 500px;
   opacity: 1;
   transition:
     max-height 0.5s ease-in-out,
@@ -51,6 +63,9 @@
 }
 .expandableContainer li,
 .expandableContainerExpanded li {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-family: var(--font-cormorant-garamond), serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--br);
+  line-height: 1.7;
 }

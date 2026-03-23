@@ -1,44 +1,56 @@
 :root {
-  /* === PRIMARY COLORS (Brand Guide Page 3) === */
-  --brand-primary: #6a2901; /* Primary Brown - main brand color */
-  --brand-deep-umber: #3d1800; /* Deep Umber - dark accent */
-  --brand-saddle-brown: #8b4513; /* Saddle Brown - medium tone */
-  --brand-warm-gold: #c8956c; /* Warm Gold - highlight color */
+  /* ── Design-system core palette (from design-system.css) ── */
+  --s: #6a2901; /* Primary Brown */
+  --br: #8b4513; /* Saddle Brown */
+  --t: #c8956c; /* Warm Gold / accent */
+  --p: #f5efe6; /* Paper background */
+  --l: #e8d9c5; /* Linen / card bg */
+  --g: #b8860b; /* Dark Goldenrod / price */
+  --c: #2c1a0e; /* Near-black / body text */
+  --bo: #d9c9b5; /* Bone / borders */
 
-  /* === NEUTRALS (Brand Guide Page 3) === */
-  --brand-old-lace: #fdf5e6; /* Old Lace - lightest background */
-  --brand-champagne: #f5e6cc; /* Champagne - light background */
-  --brand-bone: #e8d0d0; /* Bone - FIXED per brand guide */
-  --brand-warm-white: #fffaf5; /* Warm White - primary background */
+  /* ── Semantic aliases ── */
+  --color-primary: var(--s);
+  --color-secondary: var(--br);
+  --color-accent: var(--t);
+  --color-background: var(--p);
+  --color-surface: var(--l);
+  --color-price: var(--g);
+  --color-text: var(--c);
+  --color-border: var(--bo);
 
-  /* === ACCENTS (Brand Guide Page 3) === */
-  --brand-terracotta: #a05920; /* Terracotta - FIXED per brand guide */
-  --brand-dark-espresso: #2e1503; /* Dark Espresso - primary text */
-  --brand-sage: #a3a67c; /* Sage - NEW accent color */
+  /* ── Legacy aliases (backward compat) ── */
+  --brand-primary: var(--s);
+  --brand-deep-umber: #3d1800;
+  --brand-saddle-brown: var(--br);
+  --brand-warm-gold: var(--t);
+  --brand-old-lace: #fdf5e6;
+  --brand-champagne: #f5e6cc;
+  --brand-bone: var(--bo);
+  --brand-warm-white: var(--p);
+  --brand-terracotta: #a05920;
+  --brand-dark-espresso: var(--c);
+  --brand-sage: #a3a67c;
 
-  /* === RGB DECOMPOSITIONS (for rgba usage) === */
   --brand-primary-rgb: 106, 41, 1;
   --brand-deep-umber-rgb: 61, 24, 0;
-  --brand-dark-espresso-rgb: 46, 21, 3;
-  --brand-bone-rgb: 232, 208, 208;
+  --brand-dark-espresso-rgb: 44, 26, 14;
+  --brand-bone-rgb: 217, 201, 181;
 
-  /* === OPACITY SCALE === */
   --opacity-subtle: 0.05;
   --opacity-light: 0.1;
   --opacity-medium: 0.15;
   --opacity-visible: 0.3;
   --opacity-strong: 0.5;
 
-  /* === SEMANTIC COLORS === */
-  --background: var(--brand-warm-white);
-  --foreground: var(--brand-dark-espresso);
-  --text-primary: var(--brand-dark-espresso);
-  --text-secondary: var(--brand-saddle-brown);
-  --text-accent: var(--brand-warm-gold);
-  --border-primary: var(--brand-bone);
-  --border-focus: var(--brand-primary);
+  --background: var(--p);
+  --foreground: var(--c);
+  --text-primary: var(--c);
+  --text-secondary: var(--br);
+  --text-accent: var(--t);
+  --border-primary: var(--bo);
+  --border-focus: var(--s);
 
-  /* === SHADOWS === */
   --shadow-sm: 0 2px 4px rgba(var(--brand-deep-umber-rgb), var(--opacity-light));
   --shadow-md: 0 4px 6px
     rgba(var(--brand-deep-umber-rgb), var(--opacity-medium));
@@ -47,25 +59,20 @@
   --shadow-popup: -2px 0 5px
     rgba(var(--brand-dark-espresso-rgb), var(--opacity-light));
 
-  /* === INTERACTIVE STATES === */
-  --brand-bone-hover: #d4c4b0;
+  --brand-bone-hover: #c9b9a5;
   --brand-primary-hover: #501f01;
 
-  /* === LEGACY ALIASES (backward compatibility - will be removed in Phase 4) === */
-  --backgroundGrey: var(--brand-old-lace);
-  --backgroundGrey1: var(--brand-champagne);
-  --backgroundGreyDark: var(--brand-bone);
-  --accentColor: var(--brand-warm-gold);
-  --buttonBackgroundDark: var(--brand-primary);
-  --value: var(--brand-deep-umber);
-  --label: var(--brand-saddle-brown);
-
-  /* === TYPOGRAPHY === */
+  /* ── Typography ── */
   --font-hindi-heading: var(--font-tiro-devanagari), serif;
   --font-hindi-body: var(--font-noto-serif-devanagari), serif;
 
-  /* === LAYOUT === */
-  --pageTopMargin: 94px;
+  /* ── Transitions ── */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+
+  /* ── Layout ── */
+  --navbar-height: 64px;
+  --pageTopMargin: 64px;
 }
 
 html,

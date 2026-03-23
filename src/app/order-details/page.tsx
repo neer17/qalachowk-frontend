@@ -72,44 +72,42 @@ export default function OrderDetailsPage() {
 
   if (loading) {
     return (
-      <div className={styles.pageContainer}>
-        <p style={{ textAlign: "center", paddingTop: "4rem" }}>
-          Loading order...
-        </p>
+      <div className={styles.pageWrapper}>
+        <div className={styles.stateContainer}>
+          <p className={styles.stateText}>Loading your order…</p>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className={styles.pageContainer}>
-        <p
-          style={{ textAlign: "center", paddingTop: "4rem", color: "#934b19" }}
-        >
-          Please sign in to view your orders.
-        </p>
+      <div className={styles.pageWrapper}>
+        <div className={styles.stateContainer}>
+          <p className={styles.stateText}>
+            Please sign in to view your orders.
+          </p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.pageContainer}>
-        <p
-          style={{ textAlign: "center", paddingTop: "4rem", color: "#934b19" }}
-        >
-          {error}
-        </p>
+      <div className={styles.pageWrapper}>
+        <div className={styles.stateContainer}>
+          <p className={styles.stateText}>{error}</p>
+        </div>
       </div>
     );
   }
 
   if (orders.length === 0 || !selectedOrder) {
     return (
-      <div className={styles.pageContainer}>
-        <p style={{ textAlign: "center", paddingTop: "4rem" }}>
-          You have no orders yet.
-        </p>
+      <div className={styles.pageWrapper}>
+        <div className={styles.stateContainer}>
+          <p className={styles.stateText}>You have no orders yet.</p>
+        </div>
       </div>
     );
   }
@@ -120,40 +118,30 @@ export default function OrderDetailsPage() {
     order.status === "CANCELLED" || order.status === "RETURNED";
   const shippingAddr = order.shippingAddress;
   const billingAddr = order.billingAddress;
-
-  const otherOrders = orders.filter((o) => o.id !== order.id);
-
   return (
-    <div className={styles.pageContainer}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerFlex}>
-          <div>
-            <h2 className={styles.orderId}>
-              Order #{order.id.slice(0, 8).toUpperCase()}
-            </h2>
-            <p className={styles.orderDate}>
-              Placed on {formatDate(order.createdAt)}
-            </p>
-          </div>
-          <div className={styles.statusContainer}>
-            <span className={styles.statusBadge}>
-              {STATUS_LABELS[order.status] ?? order.status}
+    <div className={styles.pageWrapper}>
+      {/* ── Page Header ── */}
+      <div className={styles.pageHeader}>
+        <span className={styles.eyebrow}>Your Order</span>
+        <h1 className={styles.pageTitle}>#{order.id}</h1>
+        <div className={styles.orderMeta}>
+          <p className={styles.orderDate}>
+            Placed on{" "}
+            <span className={styles.orderDateValue}>
+              {formatDate(order.createdAt)}
             </span>
-            {order.trackingNumber && (
-              <p className={styles.estimatedDelivery}>
-                Tracking: {order.trackingNumber}
-              </p>
-            )}
-          </div>
+          </p>
+          <span className={styles.statusBadge}>
+            {STATUS_LABELS[order.status] ?? order.status}
+          </span>
         </div>
-      </header>
+      </div>
 
-      {/* Order Timeline */}
+      {/* ── Order Timeline ── */}
       {!isCancelled && (
-        <section className={styles.timelineSection}>
+        <div className={styles.timelineSection}>
           <div className={styles.timelineRelative}>
-            <div className={styles.timelineLine}></div>
+            <div className={styles.timelineLine} />
             <div className={styles.timelineFlex}>
               {STATUS_STEPS.map((step, i) => {
                 const isActive = i <= stepIndex;
@@ -168,14 +156,10 @@ export default function OrderDetailsPage() {
                             ? styles.dotActive
                             : styles.dotInactive
                       }
-                    ></div>
+                    />
                     <span
                       className={
-                        isCurrent
-                          ? styles.nodeLabelActiveBold
-                          : isActive
-                            ? styles.nodeLabelActiveMedium
-                            : styles.nodeLabelInactive
+                        isActive ? styles.nodeLabelActive : styles.nodeLabel
                       }
                     >
                       {STATUS_LABELS[step]}
@@ -185,58 +169,59 @@ export default function OrderDetailsPage() {
               })}
             </div>
           </div>
-        </section>
+        </div>
       )}
 
-      <div className={styles.mandanaDivider}></div>
-
-      {/* Order Content Grid */}
-      <div className={styles.gridContainer}>
+      {/* ── Main Content Grid ── */}
+      <div className={styles.contentGrid}>
         {/* Left: Items */}
-        <div className={styles.leftColumn}>
-          <h3 className={styles.selectionTitle}>Your Selection</h3>
+        <div className={styles.itemsColumn}>
+          <h2 className={styles.columnHeading}>Your Selection</h2>
+          <p className={styles.columnSubheading}>
+            {order.orderItems.length === 1
+              ? "1 item"
+              : `${order.orderItems.length} items`}
+          </p>
           <div className={styles.itemsList}>
             {order.orderItems.map((item, i) => (
               <div key={item.id ?? i} className={styles.itemRow}>
-                <div className={styles.itemImageContainer}>
+                <div className={styles.itemImageWrap}>
                   {item.product?.images?.[0] && (
                     <Image
                       className={styles.itemImage}
                       src={item.product.images[0].url}
                       alt={item.product?.name ?? "Product"}
-                      // sizes="(min-width: 768px) 50vw, 100vw"
                       objectFit="contain"
                       fill
                     />
                   )}
                 </div>
-                <div className={styles.itemDetails}>
-                  <div className={styles.itemTitleRow}>
-                    <h4 className={styles.itemTitle}>
-                      {item.product?.name ??
-                        `Product #${item.productId.slice(0, 8).toUpperCase()}`}
-                    </h4>
-                    {item.price !== undefined && (
-                      <p className={styles.itemPrice}>
-                        {formatAmount(item.price)}
-                      </p>
-                    )}
-                  </div>
-                  <p className={styles.itemQuantity}>
-                    Quantity: {item.quantity}
-                  </p>
+                <div className={styles.itemInfo}>
+                  <h4 className={styles.itemName}>
+                    {item.product?.name ??
+                      `Product #${item.productId.slice(0, 8).toUpperCase()}`}
+                  </h4>
+                  {item.price !== undefined && (
+                    <p className={styles.itemPrice}>
+                      {formatAmount(item.price)}
+                    </p>
+                  )}
+                  <p className={styles.itemQty}>Qty: {item.quantity}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Right: Summary */}
-        <div className={styles.rightColumn}>
-          <div className={styles.summaryBox}>
-            <div className={styles.addressGrid}>
-              <div>
-                <h5 className={styles.addressLabel}>Shipping Address</h5>
+        {/* Right: Summary Panel */}
+        <div className={styles.summaryColumn}>
+          <div className={styles.summaryPanel}>
+            <h2 className={styles.summaryHeading}>Order Summary</h2>
+
+            {/* Addresses */}
+            <div className={styles.addressSection}>
+              <div className={styles.addressBlock}>
+                <span className={styles.addressLabel}>Shipping Address</span>
                 <address className={styles.addressText}>
                   {shippingAddr.address}
                   {shippingAddr.street && (
@@ -258,8 +243,9 @@ export default function OrderDetailsPage() {
                   )}
                 </address>
               </div>
-              <div>
-                <h5 className={styles.addressLabel}>Billing Address</h5>
+
+              <div className={styles.addressBlock}>
+                <span className={styles.addressLabel}>Billing Address</span>
                 <address className={styles.addressText}>
                   {billingAddr ? (
                     <>
@@ -283,39 +269,53 @@ export default function OrderDetailsPage() {
               </div>
             </div>
 
-            <div className={styles.lightDivider}></div>
+            <div className={styles.summaryDivider} />
 
-            <div className={styles.summaryMetrics}>
-              <div className={styles.summaryRow}>
-                <span className={styles.summaryLabel}>Subtotal</span>
-                <span className={styles.summaryValue}>
-                  {formatAmount(order.subtotal)}
-                </span>
-              </div>
-              <div className={styles.summaryRow}>
-                <span className={styles.summaryLabel}>Shipping</span>
-                <span className={styles.summaryValueStressed}>
-                  Complimentary
-                </span>
-              </div>
-              <div className={styles.summaryRow}>
-                <span className={styles.summaryLabel}>Tax</span>
-                <span className={styles.summaryValue}>
-                  {formatAmount(order.tax)}
-                </span>
-              </div>
+            {/* Pricing Rows */}
+            <div className={styles.summaryRow}>
+              <span className={styles.summaryLabel}>Subtotal</span>
+              <span className={styles.summaryValue}>
+                {formatAmount(order.subtotal)}
+              </span>
+            </div>
+            <div className={styles.summaryRow}>
+              <span className={styles.summaryLabel}>Shipping</span>
+              <span className={styles.summaryShipping}>Complimentary</span>
+            </div>
+            <div className={styles.summaryRow}>
+              <span className={styles.summaryLabel}>Tax</span>
+              <span className={styles.summaryValue}>
+                {formatAmount(order.tax)}
+              </span>
             </div>
 
             <div className={styles.totalRow}>
-              <span className={styles.totalLabel}>Total</span>
+              <span className={styles.totalLabel}>Grand Total</span>
               <span className={styles.totalValue}>
                 {formatAmount(order.total)}
               </span>
             </div>
 
+            {/* Actions */}
             <div className={styles.actionsBox}>
-              <button className={styles.primaryButton}>Track Shipment</button>
-              <button className={styles.secondaryButton}>
+              {order.trackingNumber && (
+                <a
+                  className={styles.primaryButton}
+                  href={`https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?consignmentno=${order.trackingNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Track Shipment
+                </a>
+              )}
+              <button
+                className={
+                  order.trackingNumber
+                    ? styles.secondaryButton
+                    : styles.primaryButton
+                }
+                onClick={() => window.print()}
+              >
                 Download Invoice
               </button>
             </div>
@@ -323,30 +323,34 @@ export default function OrderDetailsPage() {
         </div>
       </div>
 
-      {/* All Orders */}
-      {otherOrders.length > 0 && (
-        <section className={styles.historySection}>
-          <div className={styles.mandanaDividerShort}></div>
-          <h3 className={styles.historyTitle}>Your Orders</h3>
-          <div className={styles.historyList}>
-            {otherOrders.map((o) => (
+      {/* ── Order History ── */}
+      <div className={styles.historySection}>
+        <h2 className={styles.historySectionHeading}>Order History</h2>
+        <div className={styles.historyList}>
+          {orders.map((o) => {
+            const isActive = o.id === order.id;
+            return (
               <button
                 key={o.id}
-                className={styles.historyItem}
+                className={
+                  isActive
+                    ? `${styles.historyItem} ${styles.historyItemActive}`
+                    : styles.historyItem
+                }
                 onClick={() => {
-                  setSelectedOrder(o);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  if (!isActive) {
+                    setSelectedOrder(o);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
                 }}
               >
-                <div className={styles.historyItemLeft}>
-                  <span className={styles.historyOrderId}>
-                    #{o.id.slice(0, 8).toUpperCase()}
-                  </span>
-                  <span className={styles.historyOrderDate}>
+                <div className={styles.historyLeft}>
+                  <span className={styles.historyId}>#{o.id}</span>
+                  <span className={styles.historyDate}>
                     {formatDate(o.createdAt)}
                   </span>
                 </div>
-                <div className={styles.historyItemRight}>
+                <div className={styles.historyRight}>
                   <span className={styles.historyStatus}>
                     {STATUS_LABELS[o.status] ?? o.status}
                   </span>
@@ -355,22 +359,21 @@ export default function OrderDetailsPage() {
                   </span>
                 </div>
               </button>
-            ))}
-          </div>
-        </section>
-      )}
+            );
+          })}
+        </div>
+      </div>
 
-      {/* Help Section */}
-      <section className={styles.helpSection}>
-        <div className={styles.mandanaDividerShort}></div>
+      {/* ── Help Section ── */}
+      <div className={styles.helpSection}>
         <p className={styles.helpTitle}>Need assistance with your heirloom?</p>
         <p className={styles.helpText}>
           Our curators are available daily from 10 AM to 7 PM.
         </p>
-        <a className={styles.helpLink} href="#">
+        <a className={styles.helpLink} href="mailto:hello@qalachowk.com">
           Contact Support
         </a>
-      </section>
+      </div>
     </div>
   );
 }

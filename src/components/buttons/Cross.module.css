@@ -1,9 +1,11 @@
+/* ════ CROSS BUTTON ════ */
 .crossButton {
-  width: 24px; /* Width of the button */
-  height: 24px; /* Height of the button */
+  width: 24px;
+  height: 24px;
   position: relative;
   cursor: pointer;
-  background-color: transparent; /* Transparent background */
+  background-color: transparent;
+  border: none;
 }
 
 .crossButton::before,
@@ -12,18 +14,19 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px; /* Width of the cross line */
-  height: 2px; /* Thickness of the cross line */
-  background-color: var(--text-primary);
+  width: 14px;
+  height: 1px;
+  background-color: var(--br);
   transform-origin: center;
-  transform: translate(-50%, -50%) rotate(45deg); /* Rotate for the cross */
+  transform: translate(-50%, -50%) rotate(45deg);
+  transition: background-color var(--transition-fast);
 }
 
 .crossButton::after {
-  transform: translate(-50%, -50%) rotate(-45deg); /* Rotate the second line */
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.crossButton:hover {
-  background-color: var(--brand-old-lace);
-  border-radius: 4px; /* Slight rounded corners */
+.crossButton:hover::before,
+.crossButton:hover::after {
+  background-color: var(--s);
 }

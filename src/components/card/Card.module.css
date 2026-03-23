@@ -1,48 +1,46 @@
+/* ════ CARD ════ */
 .cardContainer {
   width: 100%;
-  /* flex-basis: 20%; */
   display: flex;
   flex-direction: column;
-  /* padding-bottom: 2.5rem; */
 }
 
 .imageContainer img {
   width: 100%;
   height: auto;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
 }
+
 .textContainer {
   display: flex;
   flex-direction: column;
+  padding-top: 10px;
 }
 
 .productDescription {
   width: 100%;
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--s);
+  margin-bottom: 4px;
 }
 
 .productPrice {
   width: 100%;
-  font-size: 12px;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  color: var(--g);
 }
+
 @media (max-width: 1024px) {
   .cardContainer {
     width: 100%;
-    /* flex-basis: 50%; */
-    /* display: flex;
-        flex-direction: column;
-        padding-bottom: 2.5rem;
-        height: 436px; */
   }
   .textContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-
-  .productDescription {
-    font-size: 1rem;
   }
 }

@@ -6,11 +6,9 @@ import React from "react";
 import styles from "./page.module.css";
 import { useCart } from "@/context/CartContext";
 import CartProductCard from "@/components/card/CartProductCard";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import LeftArrow from "@/app/svgs/left_arrow.svg";
 
-export default function page() {
+export default function CartPage() {
   const router = useRouter();
   const {
     cartData,
@@ -24,7 +22,7 @@ export default function page() {
     const item = cartData.get(id);
 
     if (item !== undefined) {
-      await setCartData(item);
+      await setCartData({ ...item, quantity: 1 });
     }
   };
 
@@ -44,83 +42,126 @@ export default function page() {
     router.push("/checkout");
   };
 
-  return (
-    <div className={styles.cartDetailsContainer}>
-      <div className={styles.goBackToShoppingContainer} onClick={handleGoBack}>
-        <Image
-          height={25}
-          width={25}
-          src={LeftArrow}
-          alt="Go back to shopping"
-        />
-        <span>Go back to shopping</span>
-      </div>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
-        <div className={styles.productsContainer}>
-          {Array.from(cartData.values()).map(
-            ({
-              id,
-              name,
-              price,
-              quantity,
-              category,
-              images,
-              material,
-              slug,
-              description,
-            }) => (
-              <CartProductCard
-                key={id}
-                id={id}
-                name={name}
-                price={price}
-                quantity={quantity}
-                images={images}
-                slug={slug}
-                material={material}
-                description={description}
-                category={category}
-                imageSizes="10vw"
-                incrementCallback={handleQuantityIncrement}
-                decrementCallback={handleQuantityDecrement}
-                deleteCartItem={handleDeleteItem}
-              />
-            ),
-          )}
-        </div>
+  const itemCount = cartData.size;
 
-        <div className={styles.checkoutContainer}>
-          <div className={styles.shippingDetailsContainer}></div>
-          <div className={styles.orderDetailsContainer}>
-            <h3>Order Summary</h3>
-            <span className={styles.totalPriceContainer}>
-              <h3>Total</h3> <span>{getTotalPrice()}</span>
-            </span>
+  return (
+    <div className={styles.pageWrapper}>
+      {/* Page Header */}
+      <div className={styles.pageHeader}>
+        <button className={styles.backLink} onClick={handleGoBack}>
+          ← Continue Shopping
+        </button>
+        <span className={styles.eyebrow}>YOUR BAG</span>
+        <h1 className={styles.pageTitle}>Your Shopping Cart</h1>
+        <p className={styles.itemCount}>
+          {itemCount === 0
+            ? "No items"
+            : itemCount === 1
+              ? "1 item"
+              : `${itemCount} items`}
+        </p>
+      </div>
+
+      {/* Main Content */}
+      {itemCount === 0 ? (
+        <div className={styles.emptyState}>
+          <p className={styles.emptyText}>Your bag is empty.</p>
+          <button className={styles.emptyLink} onClick={handleGoBack}>
+            ← Continue Shopping
+          </button>
+        </div>
+      ) : (
+        <div className={styles.contentGrid}>
+          {/* Cart Items Column */}
+          <div className={styles.cartItemsColumn}>
+            {Array.from(cartData.values()).map(
+              ({
+                id,
+                name,
+                price,
+                quantity,
+                category,
+                images,
+                material,
+                slug,
+                description,
+              }) => (
+                <div key={id} className={styles.cartItemRow}>
+                  <CartProductCard
+                    id={id}
+                    name={name}
+                    price={price}
+                    quantity={quantity}
+                    images={images}
+                    slug={slug}
+                    material={material}
+                    description={description}
+                    category={category}
+                    imageSizes="10vw"
+                    incrementCallback={handleQuantityIncrement}
+                    decrementCallback={handleQuantityDecrement}
+                    deleteCartItem={handleDeleteItem}
+                  />
+                </div>
+              ),
+            )}
           </div>
+
+          {/* Order Summary Column */}
+          <div className={styles.summaryColumn}>
+            <div className={styles.summaryPanel}>
+              <h2 className={styles.summaryHeading}>Order Summary</h2>
+
+              <div className={styles.summaryRow}>
+                <span className={styles.summaryLabel}>Subtotal</span>
+                <span className={styles.summaryValue}>₹ {getTotalPrice()}</span>
+              </div>
+
+              <div className={styles.summaryRow}>
+                <span className={styles.summaryLabel}>Shipping</span>
+                <span className={styles.summaryShipping}>Complimentary</span>
+              </div>
+
+              <div className={styles.summaryDivider} />
+
+              <div className={styles.summaryTotalRow}>
+                <span className={styles.summaryTotalLabel}>Grand Total</span>
+                <span className={styles.summaryTotalPrice}>
+                  ₹ {getTotalPrice()}
+                </span>
+              </div>
+
+              <button
+                className={styles.checkoutButton}
+                onClick={navigateToCheckoutPage}
+              >
+                Proceed to Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Sticky Bar */}
+      {itemCount > 0 && (
+        <div className={styles.mobileBar}>
+          <span className={styles.mobileTotalLabel}>
+            Total{" "}
+            <strong className={styles.mobileTotalPrice}>
+              ₹ {getTotalPrice()}
+            </strong>
+          </span>
           <button
-            className={styles.checkoutButton}
+            className={styles.mobileCheckoutButton}
             onClick={navigateToCheckoutPage}
           >
-            Checkout
+            Proceed to Checkout
           </button>
-
-          <div className={styles.queryContainer}></div>
         </div>
-      </div>
+      )}
 
-      <div className={styles.checkoutContainerMobile}>
-        <span>{getTotalPrice()}</span>
-        <button
-          className={styles.checkoutButton}
-          onClick={navigateToCheckoutPage}
-        >
-          Checkout
-        </button>
-      </div>
+      {/* Mandana Divider */}
+      <div className={styles.mandanaBar} />
     </div>
   );
 }

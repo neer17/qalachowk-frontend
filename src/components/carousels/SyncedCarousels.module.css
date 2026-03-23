@@ -1,3 +1,4 @@
+/* ════ SYNCED CAROUSELS ════ */
 .embla {
   max-width: 48rem;
   margin: auto;
@@ -27,18 +28,20 @@
 }
 
 .embla__slide__img {
-  border-radius: 1.8rem;
+  border-radius: 8px;
   height: var(--slide-height);
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-color: var(--l);
 }
 
 .embla__slide__number {
-  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
-  border-radius: 1.8rem;
+  box-shadow: inset 0 0 0 0.5px var(--bo);
+  border-radius: 8px;
+  font-family: var(--font-cormorant-garamond), serif;
   font-size: 4rem;
   font-weight: 600;
   display: flex;
@@ -46,6 +49,7 @@
   justify-content: center;
   height: var(--slide-height);
   user-select: none;
+  color: var(--s);
 }
 
 .embla__controls {
@@ -64,7 +68,6 @@
 }
 
 .embla__button {
-  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
@@ -72,22 +75,28 @@
   display: inline-flex;
   text-decoration: none;
   cursor: pointer;
-  border: 0;
+  border: 0.5px solid var(--bo);
   padding: 0;
   margin: 0;
-  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
   width: 3.6rem;
   height: 3.6rem;
   z-index: 1;
   border-radius: 50%;
-  color: var(--text-body);
+  color: var(--s);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color var(--transition-fast);
+}
+
+.embla__button:hover {
+  border-color: var(--s);
 }
 
 .embla__button:disabled {
-  color: var(--detail-high-contrast);
+  color: var(--bo);
+  border-color: var(--bo);
+  cursor: default;
 }
 
 .embla__button__svg {
@@ -100,11 +109,10 @@
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
-  margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+  gap: 4px;
 }
 
 .embla__dot {
-  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
@@ -124,17 +132,18 @@
 }
 
 .embla__dot:after {
-  box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
+  background-color: rgba(106, 41, 1, 0.2);
   display: flex;
   align-items: center;
   content: "";
+  transition: background-color var(--transition-fast);
 }
 
 .embla__dot--selected:after {
-  box-shadow: inset 0 0 0 0.2rem var(--text-body);
+  background-color: var(--s);
 }
 
 .productImagesContainer {
@@ -145,7 +154,7 @@
   height: 60px;
 }
 
-/* Thumbnail carousel styles - modified for single image display */
+/* Thumbnail carousel styles */
 .embla__thumbs__viewport {
   overflow: hidden;
   width: 100%;
@@ -168,13 +177,12 @@
 }
 
 .embla__thumbs__slide__button {
-  -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.3);
   -webkit-appearance: none;
   appearance: none;
   background-color: transparent;
   touch-action: manipulation;
   cursor: pointer;
-  border: 0;
+  border: 0.5px solid transparent;
   padding: 0;
   margin: 0;
   width: 50px;
@@ -182,14 +190,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.4rem;
+  border-radius: 4px;
   opacity: 0.6;
-  transition: opacity 0.2s;
+  transition:
+    opacity var(--transition-fast),
+    border-color var(--transition-fast);
 }
 
 .embla__thumbs__slide__selected .embla__thumbs__slide__button {
   opacity: 1;
-  box-shadow: 0 0 0 2px var(--text-body);
+  border-color: var(--s);
 }
 
 .embla__thumbs__slide__button:hover {

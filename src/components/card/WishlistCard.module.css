@@ -1,3 +1,4 @@
+/* ════ WISHLIST CARD ════ */
 .cardContainer {
   display: flex;
   flex-direction: column;
@@ -7,20 +8,30 @@
 .imageContainer {
   position: relative;
   width: 100%;
+  background-color: var(--l);
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .crossButtonContainer {
   position: absolute;
-  top: 5px;
-  right: 10px;
+  top: 8px;
+  right: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  background-color: var(--brand-warm-white);
-  opacity: 0.5;
+  width: 28px;
+  height: 28px;
+  background-color: var(--p);
+  border: 0.5px solid var(--bo);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 2;
+}
+
+.imageContainer:hover .crossButtonContainer {
+  opacity: 1;
 }
 
 .imageContainer img {
@@ -31,29 +42,37 @@
 .addToCartButtonContainer {
   position: relative;
   bottom: 3rem;
-  margin: 0 8px 0 8px;
-  background-color: var(--brand-warm-white);
-  color: var(--text-primary);
+  margin: 0 8px;
+  background-color: var(--p);
+  color: var(--s);
   cursor: pointer;
 }
 
 .addToCartButtonContainer button {
   width: 100%;
-  padding: 8px 8px 8px 8px;
-  background-color: var(--brand-warm-white);
-  color: var(--text-primary);
+  padding: 10px 16px;
+  background-color: var(--s);
+  color: var(--p);
   border: none;
-  border-radius: 12px;
-  font-weight: 700;
+  border-radius: 2px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.addToCartButtonContainer button:hover {
+  background-color: var(--br);
 }
 
 .detailsWrapper {
   position: relative;
   bottom: 10px;
   display: flex;
-  color: var(--text-primary);
+  color: var(--c);
 }
 
 .detailsContainer {
@@ -63,9 +82,11 @@
 }
 
 .detailsContainer h5 {
-  font-weight: 700;
-  font-size: 12px;
-  margin-bottom: 8px;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--s);
+  margin-bottom: 4px;
 }
 
 .quantityContainer {
@@ -73,11 +94,12 @@
   justify-content: space-between;
   align-items: center;
   height: fit-content;
-  border: 0.5px solid var(--border-primary);
-  padding: 2px;
-  padding-left: 8px;
-  padding-right: 8px;
-  font-weight: 700;
+  border: 0.5px solid var(--bo);
+  padding: 2px 8px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--c);
 }
 
 .quantityContainer span {
@@ -87,8 +109,4 @@
   padding-left: 2em;
   padding-right: 2rem;
   cursor: auto;
-}
-
-/* For Mobile Screens */
-@media (max-width: 767px) {
 }

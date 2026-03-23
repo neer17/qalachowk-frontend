@@ -64,6 +64,7 @@ export const metadata: Metadata = {
 };
 
 import Footer from "@/components/footer/Footer";
+import MainWrapper from "@/components/MainWrapper";
 
 export default function RootLayout({
   children,
@@ -94,16 +95,7 @@ export default function RootLayout({
                 {/* <SlidingBanner /> */}
                 <Navbar />
               </div>
-              <main
-                style={{
-                  paddingTop: "80px",
-                  display: "flex",
-                  flexDirection: "column",
-                  minHeight: "100vh",
-                }}
-              >
-                {children}
-              </main>
+              <MainWrapper>{children}</MainWrapper>
               <Footer />
             </CartProvider>
           </AuthProvider>

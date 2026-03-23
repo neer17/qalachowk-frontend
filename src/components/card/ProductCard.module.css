@@ -1,32 +1,51 @@
+/* ════ PRODUCT CARD (catalog grid) ════ */
 .productContainer {
-  width: 100%;
+  background: var(--p);
+  border: 0.5px solid var(--bo);
+  border-radius: 8px;
   overflow: hidden;
-  background-color: inherit;
-  padding-right: 0.5rem;
-  padding-bottom: 0.5rem;
-  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.productContainer:hover {
+  border-color: var(--t);
+}
+
+.productContainer:hover .pcCta {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .imageContainer {
   position: relative;
+  background: var(--l);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
 }
 
 .embla {
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .emblaContainer {
   display: flex;
+  height: 100%;
 }
 
 .emblaSlide {
   flex: 0 0 100%;
   min-width: 0;
+  position: relative;
 }
 
 .productImage {
-  object-fit: contain;
+  object-fit: cover;
   cursor: grab;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .productImage:active {
@@ -35,66 +54,139 @@
 
 .emblaDots {
   position: absolute;
-  bottom: 1.4rem;
+  bottom: 12px;
   display: flex;
   justify-content: center;
   width: 100%;
-  gap: 0.5rem;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 6px;
 }
 
 .emblaDot {
-  background-color: rgba(
-    var(--brand-dark-espresso-rgb),
-    var(--opacity-visible)
-  );
+  background-color: rgba(106, 41, 1, 0.2);
   border: none;
   border-radius: 50%;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color var(--transition-fast);
 }
 
 .emblaDot:hover {
-  background-color: rgba(var(--brand-dark-espresso-rgb), var(--opacity-strong));
+  background-color: rgba(106, 41, 1, 0.4);
 }
 
 .emblaDotSelected {
-  background-color: var(--brand-primary);
+  background-color: var(--s);
+}
+
+/* ── Product details below image ── */
+.productDetailsContainer {
+  padding: 16px 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .textContainer {
-  flex-basis: 80%;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .productTitle {
-  font-weight: bold;
-  font-size: 12px;
-  margin-bottom: 10px;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--s);
+  line-height: 1.2;
 }
 
 .productPrice {
-  font-size: 11px;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  color: var(--g);
 }
 
 .buyContainer {
-  flex-basis: 20%;
   display: flex;
-  justify-content: flex-end;
-}
-
-.productDetailsContainer {
-  display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .wishlistSvgContainer {
+  background: rgba(245, 239, 230, 0.9);
+  border: 0.5px solid var(--bo);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.wishlistSvgContainer:hover {
+  background: #fff0f0;
+  border-color: #e8a0a0;
+  transform: scale(1.15);
+}
+
+.wishlistSvgContainer:active {
+  transform: scale(0.92);
 }
 
 .bagSvgContainer {
-  margin-left: 0.5rem;
+  background: var(--s);
+  border: 0.5px solid var(--s);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.bagSvgContainer img {
+  filter: brightness(0) invert(1);
+}
+
+.bagSvgContainer:hover {
+  background: var(--br);
+  border-color: var(--br);
+  transform: scale(1.15);
+}
+
+.bagSvgContainer:active {
+  transform: scale(0.92);
+}
+
+/* ── Inline CTA (appears on hover) ── */
+.pcCta {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--s);
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid var(--s);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
 }

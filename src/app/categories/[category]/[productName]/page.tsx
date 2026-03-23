@@ -12,12 +12,13 @@ import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
 import { Product } from "@/utils/types";
 import { API_ENDPOINTS } from "@/utils/constants";
-import { useCart } from "@/context/CartContext";
+import { useCart, useWishlist } from "@/context/CartContext";
 
 export default function ProductDetails() {
   const params = useParams();
   const slug = params.productName as string;
   const { setCartData } = useCart();
+  const { wishlistData, addWishlistItem, removeWishlistItem } = useWishlist();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [productCollectionId, setProductCollectionId] = useState<string | null>(
@@ -25,6 +26,8 @@ export default function ProductDetails() {
   );
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [showCartPopup, setShowCartPopup] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [isInWishlist, setIsInWishlist] = useState<boolean>(false);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
@@ -48,6 +51,10 @@ export default function ProductDetails() {
   const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, []);
+
+  useEffect(() => {
+    if (product) setIsInWishlist(wishlistData.has(product.id));
+  }, [wishlistData, product]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -103,7 +110,7 @@ export default function ProductDetails() {
       id: product.id,
       name: product.name,
       price: product.price,
-      quantity: 1,
+      quantity,
       images: product.images,
       category: product.category,
       slug: product.slug,
@@ -115,6 +122,25 @@ export default function ProductDetails() {
     toggleCartPopup();
   };
 
+  const handleWishlistToggle = async () => {
+    if (!product) return;
+    if (isInWishlist) {
+      await removeWishlistItem(product.id);
+    } else {
+      await addWishlistItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        images: product.images,
+        category: product.category,
+        slug: product.slug,
+        material: product.material || "",
+        description: product.description || "",
+      });
+    }
+  };
+
   const toggleCartPopup = () => {
     setShowCartPopup(!showCartPopup);
   };
@@ -122,12 +148,6 @@ export default function ProductDetails() {
   if (!product) {
     return <div>Loading...</div>;
   }
-
-  console.info({
-    product,
-    productCollectionId,
-    similarProducts,
-  });
 
   return (
     <div className={styles.productDetailsContainer}>
@@ -255,10 +275,47 @@ export default function ProductDetails() {
           </div>
 
           <div className={styles.actionsContainer}>
-            <button className={styles.addToCartBtn} onClick={handleAddToCart}>
-              <span>ADD TO CART</span>
-              <span className={styles.dot}></span>
-            </button>
+            <div className={styles.quantityRow}>
+              <button
+                className={styles.qtyBtn}
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <span className={styles.qtyValue}>{quantity}</span>
+              <button
+                className={styles.qtyBtn}
+                onClick={() => setQuantity((q) => q + 1)}
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
+            <div className={styles.actionBtns}>
+              <button className={styles.addToCartBtn} onClick={handleAddToCart}>
+                <span>ADD TO CART</span>
+                <span className={styles.dot}></span>
+              </button>
+              <button
+                className={`${styles.wishlistBtn} ${isInWishlist ? styles.wishlistBtnActive : ""}`}
+                onClick={handleWishlistToggle}
+                aria-label={
+                  isInWishlist ? "Remove from wishlist" : "Add to wishlist"
+                }
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill={isInWishlist ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                >
+                  <path d="M15.5 3.7a4 4 0 0 0-5.7 0L9 4.5l-.8-.8a4 4 0 0 0-5.7 5.7l.8.8L9 16l5.7-5.8.8-.8a4 4 0 0 0 0-5.7z" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div className={styles.handmadeGrid}>

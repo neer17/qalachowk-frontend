@@ -13,223 +13,222 @@ const ProductCatalog = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortOption, setSortOption] = useState("featured");
 
   useEffect(() => {
     const fetchProducts = async () => {
       if (!category) return;
-
       try {
         setLoading(true);
         setError(null);
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS_BY_CATEGORY.URL}/${category}`,
           {
             method: API_ENDPOINTS.PRODUCTS_BY_CATEGORY.METHOD,
-            headers: {
-              "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
           },
         );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch products: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`${response.status}`);
         const data = await response.json();
         setProducts(data.data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch products",
         );
-        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, [category]);
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortOption === "price-asc") return a.price - b.price;
+    if (sortOption === "price-desc") return b.price - a.price;
+    if (sortOption === "name-asc") return a.name.localeCompare(b.name);
+    return 0; // featured / newest: preserve API order
+  });
 
   const displayCategory =
     typeof category === "string" ? category : "Collection";
   const titleCategory =
     displayCategory === "all"
       ? "The Artisan"
-      : `The ${displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1)}`;
-
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <div>Loading {displayCategory} collection...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className={styles.errorContainer}>
-        <div>Error: {error}</div>
-      </div>
-    );
-  }
+      : displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1);
 
   return (
-    <div className={`page ${styles.pageWrapper}`}>
-      <div className={styles.contentContainer}>
-        <section className={styles.pageIntro}>
-          <h1 className={styles.pageTitle}>{titleCategory} Collection</h1>
-          <p className={styles.pageSubtitle}>
-            Discover jewelry that tells a story. Each piece is handcrafted by
-            master artisans, blending ancient Indian art forms with contemporary
-            design.
-          </p>
-          <div className={styles.mandanaDivider}></div>
-        </section>
+    <div className={styles.page}>
+      {/* ═══════ EDITORIAL HEADER ═══════ */}
+      <section className={styles.header}>
+        <div className={styles.headerBg}>
+          <svg
+            className={styles.headerBgSvg}
+            viewBox="0 0 900 380"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              cx="720"
+              cy="190"
+              r="200"
+              stroke="#C8956C"
+              strokeWidth="0.5"
+              opacity="0.11"
+            />
+            <circle
+              cx="720"
+              cy="190"
+              r="145"
+              stroke="#C8956C"
+              strokeWidth="0.5"
+              opacity="0.08"
+            />
+            <circle
+              cx="720"
+              cy="190"
+              r="90"
+              stroke="#C8956C"
+              strokeWidth="0.5"
+              opacity="0.06"
+            />
+            <polygon
+              points="720,10 900,190 720,370 540,190"
+              stroke="#C8956C"
+              strokeWidth="0.5"
+              opacity="0.08"
+              fill="none"
+            />
+            <line
+              x1="540"
+              y1="10"
+              x2="900"
+              y2="370"
+              stroke="#C8956C"
+              strokeWidth="0.3"
+              opacity="0.05"
+            />
+            <line
+              x1="900"
+              y1="10"
+              x2="540"
+              y2="370"
+              stroke="#C8956C"
+              strokeWidth="0.3"
+              opacity="0.05"
+            />
+          </svg>
+        </div>
 
-        <div className={styles.mainLayout}>
-          {/* BEGIN: Sidebar Filters - Implemented but Hidden per user request */}
-          <aside className={styles.sidebarFilters}>
-            <div style={{ position: "sticky", top: "7rem" }}>
-              {/* Filter: Art Form */}
-              <div className={styles.filterSection}>
-                <h3 className={styles.filterHeader}>Art Form</h3>
-                <ul className={styles.filterList}>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Warli Art
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Madhubani
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Pattachitra
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Gond Engravings
-                    </label>
-                  </li>
-                </ul>
-              </div>
+        <div className={styles.headerScrim} />
 
-              {/* Filter: Material */}
-              <div className={styles.filterSection}>
-                <h3 className={styles.filterHeader}>Material</h3>
-                <ul className={styles.filterList}>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      22k Gold Plated
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Sterling Silver
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Terracotta
-                    </label>
-                  </li>
-                </ul>
-              </div>
+        <div className={styles.headerContent}>
+          <div className={styles.headerLeft}>
+            <div className={styles.eyebrow}>
+              {displayCategory.toUpperCase()} Collection
+            </div>
+            <h1 className={styles.pageTitle}>
+              {titleCategory} <em>Collection</em>
+            </h1>
+            <p className={styles.pageSubtitle}>
+              Each piece handcrafted by master artisans — ancient Indian folk
+              arts worn on the skin of the modern woman.
+            </p>
+          </div>
 
-              {/* Filter: Collection */}
-              <div className={styles.filterSection}>
-                <h3 className={styles.filterHeader}>Collection</h3>
-                <ul className={styles.filterList}>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Festive 2024
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Minimalist Heritage
-                    </label>
-                  </li>
-                  <li>
-                    <label className={styles.filterItem}>
-                      <input
-                        className={styles.filterCheckbox}
-                        type="checkbox"
-                      />{" "}
-                      Tribal Roots
-                    </label>
-                  </li>
-                </ul>
+          <div className={styles.headerRight}>
+            <div className={styles.glassPill}>
+              <div className={styles.pillLabel}>Pieces</div>
+              <div className={styles.pillCount}>
+                {loading ? "—" : products.length}
               </div>
             </div>
-          </aside>
-          {/* END: Sidebar Filters */}
-
-          {/* BEGIN: Product Grid */}
-          <section className={styles.productGridArea}>
-            <SimpleGrid
-              cols={{ base: 2, md: 3, xl: 4 }}
-              spacing={{ base: 10, sm: "xl" }}
-              verticalSpacing={{ base: "md", sm: "xl" }}
-            >
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  slug={product.slug}
-                  images={product.images}
-                  name={product.name}
-                  imageSizes="(max-width: 768px) 50vw, 33.3vw"
-                  price={product.price}
-                  description={product.description}
-                  category={product.category}
-                  id={product.id}
-                  material={product.material}
-                  quantity={product.quantity}
-                />
-              ))}
-            </SimpleGrid>
-          </section>
+            <div className={styles.scrollIndicator}>
+              <div className={styles.scrollLine} />
+              Scroll
+            </div>
+          </div>
         </div>
+      </section>
+
+      {/* ═══ MANDANA BAR ═══ */}
+      <div className={styles.mandanaBar} />
+
+      {/* ═══════ CONTENT ═══════ */}
+      <div className={styles.content}>
+        {loading ? (
+          <div className={styles.loadingState}>
+            <div className={styles.loadingDot} />
+            <p className={styles.loadingText}>
+              Loading {displayCategory} collection&hellip;
+            </p>
+          </div>
+        ) : error ? (
+          <div className={styles.errorState}>
+            <div className={styles.errorBox}>
+              <p className={styles.errorText}>
+                Could not load this collection. Please try again.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Sort bar */}
+            <div className={styles.sortBar}>
+              <span className={styles.pieceCount}>
+                {sortedProducts.length}{" "}
+                {sortedProducts.length === 1 ? "piece" : "pieces"}
+              </span>
+              <div className={styles.sortControl}>
+                <label className={styles.sortLabel} htmlFor="sort-select">
+                  Sort By
+                </label>
+                <select
+                  id="sort-select"
+                  className={styles.sortSelect}
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="name-asc">Name: A to Z</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Product grid */}
+            {sortedProducts.length === 0 ? (
+              <div className={styles.emptyState}>
+                <div className={styles.emptyOrnament} aria-hidden="true" />
+                <p className={styles.emptyText}>
+                  No pieces found yet. Check back soon.
+                </p>
+              </div>
+            ) : (
+              <SimpleGrid
+                cols={{ base: 2, md: 3, xl: 4 }}
+                spacing={{ base: 10, sm: "xl" }}
+                verticalSpacing={{ base: "md", sm: "xl" }}
+              >
+                {sortedProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    slug={product.slug}
+                    images={product.images}
+                    name={product.name}
+                    imageSizes="(max-width: 768px) 50vw, 25vw"
+                    price={product.price}
+                    description={product.description}
+                    category={product.category}
+                    id={product.id}
+                    material={product.material}
+                    quantity={product.quantity}
+                  />
+                ))}
+              </SimpleGrid>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

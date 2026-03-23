@@ -1,3 +1,4 @@
+/* ════ DETAIL CARD ════ */
 .cardContainer {
   display: flex;
   flex-direction: column;
@@ -5,12 +6,15 @@
 }
 
 .imageContainer {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  background-color: var(--l);
+  border-radius: 8px;
+  overflow: hidden;
 }
 .imageContainer img {
   width: 100%;
   height: auto;
-  aspect-ratio: 1/1.5;
+  aspect-ratio: 2/3;
   object-fit: cover;
 }
 
@@ -20,9 +24,11 @@
 }
 
 .textContainer span:first-child {
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
+  font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
+  font-size: 16px;
+  color: var(--s);
+  margin-bottom: 4px;
 }
 
 @media screen and (max-width: 1024px) {
@@ -30,7 +36,7 @@
     margin-bottom: 24px;
   }
   .imageContainer img {
-    width: 100vw;
+    width: 100%;
     height: auto;
     aspect-ratio: 1/1;
   }
