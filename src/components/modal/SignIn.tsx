@@ -50,7 +50,6 @@ export default function SignInModal({
       const GOOGLE_AUTH_ENDPOINT = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.GOOGLE_SIGNIN.URL}`;
 
       // Use Google Identity Services popup flow
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
       if (!window.google?.accounts?.id) {
         // Load Google Identity Services script if not loaded
         await new Promise<void>((resolve) => {
@@ -61,7 +60,6 @@ export default function SignInModal({
         });
       }
 
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
       window.google.accounts.id.initialize({
         client_id: clientId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,7 +88,6 @@ export default function SignInModal({
         },
       });
 
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
       window.google.accounts.id.prompt();
     } catch (error) {
       console.error("Failed to sign in with Google:", error);

@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { OrderService, OrderDetail } from "@/lib/api/orderService";
+import { sendGAEvent } from "@next/third-parties/google";
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "—";
@@ -61,6 +62,35 @@ function OrderConfirmedContent() {
       .catch(() => setOrder(null))
       .finally(() => setLoading(false));
   }, [orderId]);
+
+  useEffect(() => {
+    if (!order) return;
+
+    const items = order.orderItems.map((item) => ({
+      item_id: item.productId,
+      item_name: item.product?.name ?? item.productId,
+      price: item.price ?? 0,
+      quantity: item.quantity,
+    }));
+
+    sendGAEvent("event", "purchase", {
+      transaction_id: order.id,
+      value: order.total ?? 0,
+      currency: "INR",
+      items,
+    });
+
+    const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+    if (typeof fbq === "function") {
+      fbq("track", "Purchase", {
+        value: order.total ?? 0,
+        currency: "INR",
+        content_ids: order.orderItems.map((i) => i.productId),
+        content_type: "product",
+        num_items: order.orderItems.length,
+      });
+    }
+  }, [order]);
 
   const shortId = orderId ?? null;
   const shippingAddr = order?.shippingAddress;

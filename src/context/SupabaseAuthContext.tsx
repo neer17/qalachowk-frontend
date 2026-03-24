@@ -115,7 +115,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     script.async = true;
     script.defer = true;
     script.onload = () => {
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
       window.google.accounts.id.initialize({
         client_id: clientId,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,7 +139,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         },
       });
-      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+
       window.google.accounts.id.prompt();
     };
     document.body.appendChild(script);

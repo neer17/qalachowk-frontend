@@ -17,7 +17,17 @@
       "WebFetch(domain:github.com)",
       "Bash(export:*)",
       "Bash([ -s \"$NVM_DIR/nvm.sh\" ])",
-      "Bash(. \"$NVM_DIR/nvm.sh\")"
+      "Bash(. \"$NVM_DIR/nvm.sh\")",
+      "Skill(update-config)",
+      "mcp__stitch__list_projects",
+      "mcp__stitch__get_screen",
+      "Bash(yarn tsc:*)",
+      "Bash(yarn prettier:fix)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(yarn prettier:*)",
+      "Bash(git push:*)",
+      "Bash(yarn add:*)"
     ]
   }
 }
