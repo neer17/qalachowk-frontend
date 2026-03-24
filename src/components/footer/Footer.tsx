@@ -42,16 +42,16 @@ export default function Footer() {
             <h4 className={styles.heading}>Company</h4>
             <ul className={styles.list}>
               <li>
-                <Link href="#">Our Craft</Link>
+                <Link href="/craft">Our Craft</Link>
               </li>
               <li>
-                <Link href="#">The Story</Link>
+                <Link href="/return-policy">Returns &amp; Refunds</Link>
               </li>
               <li>
-                <Link href="#">Sustainability</Link>
+                <Link href="/shipping-policy">Shipping</Link>
               </li>
               <li>
-                <Link href="#">Contact</Link>
+                <Link href="/contact">Contact</Link>
               </li>
             </ul>
           </div>
@@ -80,9 +80,9 @@ export default function Footer() {
         <div className={styles.bottomBar}>
           <p>© 2026 Qala Chowk Handcrafted. All Rights Reserved.</p>
           <div className={styles.legalLinks}>
-            <Link href="#">Privacy</Link>
-            <Link href="#">Terms</Link>
-            <Link href="#">Shipping</Link>
+            <Link href="/privacy-policy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/shipping-policy">Shipping</Link>
           </div>
         </div>
       </div>
