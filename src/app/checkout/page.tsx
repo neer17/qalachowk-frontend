@@ -22,6 +22,7 @@ import {
 } from "@/lib/api/userService";
 import { OrderService } from "@/lib/api/orderService";
 import { DeliveryFormValues } from "@/types/ui/checkoutForm";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
@@ -48,6 +49,7 @@ export default function Checkout() {
   const [selectedPayment, setSelectedPayment] = useState<string>("upi");
 
   const formRef = useRef<DeliveryFormRef>(null);
+  const checkoutTracked = useRef(false);
 
   // Load saved state on mount
   useEffect(() => {
@@ -118,6 +120,37 @@ export default function Checkout() {
       }
     };
   }, [otpExpiryTime, timeRemaining]);
+
+  // Fire begin_checkout once after cart/state is loaded
+  useEffect(() => {
+    if (!isStateLoaded || checkoutTracked.current) return;
+    checkoutTracked.current = true;
+
+    const total = getTotalPrice();
+    const gaItems = Array.from(cartData.values()).map((item) => ({
+      item_id: item.id,
+      item_name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      item_category: item.category?.name,
+    }));
+
+    sendGAEvent("event", "begin_checkout", {
+      currency: "INR",
+      value: total,
+      items: gaItems,
+    });
+
+    const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+    if (typeof fbq === "function") {
+      fbq("track", "InitiateCheckout", {
+        value: total,
+        currency: "INR",
+        num_items: cartData.size,
+        content_ids: Array.from(cartData.keys()),
+      });
+    }
+  }, [isStateLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Save form state when tab becomes hidden
   useEffect(() => {

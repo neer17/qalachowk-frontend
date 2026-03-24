@@ -13,6 +13,7 @@ import { EmblaCarouselType } from "embla-carousel";
 import { Product } from "@/utils/types";
 import { API_ENDPOINTS } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function ProductDetails() {
   const params = useParams();
@@ -55,6 +56,34 @@ export default function ProductDetails() {
   useEffect(() => {
     if (product) setIsInWishlist(wishlistData.has(product.id));
   }, [wishlistData, product]);
+
+  useEffect(() => {
+    if (!product) return;
+
+    sendGAEvent("event", "view_item", {
+      currency: "INR",
+      value: product.price,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          price: product.price,
+          item_category: product.category?.name,
+        },
+      ],
+    });
+
+    const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+    if (typeof fbq === "function") {
+      fbq("track", "ViewContent", {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_type: "product",
+        value: product.price,
+        currency: "INR",
+      });
+    }
+  }, [product]);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -119,6 +148,32 @@ export default function ProductDetails() {
     };
 
     await setCartData(productToAdd);
+
+    sendGAEvent("event", "add_to_cart", {
+      currency: "INR",
+      value: product.price * quantity,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          price: product.price,
+          quantity,
+          item_category: product.category?.name,
+        },
+      ],
+    });
+
+    const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+    if (typeof fbq === "function") {
+      fbq("track", "AddToCart", {
+        content_ids: [product.id],
+        content_name: product.name,
+        value: product.price * quantity,
+        currency: "INR",
+        num_items: quantity,
+      });
+    }
+
     toggleCartPopup();
   };
 
