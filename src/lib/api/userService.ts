@@ -10,11 +10,11 @@ export type UserSignInResponse = components["schemas"]["UserAuthResponse"];
 export const UserService = {
   getDbUserId: async (
     provider: string | undefined,
-    supabaseId: string,
+    userId: string,
     phone?: string,
   ): Promise<string> => {
     const payload: UserSignInRequest =
-      provider === "google" ? { googleAuthId: supabaseId } : { phone: phone! };
+      provider === "google" ? { googleAuthId: userId } : { phone: phone! };
     const response = await UserService.signIn(payload);
     return response.userId;
   },

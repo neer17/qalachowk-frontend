@@ -6,9 +6,9 @@ import CheckoutForm from "@/components/forms/CheckoutForm";
 import { DeliveryFormRef } from "@/components/forms/CheckoutForm";
 import Rupee from "@/components/symbols/Rupee";
 import { useRouter } from "next/navigation";
-import { AuthProvider as SupabaseAuthProvider } from "@/context/SupabaseAuthContext";
 import { Text } from "@mantine/core";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/SupabaseAuthContext";
 import CartProductCard from "@/components/card/CartProductCard";
 import { notifications } from "@mantine/notifications";
 import { ACTIVE_COUNTRIES, environments, USER_ROLES } from "@/utils/constants";
@@ -25,6 +25,7 @@ import { DeliveryFormValues } from "@/types/ui/checkoutForm";
 
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
+  const { login } = useAuth();
   const router = useRouter();
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>("");
 
@@ -322,7 +323,6 @@ export default function Checkout() {
       shippingFirstName,
       shippingLastName,
       email,
-      userId,
       shippingAddress,
       shippingLandmark,
       shippingCity,
@@ -340,8 +340,6 @@ export default function Checkout() {
       isPhoneVerified,
       useDifferentBilling,
     } = data;
-
-    const supabaseId = userId;
 
     const addresses = [];
     const shippingAddressObj = {
@@ -377,7 +375,6 @@ export default function Checkout() {
 
     try {
       user = await createUser({
-        ...(supabaseId && { supabaseId: supabaseId }),
         firstName: shippingFirstName,
         lastName: shippingLastName,
         email: email,
@@ -387,6 +384,19 @@ export default function Checkout() {
         phoneVerified: isPhoneVerified,
         addresses: addresses,
       });
+
+      // Sign the user into the auth context so they stay logged in
+      // after redirect (e.g. to order-confirmed → order-details).
+      await login(
+        {
+          userId: user.userId!,
+          firstName: user.firstName || shippingFirstName,
+          lastName: user.lastName || shippingLastName,
+          email: email,
+          phone: shippingPhone,
+        },
+        "phone",
+      );
     } catch (error) {
       console.error("Error in user creation: ", { error });
       notifications.show({
@@ -461,13 +471,13 @@ export default function Checkout() {
 
   if (!isStateLoaded) {
     return (
-      <SupabaseAuthProvider>
+      <>
         <div className={styles.container}>
           <Text py={50} px="xl">
             Loading Checkout...
           </Text>
         </div>
-      </SupabaseAuthProvider>
+      </>
     );
   }
 
@@ -476,7 +486,7 @@ export default function Checkout() {
   const itemCount = cartData.size;
 
   return (
-    <SupabaseAuthProvider>
+    <>
       <div className={styles.container}>
         {/* ── Progress Steps ── */}
         <div className={styles.checkoutProgress}>
@@ -809,6 +819,6 @@ export default function Checkout() {
           </div>
         </div>
       </div>
-    </SupabaseAuthProvider>
+    </>
   );
 }

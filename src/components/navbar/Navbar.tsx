@@ -10,7 +10,6 @@ import { useAuth } from "@/context/SupabaseAuthContext";
 import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
 import { OtpService } from "@/lib/api/otpService";
-import { UserService } from "@/lib/api/userService";
 import { notifications } from "@mantine/notifications";
 
 interface MenuItem {
@@ -91,24 +90,26 @@ const NavigationBar: React.FC = () => {
 
   const handleVerifyOtp = async (otp: string) => {
     try {
-      await OtpService.verifyOtp({ phone: phoneNumber, otp: otp });
-    } catch (error) {
-      console.error("Error in verifying OTP: ", { error });
+      const signInResponse = await OtpService.verifyOtpAndSignIn({
+        phone: phoneNumber,
+        otp: otp,
+      });
+
+      await login(signInResponse, "phone");
+
+      setShowSignInModal(false);
+      setShowOTPModal(false);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Verification failed";
+      notifications.show({
+        title: "Sign-in Failed",
+        message,
+        color: "red",
+        radius: 0,
+      });
       throw error;
     }
-
-    let signInResponse;
-    try {
-      signInResponse = await UserService.signIn({ phone: phoneNumber });
-    } catch (error) {
-      console.error("Error in signing in user: ", { error });
-      throw error;
-    }
-
-    await login(signInResponse);
-
-    setShowSignInModal(false);
-    setShowOTPModal(false);
   };
 
   return (

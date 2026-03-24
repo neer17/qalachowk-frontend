@@ -83,6 +83,18 @@ export const API_ENDPOINTS = {
     URL: "/v1/auth/verify-otp",
     METHOD: "POST",
   },
+  VERIFY_OTP_AND_SIGNIN: {
+    URL: "/v1/auth/verify-otp-and-signin",
+    METHOD: "POST",
+  },
+  GOOGLE_SIGNIN: {
+    URL: "/v1/auth/google",
+    METHOD: "POST",
+  },
+  LOGOUT: {
+    URL: "/v1/auth/logout",
+    METHOD: "POST",
+  },
   USER_CREATE: {
     URL: "/v1/users/create",
     METHOD: "POST",

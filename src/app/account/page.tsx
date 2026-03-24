@@ -7,8 +7,18 @@ import styles from "./page.module.css";
 import Link from "next/link";
 
 export default function AccountPage() {
-  const { user, logout } = useAuth();
+  const { user, isAuthLoading, logout } = useAuth();
   const router = useRouter();
+
+  if (isAuthLoading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.stateContainer}>
+          <p className={styles.stateText}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -28,11 +38,9 @@ export default function AccountPage() {
     );
   }
 
-  const firstName = user.user_metadata?.firstName as string | undefined;
-  const lastName = user.user_metadata?.lastName as string | undefined;
   const fullName =
-    firstName || lastName
-      ? [firstName, lastName].filter(Boolean).join(" ")
+    user.firstName || user.lastName
+      ? [user.firstName, user.lastName].filter(Boolean).join(" ")
       : null;
 
   const handleLogout = async () => {

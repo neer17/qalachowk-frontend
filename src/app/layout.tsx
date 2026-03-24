@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import {
   Playfair_Display,
   Cormorant_Garamond,
@@ -58,9 +57,6 @@ const notoSerifDevanagari = Noto_Serif_Devanagari({
 export const metadata: Metadata = {
   title: "Qala Chowk",
   description: "Qala Chowk - Premium Indian E-commerce",
-  other: {
-    "google-signin-client_id": process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-  },
 };
 
 import Footer from "@/components/footer/Footer";
@@ -73,16 +69,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <Script
-          src="https://accounts.google.com/gsi/client"
-          strategy="afterInteractive"
-        />
-        <meta
-          name="google-signin-client_id"
-          content={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-        />
-      </head>
+      <head></head>
       <body
         className={`${playfairDisplay.variable} ${cormorantGaramond.variable} ${dmSans.variable} ${tiroDevanagariHindi.variable} ${notoSerifDevanagari.variable}`}
       >

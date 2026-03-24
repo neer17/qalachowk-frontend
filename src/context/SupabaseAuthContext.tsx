@@ -1,24 +1,22 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { createClient, SupabaseClient, User } from "@supabase/supabase-js";
 import {
   loadUserState,
   saveUserState,
   clearUserState,
 } from "@/utils/idb/user.idb";
+import { API_ENDPOINTS } from "@/utils/constants";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey);
-
-type AuthContextType = {
-  user: User | null;
-  supabase: SupabaseClient;
-  login: (backendUser: BackendAuthResponse) => Promise<void>;
-  logout: () => Promise<void>;
-};
+/** Unified user type — no more Supabase User dependency */
+export interface AppUser {
+  id: string;
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  provider: "phone" | "google";
+}
 
 export type BackendAuthResponse = {
   userId: string;
@@ -26,183 +24,127 @@ export type BackendAuthResponse = {
   lastName: string;
   email: string;
   phone: string;
-  accessToken: string;
-  refreshToken: string;
+};
+
+type AuthContextType = {
+  user: AppUser | null;
+  isAuthLoading: boolean;
+  login: (
+    backendUser: BackendAuthResponse,
+    provider: "phone" | "google",
+  ) => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  supabase,
+  isAuthLoading: true,
   login: async () => {},
   logout: async () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isUserLoaded, setIsUserLoaded] = useState(false);
+  const [user, setUser] = useState<AppUser | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // Logout function
   const logout = async (): Promise<void> => {
     try {
-      // Sign out from Supabase
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Supabase logout error:", error);
-        throw error;
-      }
-
-      // Clear user from IDB
-      await clearUserState();
-
-      // Clear local state
-      setUser(null);
-
-      console.log("✅ User logged out successfully");
+      // Call backend logout to clear httpOnly cookies
+      await fetch(
+        `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.LOGOUT.URL}`,
+        {
+          method: API_ENDPOINTS.LOGOUT.METHOD,
+          credentials: "include",
+        },
+      );
     } catch (error) {
-      console.error("❌ Failed to logout user:", error);
-      throw error;
+      console.error("Backend logout error:", error);
     }
+
+    await clearUserState();
+    setUser(null);
   };
 
-  // Login function for backend phone OTP sign-in
-  const login = async (backendUser: BackendAuthResponse): Promise<void> => {
-    const syntheticUser: User = {
+  const login = async (
+    backendUser: BackendAuthResponse,
+    provider: "phone" | "google",
+  ): Promise<void> => {
+    const appUser: AppUser = {
       id: backendUser.userId,
       email: backendUser.email,
       phone: backendUser.phone,
-      app_metadata: { provider: "phone" },
-      user_metadata: {
-        firstName: backendUser.firstName,
-        lastName: backendUser.lastName,
-      },
-      aud: "authenticated",
-      created_at: new Date().toISOString(),
+      firstName: backendUser.firstName,
+      lastName: backendUser.lastName,
+      provider,
     };
 
-    setUser(syntheticUser);
-    await saveUserState(syntheticUser);
+    setUser(appUser);
+    await saveUserState(appUser);
   };
 
+  // Initialize auth from IndexedDB cache
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // First, try to load user from IDB
         const cachedUser = await loadUserState();
         if (cachedUser) {
-          console.log("✅ Loaded user from IDB:", cachedUser.email);
           setUser(cachedUser);
-          setIsUserLoaded(true);
-          return;
-        }
-
-        // If no cached user, get current session from Supabase
-        const { data } = await supabase.auth.getUser();
-        if (data?.user) {
-          setUser(data.user);
-          // Save to IDB for future use
-          await saveUserState(data.user);
         }
       } catch (error) {
         console.error("Failed to initialize auth:", error);
       } finally {
-        setIsUserLoaded(true);
+        setIsAuthLoading(false);
       }
     };
 
     initializeAuth();
-
-    // Listen for auth state changes (only for Supabase-managed sessions like Google sign-in)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        const newUser = session?.user ?? null;
-
-        console.info("onAuthStateChanged", { event, user: newUser });
-
-        if (newUser) {
-          // Supabase session exists — update state and persist
-          setUser(newUser);
-          await saveUserState(newUser);
-        } else if (event === "SIGNED_OUT") {
-          // Only clear on explicit sign-out, not on missing session
-          // (phone OTP users have no Supabase session, so session is always null for them)
-          setUser(null);
-          await clearUserState();
-        }
-        // For other events with null session (INITIAL_SESSION, TOKEN_REFRESHED, etc.),
-        // do nothing — preserve any phone-authenticated user already in state/IDB.
-      },
-    );
-
-    return () => {
-      listener.subscription.unsubscribe();
-    };
   }, []);
 
-  // 👇 Google One Tap integration - only show if no user in IDB
+  // Google One Tap — sends ID token directly to our backend
   useEffect(() => {
-    // Don't show Google One Tap if:
-    // 1. User data is still loading
-    // 2. User is already authenticated (from IDB or Supabase)
-    if (!isUserLoaded || user) {
-      return;
-    }
+    if (isAuthLoading || user) return;
 
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
     if (!clientId) return;
 
-    // Gracefully disable Google One Tap natively if the local dev server is running
-    // over a non-secure HTTP context where the Web Crypto API is forcefully undefined.
-    if (typeof window !== "undefined" && !window.crypto?.subtle) {
-      console.warn(
-        "Web Crypto API (crypto.subtle) is unavailable. Disabling Google One Tap. (Are you running on HTTP?)",
-      );
-      return;
-    }
+    const GOOGLE_AUTH_ENDPOINT = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.GOOGLE_SIGNIN.URL}`;
 
-    // Generate a nonce for Google One Tap + Supabase
-    const rawNonce = uuidv4();
-    const encodedNonce = new TextEncoder().encode(rawNonce);
-    crypto.subtle.digest("SHA-256", encodedNonce).then((hashBuffer) => {
-      const hashedNonce = Array.from(new Uint8Array(hashBuffer))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-
-      // Load Google One Tap
-      const script = document.createElement("script");
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          nonce: hashedNonce,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          callback: async (response: any) => {
-            const { credential } = response;
-            const { data, error } = await supabase.auth.signInWithIdToken({
-              provider: "google",
-              token: credential,
-              nonce: rawNonce,
+    // Load Google Identity Services
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback: async (response: any) => {
+          try {
+            const res = await fetch(GOOGLE_AUTH_ENDPOINT, {
+              method: API_ENDPOINTS.GOOGLE_SIGNIN.METHOD,
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ idToken: response.credential }),
             });
 
-            if (error) {
-              console.error("Google sign-in error:", error);
-            } else if (data.user) {
-              setUser(data.user);
-              // Save to IDB after successful Google sign-in
-              await saveUserState(data.user);
+            if (!res.ok) {
+              console.error("Google sign-in failed:", res.status);
+              return;
             }
-          },
-        });
-        // Show the prompt
-        // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
-        window.google.accounts.id.prompt();
-      };
-      document.body.appendChild(script);
-    });
 
-    // Cleanup script on unmount
+            const userData: BackendAuthResponse = await res.json();
+            await login(userData, "google");
+          } catch (error) {
+            console.error("Google sign-in error:", error);
+          }
+        },
+      });
+      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+      window.google.accounts.id.prompt();
+    };
+    document.body.appendChild(script);
+
     return () => {
       const gsiScript = document.querySelector(
         'script[src="https://accounts.google.com/gsi/client"]',
@@ -211,10 +153,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         gsiScript.parentNode.removeChild(gsiScript);
       }
     };
-  }, [isUserLoaded, user]);
+  }, [isAuthLoading, user]);
 
   return (
-    <AuthContext.Provider value={{ user, supabase, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

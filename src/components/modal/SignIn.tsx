@@ -6,6 +6,8 @@ import Image from "next/image";
 import Google from "@/app/svgs/google.svg";
 import styles from "./SignIn.module.css";
 import { useAuth } from "@/context/SupabaseAuthContext";
+import { API_ENDPOINTS } from "@/utils/constants";
+import type { BackendAuthResponse } from "@/context/SupabaseAuthContext";
 
 interface SignInModalProps {
   sendOTPCallback: (phoneNumber: string) => void;
@@ -21,7 +23,7 @@ export default function SignInModal({
   const [input, setInput] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { supabase } = useAuth();
+  const { login } = useAuth();
 
   // Validate input whenever it changes
   useEffect(() => {
@@ -43,20 +45,53 @@ export default function SignInModal({
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+
+      const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+      const GOOGLE_AUTH_ENDPOINT = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.GOOGLE_SIGNIN.URL}`;
+
+      // Use Google Identity Services popup flow
+      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+      if (!window.google?.accounts?.id) {
+        // Load Google Identity Services script if not loaded
+        await new Promise<void>((resolve) => {
+          const script = document.createElement("script");
+          script.src = "https://accounts.google.com/gsi/client";
+          script.onload = () => resolve();
+          document.body.appendChild(script);
+        });
+      }
+
+      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        callback: async (response: any) => {
+          try {
+            const res = await fetch(GOOGLE_AUTH_ENDPOINT, {
+              method: API_ENDPOINTS.GOOGLE_SIGNIN.METHOD,
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify({ idToken: response.credential }),
+            });
+
+            if (!res.ok) {
+              console.error("Google sign-in failed:", res.status);
+              return;
+            }
+
+            const userData: BackendAuthResponse = await res.json();
+            await login(userData, "google");
+            onClose();
+          } catch (error) {
+            console.error("Google sign-in error:", error);
+          } finally {
+            setIsLoading(false);
+          }
         },
       });
 
-      if (error) {
-        console.error("Google sign-in error:", error);
-        throw error;
-      }
-
-      // The redirect will happen automatically, but we'll close the modal
-      onClose();
+      // @ts-expect-error Property 'google' does not exist on type 'Window & typeof globalThis'.
+      window.google.accounts.id.prompt();
     } catch (error) {
       console.error("Failed to sign in with Google:", error);
     } finally {

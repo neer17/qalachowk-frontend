@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { OrderService, OrderDetail } from "@/lib/api/orderService";
-import { UserService } from "@/lib/api/userService";
 import { useAuth } from "@/context/SupabaseAuthContext";
 import Image from "next/image";
 
@@ -40,7 +39,7 @@ function formatAmount(amount?: number | string): string {
 }
 
 export default function OrderDetailsPage() {
-  const { user } = useAuth();
+  const { user, isAuthLoading } = useAuth();
 
   const [orders, setOrders] = useState<OrderDetail[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
@@ -48,16 +47,15 @@ export default function OrderDetailsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (isAuthLoading) return;
+
     if (!user) {
       setLoading(false);
       return;
     }
 
-    const provider = user.app_metadata?.provider as string | undefined;
-    const phone = user.phone ?? undefined;
-
-    UserService.getDbUserId(provider, user.id, phone)
-      .then((dbUserId) => OrderService.getUserOrders(dbUserId))
+    setLoading(true);
+    OrderService.getUserOrders(user.id)
       .then((data) => {
         const raw = Array.isArray(data)
           ? data
@@ -68,9 +66,9 @@ export default function OrderDetailsPage() {
       })
       .catch(() => setError("Failed to load order details. Please try again."))
       .finally(() => setLoading(false));
-  }, [user]);
+  }, [user, isAuthLoading]);
 
-  if (loading) {
+  if (loading || isAuthLoading) {
     return (
       <div className={styles.pageWrapper}>
         <div className={styles.stateContainer}>

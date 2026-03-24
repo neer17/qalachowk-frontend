@@ -1,0 +1,788 @@
+/*
+ * ════════════════════════════════════════════════════════════════
+ * QALA CHOWK — DESIGN SYSTEM
+ * ════════════════════════════════════════════════════════════════
+ *
+ * This file documents and provides reusable CSS classes for every
+ * visual pattern in the Qala Chowk design language. Import it
+ * globally (via layout.tsx) or reference it when building new
+ * pages / components.
+ *
+ * Organisation:
+ *   1. Design Tokens (CSS custom properties)
+ *   2. Typography
+ *   3. Buttons
+ *   4. Cards
+ *   5. Section Layouts
+ *   6. Decorative Elements (dividers, marquee, badges)
+ *   7. Form Controls
+ *   8. Utility & Animation
+ *   9. Responsive Breakpoints
+ *
+ * Fonts loaded in layout.tsx (next/font):
+ *   --font-cormorant-garamond   → Headlines, prices, body prose
+ *   --font-dm-sans              → Labels, UI text, buttons
+ *   --font-playfair-display     → Mantine headings (via theme.ts)
+ *   --font-tiro-devanagari      → Hindi headings
+ *   --font-noto-serif-devanagari → Hindi body
+ *
+ * Colour palette source: brand guide + homepage HTML design.
+ * Mantine theme tokens live in src/theme.ts — this file is the
+ * CSS-only counterpart for custom components.
+ * ════════════════════════════════════════════════════════════════
+ */
+
+/* ────────────────────────────────────────────────────────────────
+   1. DESIGN TOKENS
+   ────────────────────────────────────────────────────────────────
+   Apply .qc-root (or scope to :root) to make tokens available.
+   Short aliases (--s, --t, etc.) mirror the homepage source HTML
+   for fast prototyping; semantic names are also provided.
+   ──────────────────────────────────────────────────────────────── */
+
+.qc-root {
+  /* — Core palette — */
+  --s: #6a2901; /* Primary Brown          (brand primary)       */
+  --br: #8b4513; /* Saddle Brown           (secondary text)      */
+  --t: #c8956c; /* Warm Gold              (accent / highlight)  */
+  --p: #f5efe6; /* Paper                  (page background)     */
+  --l: #e8d9c5; /* Linen                  (card / image bg)     */
+  --g: #b8860b; /* Dark Goldenrod         (price accent)        */
+  --c: #2c1a0e; /* Near-black             (body text)           */
+  --bo: #d9c9b5; /* Bone                   (borders)             */
+
+  /* — Semantic aliases — */
+  --color-primary: var(--s);
+  --color-secondary: var(--br);
+  --color-accent: var(--t);
+  --color-background: var(--p);
+  --color-surface: var(--l);
+  --color-price: var(--g);
+  --color-text: var(--c);
+  --color-border: var(--bo);
+
+  /* — Surfaces on dark backgrounds — */
+  --color-on-dark-text: var(--p); /* #f5efe6  */
+  --color-on-dark-text-muted: rgba(245, 239, 230, 0.78);
+  --color-on-dark-text-dim: rgba(245, 239, 230, 0.4);
+  --color-on-dark-border: rgba(200, 149, 108, 0.14);
+
+  /* — Glass / frosted effects — */
+  --glass-bg: rgba(245, 239, 230, 0.12);
+  --glass-border: rgba(245, 239, 230, 0.22);
+
+  /* — Transitions — */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.7s ease;
+
+  /* — Border radius scale — */
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-full: 50%;
+
+  /* — Spacing (used for section padding) — */
+  --space-section-x: 64px;
+  --space-section-y: 88px;
+
+  /* — Layout — */
+  --navbar-height: 64px;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   2. TYPOGRAPHY
+   ────────────────────────────────────────────────────────────────
+   Two font families form the typographic system:
+     • Cormorant Garamond — editorial serif for headlines, prices,
+       descriptions, quotes. Used at weights 400 (italic body)
+       and 600 (headlines).
+     • DM Sans — clean sans-serif for labels, buttons, eyebrow
+       text, navigation. Used at weight 300.
+   ──────────────────────────────────────────────────────────────── */
+
+/* Eyebrow / category label — appears above section titles */
+.qc-eyebrow {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--t);
+  margin-bottom: 10px;
+}
+
+/* Eyebrow with leading dash (hero / editorial variant) */
+.qc-eyebrow-dash {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--t);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.qc-eyebrow-dash::before {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 0.5px;
+  background: var(--t);
+}
+
+/* Section title — large serif headline */
+.qc-section-title {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3vw, 42px);
+  color: var(--s);
+  line-height: 1.1;
+}
+.qc-section-title em {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--br);
+}
+
+/* Hero headline — oversized serif */
+.qc-hero-headline {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: clamp(52px, 7.5vw, 100px);
+  line-height: 0.95;
+  color: var(--p);
+  letter-spacing: -0.01em;
+}
+.qc-hero-headline em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--t);
+}
+
+/* Editorial headline — mid-size serif on dark background */
+.qc-editorial-headline {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: clamp(32px, 4.5vw, 58px);
+  color: var(--p);
+  line-height: 1.06;
+}
+.qc-editorial-headline em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--t);
+}
+
+/* Body prose — italic serif for descriptions */
+.qc-body-prose {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--c);
+  line-height: 1.78;
+}
+
+/* Body prose on dark backgrounds */
+.qc-body-prose-light {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(245, 239, 230, 0.78);
+  line-height: 1.7;
+}
+
+/* Pull-quote / blockquote */
+.qc-quote {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--t);
+  border-left: 2px solid var(--t);
+  padding-left: 18px;
+  line-height: 1.5;
+}
+
+/* Price display */
+.qc-price {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 17px;
+  color: var(--g);
+}
+
+/* Pillar / feature title — medium serif on dark bg */
+.qc-feature-title {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--p);
+}
+
+/* Tag / craft label — tiny caps */
+.qc-tag {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--t);
+}
+
+/* Origin / sub-label — tiny caps on dark bg */
+.qc-origin-label {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--t);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   3. BUTTONS
+   ──────────────────────────────────────────────────────────────── */
+
+/* Primary filled button — dark brown bg, paper text */
+.qc-btn-primary {
+  background: var(--s);
+  color: var(--p);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background var(--transition-fast);
+}
+.qc-btn-primary:hover {
+  background: var(--br);
+}
+
+/* Outline button — transparent bg, border */
+.qc-btn-outline {
+  color: var(--s);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  background: none;
+  border: 0.5px solid var(--bo);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color var(--transition-fast);
+}
+.qc-btn-outline:hover {
+  border-color: var(--s);
+}
+
+/* Light button — paper bg on dark overlays */
+.qc-btn-light {
+  background: var(--p);
+  color: var(--s);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background var(--transition-fast);
+}
+.qc-btn-light:hover {
+  background: var(--l);
+}
+
+/* Ghost link button — text + bottom border, for dark bg */
+.qc-btn-ghost {
+  color: var(--p);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 13px 0;
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid rgba(245, 239, 230, 0.5);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: border-color var(--transition-fast);
+}
+.qc-btn-ghost:hover {
+  border-color: var(--p);
+}
+
+/* Arrow link — inline text link with underline */
+.qc-link-arrow {
+  color: var(--s);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 0.5px solid var(--bo);
+  padding-bottom: 1px;
+  transition: border-color var(--transition-fast);
+}
+.qc-link-arrow:hover {
+  border-color: var(--s);
+}
+
+/* Inline CTA — appears on card hover (slide-up reveal) */
+.qc-btn-inline-cta {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--s);
+  background: none;
+  border: none;
+  border-bottom: 0.5px solid var(--s);
+  cursor: pointer;
+  padding: 0;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   4. CARDS
+   ──────────────────────────────────────────────────────────────── */
+
+/* Product card container */
+.qc-card {
+  background: var(--p);
+  border: 0.5px solid var(--bo);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+.qc-card:hover {
+  border-color: var(--t);
+}
+
+/* Card image area — 3:4 aspect, linen background */
+.qc-card-image {
+  background: var(--l);
+  aspect-ratio: 3 / 4;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Card body — text content below image */
+.qc-card-body {
+  padding: 16px 18px 20px;
+}
+
+/* Card footer — price + CTA row */
+.qc-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Wishlist heart button — floats in card image area */
+.qc-wishlist-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(245, 239, 230, 0.9);
+  border: none;
+  border-radius: var(--radius-full);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  opacity: 0;
+}
+.qc-card:hover .qc-wishlist-btn {
+  opacity: 1;
+}
+
+/* "New" badge — top-right corner of card image */
+.qc-badge-new {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--p);
+  background: var(--t);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+/* Image placeholder text (when no product photo yet) */
+.qc-card-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--br);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.4;
+}
+
+/* Frosted glass pill (hero side info) */
+.qc-glass-pill {
+  background: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 13px 17px;
+  backdrop-filter: blur(10px);
+}
+
+/* Pillar card — on dark background sections */
+.qc-pillar {
+  padding: 38px 32px;
+  border: 0.5px solid var(--color-on-dark-border);
+}
+
+/* ────────────────────────────────────────────────────────────────
+   5. SECTION LAYOUTS
+   ──────────────────────────────────────────────────────────────── */
+
+/* Standard content section */
+.qc-section {
+  padding: var(--space-section-y) var(--space-section-x);
+}
+
+/* Section header — title left, link right */
+.qc-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 52px;
+}
+
+/* 3-column grid */
+.qc-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* 4-column grid */
+.qc-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* Dark section (pillars, craft story) */
+.qc-section-dark {
+  padding: 80px var(--space-section-x);
+  background: var(--s);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light tinted section (email capture, art square) */
+.qc-section-tinted {
+  padding: 80px var(--space-section-x);
+  background: var(--l);
+  text-align: center;
+}
+
+/* Full-bleed hero section */
+.qc-hero {
+  position: relative;
+  height: calc(100vh - var(--navbar-height));
+  min-height: 560px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Full-bleed editorial band */
+.qc-editorial-band {
+  position: relative;
+  height: 82vh;
+  min-height: 540px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+/* Promise / feature strip — 4-col bordered row */
+.qc-promise-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 0.5px solid var(--bo);
+  border-bottom: 0.5px solid var(--bo);
+}
+.qc-promise-item {
+  padding: 34px 24px;
+  border-right: 0.5px solid var(--bo);
+  text-align: center;
+}
+.qc-promise-item:last-child {
+  border-right: none;
+}
+
+/* Gradient scrims for overlaying text on images */
+.qc-scrim-bottom {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 10, 0, 0.08) 0%,
+    rgba(26, 10, 0, 0.04) 28%,
+    rgba(26, 10, 0, 0.32) 58%,
+    rgba(26, 10, 0, 0.76) 100%
+  );
+}
+.qc-scrim-left {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    105deg,
+    rgba(26, 10, 0, 0.82) 0%,
+    rgba(26, 10, 0, 0.55) 38%,
+    rgba(26, 10, 0, 0.15) 68%,
+    transparent 100%
+  );
+}
+
+/* ────────────────────────────────────────────────────────────────
+   6. DECORATIVE ELEMENTS
+   ──────────────────────────────────────────────────────────────── */
+
+/* Mandana pattern divider bar */
+.qc-mandana-bar {
+  height: 28px;
+  background: var(--s);
+  overflow: hidden;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='28'%3E%3Crect width='36' height='28' fill='%236A2901'/%3E%3Cpolygon points='18,6 22,14 18,22 14,14' fill='%23C8956C'/%3E%3Ccircle cx='4' cy='14' r='2' fill='%23F5EFE6'/%3E%3Ccircle cx='32' cy='14' r='2' fill='%23F5EFE6'/%3E%3Cline x1='0' y1='1' x2='36' y2='1' stroke='%238B4513' stroke-width='0.5'/%3E%3Cline x1='0' y1='27' x2='36' y2='27' stroke='%238B4513' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-size: 36px 28px;
+}
+
+/* Marquee / scrolling ticker */
+.qc-marquee-wrap {
+  overflow: hidden;
+  border-bottom: 0.5px solid var(--bo);
+  padding: 13px 0;
+}
+.qc-marquee-track {
+  display: flex;
+  animation: qc-marquee 28s linear infinite;
+  width: max-content;
+  white-space: nowrap;
+}
+.qc-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0 30px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--br);
+}
+.qc-marquee-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--t);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+@keyframes qc-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scroll indicator (vertical text + animated line) */
+.qc-scroll-indicator {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qc-scroll-line {
+  width: 0.5px;
+  height: 36px;
+  background: rgba(245, 239, 230, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.qc-scroll-line::after {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--t);
+  animation: qc-scroll-line 2.2s ease-in-out infinite;
+}
+@keyframes qc-scroll-line {
+  0% {
+    top: -100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* ────────────────────────────────────────────────────────────────
+   7. FORM CONTROLS
+   ──────────────────────────────────────────────────────────────── */
+
+/* Inline email capture form */
+.qc-inline-form {
+  display: flex;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Text input — paper bg, bone border */
+.qc-input {
+  flex: 1;
+  background: var(--p);
+  border: 0.5px solid var(--bo);
+  border-right: none;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  padding: 12px 16px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  color: var(--c);
+  outline: none;
+}
+.qc-input::placeholder {
+  color: var(--t);
+  opacity: 0.55;
+}
+.qc-input:focus {
+  border-color: var(--s);
+}
+
+/* Submit button (pairs with .qc-input) */
+.qc-input-submit {
+  background: var(--s);
+  color: var(--p);
+  border: none;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 22px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.qc-input-submit:hover {
+  background: var(--br);
+}
+
+/* Helper / note text below forms */
+.qc-form-note {
+  margin-top: 12px;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  color: var(--br);
+  opacity: 0.65;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   8. UTILITY & ANIMATION
+   ──────────────────────────────────────────────────────────────── */
+
+/* Fade-up on scroll (pair with IntersectionObserver) */
+.qc-fade-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.qc-fade-up.qc-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays for sequential fade-ups */
+.qc-delay-1 {
+  transition-delay: 0.1s;
+}
+.qc-delay-2 {
+  transition-delay: 0.2s;
+}
+.qc-delay-3 {
+  transition-delay: 0.3s;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   9. RESPONSIVE BREAKPOINTS
+   ────────────────────────────────────────────────────────────────
+   Tablet : max-width 1024px
+   Mobile : max-width 640px
+   ──────────────────────────────────────────────────────────────── */
+
+@media (max-width: 1024px) {
+  .qc-root {
+    --space-section-x: 24px;
+  }
+  .qc-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .qc-grid-4,
+  .qc-promise-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .qc-grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .qc-hero-headline {
+    font-size: clamp(40px, 10vw, 72px);
+  }
+}

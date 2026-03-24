@@ -1,8 +1,8 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
-import { User } from "@supabase/supabase-js";
+import type { AppUser } from "@/context/SupabaseAuthContext";
 
 interface UserState {
-  user: User;
+  user: AppUser;
   savedAt: number;
   expiresAt: number;
 }
@@ -40,7 +40,7 @@ async function getDB(): Promise<IDBPDatabase<UserDB>> {
   return dbInstance;
 }
 
-export async function saveUserState(user: User): Promise<void> {
+export async function saveUserState(user: AppUser): Promise<void> {
   try {
     const db = await getDB();
     const now = Date.now();
@@ -57,7 +57,7 @@ export async function saveUserState(user: User): Promise<void> {
   }
 }
 
-export async function loadUserState(): Promise<User | null> {
+export async function loadUserState(): Promise<AppUser | null> {
   try {
     const db = await getDB();
     const state = await db.get(STORE_NAME, STATE_KEY);
@@ -74,7 +74,15 @@ export async function loadUserState(): Promise<User | null> {
       return null;
     }
 
-    return state.user;
+    // Validate that the cached object has the new AppUser shape.
+    // Old Supabase User objects won't have these fields.
+    const u = state.user;
+    if (!u || !u.id || !u.provider || !("firstName" in u)) {
+      await clearUserState();
+      return null;
+    }
+
+    return u;
   } catch (error) {
     console.error("Failed to load user state:", error);
     return null;
@@ -90,7 +98,9 @@ export async function clearUserState(): Promise<void> {
   }
 }
 
-export async function updateUserState(userData: Partial<User>): Promise<void> {
+export async function updateUserState(
+  userData: Partial<AppUser>,
+): Promise<void> {
   try {
     const currentState = await loadUserState();
     if (currentState) {
