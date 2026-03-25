@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Modal, TextInput, Button, Text, Divider, Box } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
 import Image from "next/image";
 import Google from "@/app/svgs/google.svg";
 import styles from "./SignIn.module.css";
@@ -73,7 +74,16 @@ export default function SignInModal({
             });
 
             if (!res.ok) {
-              console.error("Google sign-in failed:", res.status);
+              const errBody = await res.json().catch(() => null);
+              const errMsg =
+                errBody?.message ||
+                "Google sign-in failed. Please try again.";
+              notifications.show({
+                title: "Sign-in failed",
+                message: errMsg,
+                color: "red",
+              });
+              console.error("Google sign-in failed:", res.status, errBody);
               return;
             }
 
@@ -82,6 +92,11 @@ export default function SignInModal({
             onClose();
           } catch (error) {
             console.error("Google sign-in error:", error);
+            notifications.show({
+              title: "Sign-in failed",
+              message: "An unexpected error occurred. Please try again.",
+              color: "red",
+            });
           } finally {
             setIsLoading(false);
           }
