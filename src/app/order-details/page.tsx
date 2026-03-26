@@ -2,9 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import { OrderService, OrderDetail } from "@/lib/api/orderService";
+import {
+  OrderService,
+  OrderDetail,
+  getOrderInvoice,
+} from "@/lib/api/orderService";
 import { useAuth } from "@/context/SupabaseAuthContext";
 import Image from "next/image";
+import { notifications } from "@mantine/notifications";
 
 const STATUS_STEPS = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"];
 
@@ -45,6 +50,7 @@ export default function OrderDetailsPage() {
   const [selectedOrder, setSelectedOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -108,6 +114,23 @@ export default function OrderDetailsPage() {
         </div>
       </div>
     );
+  }
+
+  async function handleDownloadInvoice(orderId: string) {
+    setInvoiceLoading(true);
+    try {
+      const url = await getOrderInvoice(orderId);
+      window.open(url, "_blank");
+    } catch {
+      notifications.show({
+        title: "Invoice unavailable",
+        message:
+          "Could not generate invoice. Please contact care@qalachowk.com",
+        color: "red",
+      });
+    } finally {
+      setInvoiceLoading(false);
+    }
   }
 
   const order = selectedOrder;
@@ -312,9 +335,10 @@ export default function OrderDetailsPage() {
                     ? styles.secondaryButton
                     : styles.primaryButton
                 }
-                onClick={() => window.print()}
+                onClick={() => handleDownloadInvoice(order.id)}
+                disabled={invoiceLoading}
               >
-                Download Invoice
+                {invoiceLoading ? "Generating…" : "Download Invoice"}
               </button>
             </div>
           </div>

@@ -3,8 +3,13 @@ import { Suspense, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
-import { OrderService, OrderDetail } from "@/lib/api/orderService";
+import {
+  OrderService,
+  OrderDetail,
+  getOrderInvoice,
+} from "@/lib/api/orderService";
 import { sendGAEvent } from "@next/third-parties/google";
+import { notifications } from "@mantine/notifications";
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "—";
@@ -51,6 +56,7 @@ function OrderConfirmedContent() {
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const [invoiceLoading, setInvoiceLoading] = useState(false);
 
   useEffect(() => {
     if (!orderId) {
@@ -91,6 +97,24 @@ function OrderConfirmedContent() {
       });
     }
   }, [order]);
+
+  async function handleDownloadInvoice() {
+    if (!orderId) return;
+    setInvoiceLoading(true);
+    try {
+      const url = await getOrderInvoice(orderId);
+      window.open(url, "_blank");
+    } catch {
+      notifications.show({
+        title: "Invoice unavailable",
+        message:
+          "Could not generate invoice. Please contact care@qalachowk.com",
+        color: "red",
+      });
+    } finally {
+      setInvoiceLoading(false);
+    }
+  }
 
   const shortId = orderId ?? null;
   const shippingAddr = order?.shippingAddress;
@@ -436,6 +460,13 @@ function OrderConfirmedContent() {
                   }
                 >
                   View Order Details
+                </button>
+                <button
+                  className={styles.btnGhost}
+                  onClick={handleDownloadInvoice}
+                  disabled={invoiceLoading}
+                >
+                  {invoiceLoading ? "Generating…" : "Download Invoice"}
                 </button>
               </div>
             </div>

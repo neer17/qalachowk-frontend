@@ -51,6 +51,32 @@ export interface OrderDetail {
   updatedAt?: string;
 }
 
+export async function getOrderInvoice(orderId: string): Promise<string> {
+  const endpoint = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.ORDER_INVOICE.URL}/${orderId}/invoice`;
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (response.status === 401) {
+    const refreshed = await refreshSession();
+    if (!refreshed) throw new Error("Not authenticated");
+    const retryResponse = await fetch(endpoint, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!retryResponse.ok) throw new Error("Request failed after refresh");
+    const data = (await retryResponse.json()) as { invoiceUrl: string };
+    return data.invoiceUrl;
+  }
+
+  if (!response.ok) throw new Error("Request failed");
+  const data = (await response.json()) as { invoiceUrl: string };
+  return data.invoiceUrl;
+}
+
 export const OrderService = {
   getOrder: async (orderId: string): Promise<{ data: OrderDetail }> => {
     const endpoint = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.ORDER_GET.URL}/${orderId}`;

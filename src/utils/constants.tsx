@@ -54,6 +54,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/orders",
     METHOD: "GET",
   },
+  ORDER_INVOICE: {
+    URL: "/v1/orders",
+    METHOD: "GET",
+  },
   VALIDATE_DISCOUNT_CODE: {
     URL: "/v1/orders/validate-discount-code",
     METHOD: "POST",
