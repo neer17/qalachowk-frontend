@@ -11,6 +11,8 @@ import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
 import { OtpService } from "@/lib/api/otpService";
 import { notifications } from "@mantine/notifications";
+import PeacockBrown from "@/assets/peacock.svg";
+import Image from "next/image";
 
 interface MenuItem {
   name: string;
@@ -130,13 +132,13 @@ const NavigationBar: React.FC = () => {
 
         {/* Logo — left on desktop, centered on mobile */}
         <Link href="/" className={styles.brandName}>
-          {/* <Image
+          <Image
             src={PeacockBrown}
-            alt="Qala Chowk logo"
+            alt="Qala Chowk Peacock logo"
             height={36}
             width={36}
             className={styles.brandLogo}
-          /> */}
+          />
           Qala Chowk
         </Link>
 

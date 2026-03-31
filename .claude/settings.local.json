@@ -32,7 +32,15 @@
       "Bash(echo \"Exit: $?\")",
       "Bash(rm /Users/neesewan/Documents/Me_documents/qalachowk-frontend/.claude/commands/brand.md)",
       "Bash(rmdir /Users/neesewan/Documents/Me_documents/qalachowk-frontend/.claude/commands)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Read(//Users/neesewan/Documents/Me_documents/**)",
+      "Bash(find ~/Documents/Me_documents/qalachowk-backend -name *email* -o -name *mail* -o -name *template*)",
+      "Bash(/Users/neesewan/Documents/Me_documents/qalachowk-backend/node_modules/.bin/tsc --noEmit)",
+      "Bash(fish -c \"cd /Users/neesewan/Documents/Me_documents/qalachowk-backend && node_modules/.bin/tsc --noEmit 2>&1 | head -20\")",
+      "Bash(open:*)",
+      "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-frontend/src/app/favicon* /Users/neesewan/Documents/Me_documents/qalachowk-frontend/src/app/icon*)",
+      "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-backend/.env*)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8080/v1/auth/google -H \"Content-Type: application/json\" -d '{}')"
     ]
   }
 }

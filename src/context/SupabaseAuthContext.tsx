@@ -6,12 +6,12 @@ import {
   saveUserState,
   clearUserState,
 } from "@/utils/idb/user.idb";
+import { clearCheckoutState } from "@/utils/idb/checkout.idb";
 import { API_ENDPOINTS } from "@/utils/constants";
 
 /** Unified user type — no more Supabase User dependency */
 export interface AppUser {
   id: string;
-  email: string;
   phone: string;
   firstName: string;
   lastName: string;
@@ -22,7 +22,6 @@ export type BackendAuthResponse = {
   userId: string;
   firstName: string;
   lastName: string;
-  email: string;
   phone: string;
 };
 
@@ -61,6 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.error("Backend logout error:", error);
     }
 
+    await clearCheckoutState();
     await clearUserState();
     setUser(null);
   };
@@ -71,7 +71,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   ): Promise<void> => {
     const appUser: AppUser = {
       id: backendUser.userId,
-      email: backendUser.email,
       phone: backendUser.phone,
       firstName: backendUser.firstName,
       lastName: backendUser.lastName,
@@ -100,9 +99,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     initializeAuth();
   }, []);
 
-  // Google One Tap — sends ID token directly to our backend
+  // Google One Tap — disabled for now; set GOOGLE_ONE_TAP_ENABLED = true to re-enable
+  const GOOGLE_ONE_TAP_ENABLED = false;
   useEffect(() => {
-    if (isAuthLoading || user) return;
+    if (!GOOGLE_ONE_TAP_ENABLED || isAuthLoading || user) return;
 
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
     if (!clientId) return;
@@ -152,6 +152,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         gsiScript.parentNode.removeChild(gsiScript);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthLoading, user]);
 
   return (

@@ -11,8 +11,8 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/SupabaseAuthContext";
 import CartProductCard from "@/components/card/CartProductCard";
 import { notifications } from "@mantine/notifications";
-import { ACTIVE_COUNTRIES, environments, USER_ROLES } from "@/utils/constants";
-import { saveCheckoutState, loadCheckoutState } from "@/utils/idb/checkout.idb";
+import { ACTIVE_COUNTRIES, environments } from "@/utils/constants";
+import { saveCheckoutState } from "@/utils/idb/checkout.idb";
 import { OtpService } from "@/lib/api/otpService";
 import { DiscountService, DiscountResult } from "@/lib/api/discountService";
 import {
@@ -26,7 +26,7 @@ import { sendGAEvent } from "@next/third-parties/google";
 
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
-  const { login } = useAuth();
+  const { login, user: authUser } = useAuth();
   const router = useRouter();
   const [appliedDiscountCode, setAppliedDiscountCode] = useState<string>("");
 
@@ -44,58 +44,12 @@ export default function Checkout() {
   const [otpExpiryTime, setOtpExpiryTime] = useState<number | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number>(0);
 
-  const [isStateLoaded, setIsStateLoaded] = useState(false);
+  const [isStateLoaded] = useState(true);
 
   const [selectedPayment, setSelectedPayment] = useState<string>("upi");
 
   const formRef = useRef<DeliveryFormRef>(null);
   const checkoutTracked = useRef(false);
-
-  // Load saved state on mount
-  useEffect(() => {
-    const loadSavedState = async () => {
-      try {
-        const savedState = await loadCheckoutState();
-        if (savedState) {
-          if (formRef.current && savedState.formData) {
-            formRef.current.setFormData(
-              savedState.formData,
-              savedState.useDifferentBilling,
-            );
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load saved checkout state:", error);
-      } finally {
-        setIsStateLoaded(true);
-      }
-    };
-
-    loadSavedState();
-  }, []);
-
-  // Save state whenever relevant state changes
-  useEffect(() => {
-    if (!isStateLoaded) return;
-
-    const saveState = async () => {
-      if (formRef.current) {
-        const formData = formRef.current.getFormData();
-        const useDifferentBilling = formRef.current.getUseDifferentBilling();
-
-        await saveCheckoutState(
-          { ...formData },
-          false,
-          false,
-          null,
-          0,
-          useDifferentBilling,
-        );
-      }
-    };
-
-    saveState();
-  }, [isStateLoaded]);
 
   // Timer effect
   useEffect(() => {
@@ -370,11 +324,9 @@ export default function Checkout() {
       billingState,
       billingPinCode,
       billingPhone,
-      isPhoneVerified,
       useDifferentBilling,
     } = data;
 
-    const addresses = [];
     const shippingAddressObj = {
       firstName: shippingFirstName,
       lastName: shippingLastName,
@@ -386,8 +338,6 @@ export default function Checkout() {
       pinCode: shippingPinCode || "",
       phone: shippingPhone,
     };
-    addresses.push(shippingAddressObj);
-
     let billingAddressObj;
     if (useDifferentBilling === true) {
       billingAddressObj = {
@@ -401,44 +351,45 @@ export default function Checkout() {
         pinCode: billingPinCode!,
         phone: billingPhone!,
       };
-      addresses.push(billingAddressObj);
     }
 
-    let user: CreateUserResponse;
+    let userIdForOrder: string;
 
-    try {
-      user = await createUser({
-        firstName: shippingFirstName,
-        lastName: shippingLastName,
-        email: email,
-        phone: shippingPhone,
-        country: "INDIA",
-        role: USER_ROLES.CUSTOMER,
-        phoneVerified: isPhoneVerified,
-        addresses: addresses,
-      });
-
-      // Sign the user into the auth context so they stay logged in
-      // after redirect (e.g. to order-confirmed → order-details).
-      await login(
-        {
-          userId: user.userId!,
-          firstName: user.firstName || shippingFirstName,
-          lastName: user.lastName || shippingLastName,
-          email: email,
+    if (authUser) {
+      // User already signed in via navbar — skip createUser, reuse existing session
+      userIdForOrder = authUser.id;
+    } else {
+      // Not signed in — findOrCreate user by phone, then establish session
+      let createdUser: CreateUserResponse;
+      try {
+        createdUser = await createUser({
+          firstName: shippingFirstName,
+          lastName: shippingLastName,
           phone: shippingPhone,
-        },
-        "phone",
-      );
-    } catch (error) {
-      console.error("Error in user creation: ", { error });
-      notifications.show({
-        title: "Error",
-        message: "Failed to save your details. Please try again.",
-        color: "red",
-        position: "top-right",
-      });
-      return;
+        });
+
+        // Sign the user into the auth context so they stay logged in
+        // after redirect (e.g. to order-confirmed → order-details).
+        await login(
+          {
+            userId: createdUser.userId!,
+            firstName: createdUser.firstName || shippingFirstName,
+            lastName: createdUser.lastName || shippingLastName,
+            phone: shippingPhone,
+          },
+          "phone",
+        );
+      } catch (error) {
+        console.error("Error in user creation: ", { error });
+        notifications.show({
+          title: "Error",
+          message: "Failed to save your details. Please try again.",
+          color: "red",
+          position: "top-right",
+        });
+        return;
+      }
+      userIdForOrder = createdUser.userId!;
     }
 
     const cartValues = cartData.values();
@@ -452,9 +403,10 @@ export default function Checkout() {
     });
 
     const orderData = {
-      userId: user.userId!,
+      userId: userIdForOrder,
       items,
       paymentId: "PAYMENT_ID_PLACEHOLDER",
+      email: email,
       ...(appliedDiscountResponse?.isValid && {
         discountCode: appliedDiscountCode,
       }),

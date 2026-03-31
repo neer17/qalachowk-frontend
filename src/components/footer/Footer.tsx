@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./Footer.module.css";
 import Link from "next/link";
+import Image from "next/image";
+import Peacock from "@/assets/peacock.svg";
 
 export default function Footer() {
   return (
@@ -12,6 +14,13 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Logo & Tagline */}
           <div className={styles.brandColumn}>
+            <Image
+              src={Peacock}
+              alt="Qala Chowk"
+              width={40}
+              height={40}
+              style={{ marginBottom: "0.5rem" }}
+            />
             <h2 className={styles.logoText}>Qala Chowk</h2>
             <p className={styles.tagline}>
               Preserving heritage through handcrafted excellence.

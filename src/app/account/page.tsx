@@ -68,11 +68,6 @@ export default function AccountPage() {
             </div>
 
             <div className={styles.fieldRow}>
-              <span className={styles.fieldLabel}>Email</span>
-              <span className={styles.fieldValue}>{user.email ?? "—"}</span>
-            </div>
-
-            <div className={styles.fieldRow}>
               <span className={styles.fieldLabel}>Phone</span>
               <span className={styles.fieldValue}>{user.phone ?? "—"}</span>
             </div>

@@ -88,7 +88,7 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
         country: ACTIVE_COUNTRIES.INDIA,
         shippingFirstName: "",
         shippingLastName: "",
-        email: user?.email || "",
+        email: "",
         shippingAddress: "",
         shippingLandmark: "",
         shippingCity: "",
@@ -200,12 +200,19 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
       loadSavedFormData();
     }, []);
 
-    // Autofill user's email from GoogleOneTap Dialog
+    // Autofill from signed-in user — runs only after IDB checkout data has been
+    // applied so user values always win over any stale persisted data.
     useEffect(() => {
+      if (!isFormLoaded) return;
       if (user) {
-        form.setFieldValue("email", user.email ?? "");
+        if (user.phone) form.setFieldValue("shippingPhone", user.phone);
+        if (user.firstName)
+          form.setFieldValue("shippingFirstName", user.firstName);
+        if (user.lastName)
+          form.setFieldValue("shippingLastName", user.lastName);
       }
-    }, [user]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user, isFormLoaded]);
 
     // Save form data to IDB whenever form values change (only after initial load)
     useEffect(() => {
@@ -289,8 +296,8 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
 
     // Final form submit handler
     const handleFormSubmit = async (values: DeliveryFormValues) => {
-      // If phone not verified, block submit
-      if (!isVerificationCodeVerified) {
+      // Skip OTP check if user is already signed in via the navbar
+      if (!isVerificationCodeVerified && !user) {
         notifications.show({
           title: "Phone verification required",
           message: "Please verify your phone number before placing the order.",
@@ -449,74 +456,94 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
                 </Grid.Col>
               </Grid>
 
-              <Group align="end">
-                <TextInput
-                  flex={1}
-                  label="Phone"
-                  placeholder="Enter phone number"
-                  {...form.getInputProps("shippingPhone")}
-                  required
-                />
-                <Button
-                  onClick={handleSendOtp}
-                  disabled={
-                    form.values.shippingPhone.length !== 10 || !canSendOtp
-                  }
-                  loading={sendingOtp}
-                >
-                  {isVerificationCodeSent && timeRemaining > 0
-                    ? "OTP Sent"
-                    : "Send OTP"}
-                </Button>
-              </Group>
-
-              {/* Timer display */}
-              {isVerificationCodeSent && timeRemaining > 0 && (
-                <Text size="sm" c="dimmed">
-                  Resend OTP in {formatTime(timeRemaining)}
-                </Text>
-              )}
-
-              {/* Timer expired message */}
-              {isVerificationCodeSent &&
-                timeRemaining === 0 &&
-                !isVerificationCodeVerified && (
-                  <Text size="sm" c="red">
-                    OTP expired. Please request a new one.
-                  </Text>
-                )}
-
-              {/* Timer expired message */}
-              {otpRequestTimeoutError && (
-                <Text size="sm" c="red">
-                  {otpRequestTimeoutError}
-                </Text>
-              )}
-
-              {isVerificationCodeSent && (
-                <Group align="end">
+              {user ? (
+                /* User already signed in — phone pre-filled, OTP not needed */
+                <>
                   <TextInput
-                    flex={1}
-                    label="Verification Code"
-                    placeholder="Enter 6-digit OTP"
-                    {...form.getInputProps("verificationCode")}
+                    label="Phone"
+                    placeholder="Enter phone number"
+                    {...form.getInputProps("shippingPhone")}
                     required
-                    maxLength={6}
+                    disabled
                   />
-                  <Button
-                    variant="light"
-                    onClick={handleVerifyOtp}
-                    disabled={
-                      (form.values.verificationCode &&
-                        form.values.verificationCode.length !== 6) ||
-                      isVerificationCodeVerified ||
-                      timeRemaining === 0
-                    }
-                    loading={verifyingOtp}
-                  >
-                    {isVerificationCodeVerified ? "Verified ✓" : "Verify OTP"}
-                  </Button>
-                </Group>
+                  <Text size="sm" c="green">
+                    ✓ Phone verified via your account
+                  </Text>
+                </>
+              ) : (
+                /* User not signed in — show OTP verification flow */
+                <>
+                  <Group align="end">
+                    <TextInput
+                      flex={1}
+                      label="Phone"
+                      placeholder="Enter phone number"
+                      {...form.getInputProps("shippingPhone")}
+                      required
+                    />
+                    <Button
+                      onClick={handleSendOtp}
+                      disabled={
+                        form.values.shippingPhone.length !== 10 || !canSendOtp
+                      }
+                      loading={sendingOtp}
+                    >
+                      {isVerificationCodeSent && timeRemaining > 0
+                        ? "OTP Sent"
+                        : "Send OTP"}
+                    </Button>
+                  </Group>
+
+                  {/* Timer display */}
+                  {isVerificationCodeSent && timeRemaining > 0 && (
+                    <Text size="sm" c="dimmed">
+                      Resend OTP in {formatTime(timeRemaining)}
+                    </Text>
+                  )}
+
+                  {/* Timer expired message */}
+                  {isVerificationCodeSent &&
+                    timeRemaining === 0 &&
+                    !isVerificationCodeVerified && (
+                      <Text size="sm" c="red">
+                        OTP expired. Please request a new one.
+                      </Text>
+                    )}
+
+                  {otpRequestTimeoutError && (
+                    <Text size="sm" c="red">
+                      {otpRequestTimeoutError}
+                    </Text>
+                  )}
+
+                  {isVerificationCodeSent && (
+                    <Group align="end">
+                      <TextInput
+                        flex={1}
+                        label="Verification Code"
+                        placeholder="Enter 6-digit OTP"
+                        {...form.getInputProps("verificationCode")}
+                        required
+                        maxLength={6}
+                      />
+                      <Button
+                        variant="light"
+                        onClick={handleVerifyOtp}
+                        disabled={
+                          (form.values.verificationCode &&
+                            form.values.verificationCode.length !== 6) ||
+                          isVerificationCodeVerified ||
+                          timeRemaining === 0
+                        }
+                        loading={verifyingOtp}
+                      >
+                        {isVerificationCodeVerified
+                          ? "Verified ✓"
+                          : "Verify OTP"}
+                      </Button>
+                    </Group>
+                  )}
+                </>
               )}
             </Stack>
             {/* Billing Address - preserve your CSS */}

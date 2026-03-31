@@ -273,16 +273,9 @@ export interface components {
       message?: string;
     };
     CreateUserRequest: {
-      supabaseId?: string;
       firstName: string;
       lastName: string;
-      /** @enum {string} */
-      country: "INDIA";
-      addresses: components["schemas"]["Address"][];
       phone: string;
-      phoneVerified: boolean;
-      role: string;
-      email: string;
     };
     SignInRequest: {
       phone?: string;
@@ -293,7 +286,6 @@ export interface components {
       userId: string;
       firstName: string;
       lastName: string;
-      email: string;
       phone: string;
       accessToken: string;
       refreshToken: string;
@@ -355,6 +347,8 @@ export interface components {
         | "FAILED"
         | "REFUNDED"
         | "PARTIALLY_REFUNDED";
+      /** Format: email */
+      email?: string;
     };
     OrderResponse: {
       /** Format: uuid */
