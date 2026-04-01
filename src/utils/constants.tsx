@@ -131,9 +131,10 @@ export const ACTIVE_COUNTRIES = {
 };
 
 export const environments = {
-  DEVELOPMENT: "Development",
-  STAGING: "Staging",
-  PRODUCTION: "Production",
+  DEVELOPMENT: "development",
+  STAGING: "staging",
+  PRODUCTION: "production",
+  LOCAL: "local",
 };
 
 export const collections = {

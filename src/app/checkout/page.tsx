@@ -78,6 +78,7 @@ export default function Checkout() {
   // Fire begin_checkout once after cart/state is loaded
   useEffect(() => {
     if (!isStateLoaded || checkoutTracked.current) return;
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== environments.PRODUCTION) return;
     checkoutTracked.current = true;
 
     const total = getTotalPrice();

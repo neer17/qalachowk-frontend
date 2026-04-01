@@ -19,6 +19,7 @@ import { AuthProvider } from "@/context/SupabaseAuthContext";
 import { validateEnv } from "@/utils/schema";
 import { Notifications } from "@mantine/notifications";
 import { theme } from "@/theme";
+import { environments } from "@/utils/constants";
 
 // Validate all the env variables
 validateEnv();
@@ -69,9 +70,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-  const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
-  const clarityId = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+  const isProduction =
+    process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
+  const gaId = isProduction
+    ? process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+    : undefined;
+  const metaPixelId = isProduction
+    ? process.env.NEXT_PUBLIC_META_PIXEL_ID
+    : undefined;
+  const clarityId = isProduction
+    ? process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID
+    : undefined;
 
   return (
     <html lang="en">

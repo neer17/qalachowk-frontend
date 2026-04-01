@@ -11,9 +11,12 @@ import { SimpleGrid } from "@mantine/core";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
 import { Product } from "@/utils/types";
-import { API_ENDPOINTS } from "@/utils/constants";
+import { API_ENDPOINTS, environments } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
 import { sendGAEvent } from "@next/third-parties/google";
+
+const isProduction =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
 
 export default function ProductDetails() {
   const params = useParams();
@@ -58,7 +61,7 @@ export default function ProductDetails() {
   }, [wishlistData, product]);
 
   useEffect(() => {
-    if (!product) return;
+    if (!product || !isProduction) return;
 
     sendGAEvent("event", "view_item", {
       currency: "INR",
@@ -149,29 +152,31 @@ export default function ProductDetails() {
 
     await setCartData(productToAdd);
 
-    sendGAEvent("event", "add_to_cart", {
-      currency: "INR",
-      value: product.price * quantity,
-      items: [
-        {
-          item_id: product.id,
-          item_name: product.name,
-          price: product.price,
-          quantity,
-          item_category: product.category?.name,
-        },
-      ],
-    });
-
-    const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
-    if (typeof fbq === "function") {
-      fbq("track", "AddToCart", {
-        content_ids: [product.id],
-        content_name: product.name,
-        value: product.price * quantity,
+    if (isProduction) {
+      sendGAEvent("event", "add_to_cart", {
         currency: "INR",
-        num_items: quantity,
+        value: product.price * quantity,
+        items: [
+          {
+            item_id: product.id,
+            item_name: product.name,
+            price: product.price,
+            quantity,
+            item_category: product.category?.name,
+          },
+        ],
       });
+
+      const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+      if (typeof fbq === "function") {
+        fbq("track", "AddToCart", {
+          content_ids: [product.id],
+          content_name: product.name,
+          value: product.price * quantity,
+          currency: "INR",
+          num_items: quantity,
+        });
+      }
     }
 
     toggleCartPopup();
