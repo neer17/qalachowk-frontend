@@ -20,7 +20,7 @@ export const theme = createTheme({
   },
   fontFamily: "DM Sans, sans-serif",
   headings: {
-    fontFamily: "Playfair Display, serif",
+    fontFamily: "Cormorant Garamond, serif",
     sizes: {
       h1: { fontSize: "3rem" },
       h2: { fontSize: "2.25rem" },

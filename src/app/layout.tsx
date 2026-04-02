@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Playfair_Display,
-  Cormorant_Garamond,
-  DM_Sans,
-  Tiro_Devanagari_Hindi,
-  Noto_Serif_Devanagari,
-} from "next/font/google";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -24,12 +18,6 @@ import { environments } from "@/utils/constants";
 // Validate all the env variables
 validateEnv();
 
-const playfairDisplay = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair-display",
-  display: "swap",
-});
-
 const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -41,19 +29,6 @@ const cormorantGaramond = Cormorant_Garamond({
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
-  display: "swap",
-});
-
-const tiroDevanagariHindi = Tiro_Devanagari_Hindi({
-  subsets: ["devanagari"],
-  weight: "400",
-  variable: "--font-tiro-devanagari",
-  display: "swap",
-});
-
-const notoSerifDevanagari = Noto_Serif_Devanagari({
-  subsets: ["devanagari"],
-  variable: "--font-noto-serif-devanagari",
   display: "swap",
 });
 
@@ -85,9 +60,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body
-        className={`${playfairDisplay.variable} ${cormorantGaramond.variable} ${dmSans.variable} ${tiroDevanagariHindi.variable} ${notoSerifDevanagari.variable}`}
-      >
+      <body className={`${cormorantGaramond.variable} ${dmSans.variable}`}>
         <MantineProvider theme={theme}>
           <AuthProvider>
             <CartProvider>

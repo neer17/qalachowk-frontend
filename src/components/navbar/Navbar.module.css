@@ -313,6 +313,10 @@
   .brandName {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-60%);
+  }
+
+  .navRight {
+    gap: 10px;
   }
 }

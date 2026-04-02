@@ -62,10 +62,6 @@
   --brand-bone-hover: #c9b9a5;
   --brand-primary-hover: #501f01;
 
-  /* ── Typography ── */
-  --font-hindi-heading: var(--font-tiro-devanagari), serif;
-  --font-hindi-body: var(--font-noto-serif-devanagari), serif;
-
   /* ── Transitions ── */
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
