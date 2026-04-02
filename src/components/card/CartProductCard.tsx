@@ -41,7 +41,8 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
       </div>
       <div className={styles.detailsContainer}>
         <h3 className={styles.productTitle}>{name}</h3>
-        <p className={styles.productPrice}>₹ {price}</p>
+        <p className={styles.productPrice}>₹ {price.toLocaleString("en-IN")}</p>
+        <p className={styles.productGstNote}>Incl. 3% GST</p>
 
         {isOrderSummaryCard ? (
           <div className={styles.quantityWrapper}>

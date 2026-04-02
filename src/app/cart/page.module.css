@@ -208,6 +208,13 @@
   color: var(--g);
 }
 
+.summaryGstNote {
+  font-size: 11px;
+  color: #888;
+  text-align: right;
+  margin-top: 2px;
+}
+
 .checkoutButton {
   display: block;
   width: 100%;

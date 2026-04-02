@@ -126,9 +126,12 @@ export default function CartPage() {
 
               <div className={styles.summaryTotalRow}>
                 <span className={styles.summaryTotalLabel}>Grand Total</span>
-                <span className={styles.summaryTotalPrice}>
-                  ₹ {getTotalPrice()}
-                </span>
+                <div>
+                  <span className={styles.summaryTotalPrice}>
+                    ₹ {getTotalPrice().toLocaleString("en-IN")}
+                  </span>
+                  <div className={styles.summaryGstNote}>Incl. 3% GST</div>
+                </div>
               </div>
 
               <button

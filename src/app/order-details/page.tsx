@@ -293,29 +293,48 @@ export default function OrderDetailsPage() {
             <div className={styles.summaryDivider} />
 
             {/* Pricing Rows */}
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Subtotal</span>
-              <span className={styles.summaryValue}>
-                {formatAmount(order.subtotal)}
-              </span>
-            </div>
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Shipping</span>
-              <span className={styles.summaryShipping}>Complimentary</span>
-            </div>
-            <div className={styles.summaryRow}>
-              <span className={styles.summaryLabel}>Tax</span>
-              <span className={styles.summaryValue}>
-                {formatAmount(order.tax)}
-              </span>
-            </div>
+            {(() => {
+              const displayTotal = order.total ?? 0;
+              const displayTax =
+                order.tax !== undefined
+                  ? order.tax
+                  : Math.round((displayTotal * 3) / 103);
+              const displaySubtotal =
+                order.subtotal !== undefined
+                  ? order.subtotal
+                  : displayTotal - displayTax;
+              return (
+                <>
+                  <div className={styles.summaryRow}>
+                    <span className={styles.summaryLabel}>
+                      Subtotal (excl. GST)
+                    </span>
+                    <span className={styles.summaryValue}>
+                      {formatAmount(displaySubtotal)}
+                    </span>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span className={styles.summaryLabel}>Shipping</span>
+                    <span className={styles.summaryShipping}>
+                      Complimentary
+                    </span>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span className={styles.summaryLabel}>GST (3%)</span>
+                    <span className={styles.summaryValue}>
+                      {formatAmount(displayTax)}
+                    </span>
+                  </div>
 
-            <div className={styles.totalRow}>
-              <span className={styles.totalLabel}>Grand Total</span>
-              <span className={styles.totalValue}>
-                {formatAmount(order.total)}
-              </span>
-            </div>
+                  <div className={styles.totalRow}>
+                    <span className={styles.totalLabel}>Grand Total</span>
+                    <span className={styles.totalValue}>
+                      {formatAmount(displayTotal)}
+                    </span>
+                  </div>
+                </>
+              );
+            })()}
 
             {/* Actions */}
             <div className={styles.actionsBox}>

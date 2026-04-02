@@ -747,7 +747,7 @@ export default function Checkout() {
                     <Rupee />
                     {total.toLocaleString("en-IN")}
                   </span>
-                  <div className={styles.totalNote}>Inclusive of all taxes</div>
+                  <div className={styles.totalNote}>Incl. 3% GST</div>
                 </div>
               </div>
             </div>

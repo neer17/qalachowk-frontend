@@ -45,6 +45,12 @@
   margin: 0;
 }
 
+.productGstNote {
+  font-size: 11px;
+  color: #888;
+  margin: 0;
+}
+
 .quantityWrapper {
   display: inline-flex;
   align-items: center;

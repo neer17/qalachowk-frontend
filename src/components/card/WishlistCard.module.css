@@ -89,6 +89,11 @@
   margin-bottom: 4px;
 }
 
+.gstNote {
+  font-size: 11px;
+  color: #888;
+}
+
 .quantityContainer {
   display: flex;
   justify-content: space-between;

@@ -108,6 +108,12 @@
   color: var(--g);
 }
 
+.productGstNote {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+}
+
 .buyContainer {
   display: flex;
   align-items: center;

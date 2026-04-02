@@ -183,7 +183,10 @@ export default function ProductCard({
         <div className={styles.productDetailsContainer}>
           <div className={styles.textContainer}>
             <span className={styles.productTitle}>{name}</span>
-            <span className={styles.productPrice}>₹{price}</span>
+            <span className={styles.productPrice}>
+              ₹{price.toLocaleString("en-IN")}
+            </span>
+            <span className={styles.productGstNote}>Incl. 3% GST</span>
           </div>
 
           <div className={styles.buyContainer}>

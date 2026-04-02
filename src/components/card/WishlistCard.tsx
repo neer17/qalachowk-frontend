@@ -58,7 +58,8 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
       <div className={styles.detailsWrapper}>
         <div className={styles.detailsContainer}>
           <h5>{name}</h5>
-          <h5>{price}</h5>
+          <h5>₹{price.toLocaleString("en-IN")}</h5>
+          <span className={styles.gstNote}>Incl. 3% GST</span>
         </div>
 
         <div className={styles.quantityContainer}>

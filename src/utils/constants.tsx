@@ -137,6 +137,8 @@ export const environments = {
   LOCAL: "local",
 };
 
+export const GST_RATE = 0.03; // 3% GST on all jewellery/handicrafts (CGST 1.5% + SGST 1.5%)
+
 export const collections = {
   BLUE_POTTERY: {
     RINGS: [

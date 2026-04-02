@@ -406,33 +406,50 @@ function OrderConfirmedContent() {
               <div className={styles.hairline} />
 
               {/* Pricing breakdown */}
-              <div className={styles.pricingRows}>
-                <div className={styles.pricingRow}>
-                  <span className={styles.pricingLabel}>Subtotal</span>
-                  <span className={styles.pricingValue}>
-                    {formatAmount(order.subtotal)}
-                  </span>
-                </div>
-                <div className={styles.pricingRow}>
-                  <span className={styles.pricingLabel}>Shipping</span>
-                  <span className={styles.pricingFree}>Complimentary</span>
-                </div>
-                {order.tax !== undefined && (
-                  <div className={styles.pricingRow}>
-                    <span className={styles.pricingLabel}>Tax</span>
-                    <span className={styles.pricingValue}>
-                      {formatAmount(order.tax)}
-                    </span>
-                  </div>
-                )}
-              </div>
+              {(() => {
+                const displayTotal = order.total ?? 0;
+                const displayTax =
+                  order.tax !== undefined
+                    ? order.tax
+                    : Math.round((displayTotal * 3) / 103);
+                const displaySubtotal =
+                  order.subtotal !== undefined
+                    ? order.subtotal
+                    : displayTotal - displayTax;
+                return (
+                  <>
+                    <div className={styles.pricingRows}>
+                      <div className={styles.pricingRow}>
+                        <span className={styles.pricingLabel}>
+                          Subtotal (excl. GST)
+                        </span>
+                        <span className={styles.pricingValue}>
+                          {formatAmount(displaySubtotal)}
+                        </span>
+                      </div>
+                      <div className={styles.pricingRow}>
+                        <span className={styles.pricingLabel}>Shipping</span>
+                        <span className={styles.pricingFree}>
+                          Complimentary
+                        </span>
+                      </div>
+                      <div className={styles.pricingRow}>
+                        <span className={styles.pricingLabel}>GST (3%)</span>
+                        <span className={styles.pricingValue}>
+                          {formatAmount(displayTax)}
+                        </span>
+                      </div>
+                    </div>
 
-              <div className={styles.totalRow}>
-                <span className={styles.totalLabel}>Grand Total</span>
-                <span className={styles.totalValue}>
-                  {formatAmount(order.total)}
-                </span>
-              </div>
+                    <div className={styles.totalRow}>
+                      <span className={styles.totalLabel}>Grand Total</span>
+                      <span className={styles.totalValue}>
+                        {formatAmount(displayTotal)}
+                      </span>
+                    </div>
+                  </>
+                );
+              })()}
 
               <div className={styles.hairline} />
 
