@@ -59,10 +59,6 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
     router.push("/checkout");
   };
 
-  useEffect(() => {
-    console.info("Cart data changed:", cartData);
-  }, [cartData]);
-
   const cartTotal = getTotalPrice();
 
   return (
@@ -81,6 +77,7 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
         aria-modal="true"
         aria-label="Shopping cart"
         aria-hidden={!isOpen}
+        tabIndex={-1}
         onKeyDown={(e) => {
           if (e.key === "Escape") backdropClickCallback();
         }}

@@ -182,11 +182,15 @@ const NavigationBar: React.FC = () => {
             className={styles.actionButtonContainer}
             onMouseEnter={() => setShowAccountPanel(true)}
             onMouseLeave={() => setShowAccountPanel(false)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setShowAccountPanel(false);
+            }}
           >
             <button
               className={styles.iconBtn}
               onClick={() => setShowAccountPanel((prev) => !prev)}
               aria-label="Account"
+              aria-haspopup="menu"
               aria-expanded={showAccountPanel}
             >
               <svg
@@ -296,9 +300,11 @@ const NavigationBar: React.FC = () => {
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
+          tabIndex={-1}
           onKeyDown={(e) => {
             if (e.key === "Escape") closeMenu();
           }}
+          {...(!isMenuOpen && ({ inert: true } as unknown as React.HTMLAttributes<HTMLDivElement>))}
         >
           <div className={styles.menuHeader}>
             <span className={styles.menuTitle}>Menu</span>
