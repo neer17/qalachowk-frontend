@@ -65,6 +65,7 @@
   /* ── Semantic color tokens ── */
   --muted: #9a8070; /* warm taupe for secondary text, replaces #888 */
   --error: #c0392b; /* error state red */
+  --overlay-bg: rgba(44, 26, 14, 0.5); /* slide panel overlay */
 
   /* ── Transitions ── */
   --transition-fast: 0.2s ease;

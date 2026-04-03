@@ -533,10 +533,12 @@
   border: none;
   border-bottom: 0.5px solid var(--bo);
   cursor: pointer;
-  padding: 12px 24px;
+  padding: 0 0 1px;
   transition: border-color 0.2s;
   align-self: center;
   min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 .btnGhost:hover {
   border-color: var(--s);

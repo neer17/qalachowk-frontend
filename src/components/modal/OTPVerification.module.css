@@ -75,6 +75,9 @@
   text-transform: uppercase;
   cursor: pointer;
   padding: 0 0 1px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
   transition: border-color var(--transition-fast);
 }
 
@@ -109,7 +112,7 @@
 .otpInputError {
   width: 45px !important;
   height: 55px !important;
-  border: 0.5px solid var(--br) !important;
+  border: 0.5px solid var(--error) !important;
   border-radius: 2px !important;
   font-family: var(--font-cormorant-garamond), serif !important;
   font-size: 20px !important;
@@ -123,7 +126,7 @@
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
   font-size: 14px;
-  color: var(--br);
+  color: var(--error);
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.6;
@@ -173,6 +176,7 @@
   text-transform: uppercase;
   cursor: pointer;
   padding: 0 0 1px;
+  min-height: 44px;
   transition: border-color var(--transition-fast);
 }
 
