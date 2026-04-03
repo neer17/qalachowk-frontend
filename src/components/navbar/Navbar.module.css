@@ -173,6 +173,17 @@
 }
 
 .accountDropdown li {
+  padding: 0;
+  transition: background 0.2s;
+}
+
+.accountDropdown li:hover {
+  background-color: var(--l);
+}
+
+.accountDropdown li button {
+  display: block;
+  width: 100%;
   padding: 0.5rem 1rem;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 11px;
@@ -180,11 +191,14 @@
   text-transform: uppercase;
   color: var(--s);
   cursor: pointer;
-  transition: background 0.2s;
+  background: none;
+  border: none;
+  text-align: left;
 }
 
-.accountDropdown li:hover {
-  background-color: var(--l);
+.accountDropdown li button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 /* ════ MOBILE ════ */

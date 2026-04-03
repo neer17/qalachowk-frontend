@@ -81,6 +81,10 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
         aria-modal="true"
         aria-label="Shopping cart"
         aria-hidden={!isOpen}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") backdropClickCallback();
+        }}
+        {...(!isOpen && ({ inert: true } as unknown as React.HTMLAttributes<HTMLDivElement>))}
       >
         <div className={styles.topSection}>
           <header className={styles.panelHeader}>

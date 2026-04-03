@@ -93,7 +93,6 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         <div className={styles.embla__thumbs__viewport} ref={emblaThumbsRef}>
           <div
             className={styles.embla__thumbs__container}
-            role="tablist"
             aria-label="Product image thumbnails"
           >
             {images.map((src, index) => (
@@ -109,8 +108,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                   onClick={() => onThumbClick(index)}
                   className={styles.embla__thumbs__slide__button}
                   type="button"
-                  role="tab"
-                  aria-selected={index === selectedIndex}
+                  aria-pressed={index === selectedIndex}
                   aria-label={`View image ${index + 1}`}
                 >
                   <Image

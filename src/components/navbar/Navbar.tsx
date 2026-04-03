@@ -13,6 +13,7 @@ import { OtpService } from "@/lib/api/otpService";
 import { notifications } from "@mantine/notifications";
 import PeacockBrown from "@/assets/peacock.svg";
 import Image from "next/image";
+import { FocusTrap } from "@mantine/core";
 
 interface MenuItem {
   name: string;
@@ -199,31 +200,49 @@ const NavigationBar: React.FC = () => {
               </svg>
             </button>
             {showAccountPanel && (
-              <div className={styles.accountDropdown}>
+              <div className={styles.accountDropdown} role="menu">
                 <ul>
                   {user ? (
                     <>
-                      <li onClick={() => router.push("/order-details")}>
-                        Orders
+                      <li role="none">
+                        <button
+                          type="button"
+                          role="menuitem"
+                          onClick={() => router.push("/order-details")}
+                        >
+                          Orders
+                        </button>
                       </li>
-                      <li>Tracking link</li>
-                      <li
-                        onClick={() => {
-                          setShowAccountPanel(false);
-                          logout();
-                        }}
-                      >
-                        Logout
+                      <li role="none">
+                        <button type="button" role="menuitem" disabled>
+                          Tracking link
+                        </button>
+                      </li>
+                      <li role="none">
+                        <button
+                          type="button"
+                          role="menuitem"
+                          onClick={() => {
+                            setShowAccountPanel(false);
+                            logout();
+                          }}
+                        >
+                          Logout
+                        </button>
                       </li>
                     </>
                   ) : (
-                    <li
-                      onClick={() => {
-                        setShowAccountPanel(false);
-                        handleUserSignIn();
-                      }}
-                    >
-                      Sign In
+                    <li role="none">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setShowAccountPanel(false);
+                          handleUserSignIn();
+                        }}
+                      >
+                        Sign In
+                      </button>
                     </li>
                   )}
                 </ul>
@@ -270,76 +289,78 @@ const NavigationBar: React.FC = () => {
       </nav>
 
       {/* Mobile slide-out menu */}
-      <div
-        id="mobile-menu"
-        className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
-        onKeyDown={(e) => {
-          if (e.key === "Escape") closeMenu();
-        }}
-      >
-        <div className={styles.menuHeader}>
-          <span className={styles.menuTitle}>Menu</span>
-          <button
-            onClick={closeMenu}
-            className={styles.closeButton}
-            aria-label="Close menu"
-          >
-            <span className={styles.closeBar}></span>
-            <span className={styles.closeBar}></span>
-          </button>
-        </div>
-
-        <div className={styles.menuItemsMobile}>
-          {menuItems.map((item) => (
-            <Link
-              href={item.path}
-              key={item.name}
-              className={styles.menuItemMobile}
+      <FocusTrap active={isMenuOpen}>
+        <div
+          id="mobile-menu"
+          className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ""}`}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          onKeyDown={(e) => {
+            if (e.key === "Escape") closeMenu();
+          }}
+        >
+          <div className={styles.menuHeader}>
+            <span className={styles.menuTitle}>Menu</span>
+            <button
               onClick={closeMenu}
+              className={styles.closeButton}
+              aria-label="Close menu"
             >
-              {item.name}
-            </Link>
-          ))}
-          {user ? (
-            <button
-              className={styles.menuItemMobile}
-              style={{
-                textAlign: "left",
-                background: "none",
-                border: "none",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                closeMenu();
-                logout();
-              }}
-            >
-              Logout
+              <span className={styles.closeBar}></span>
+              <span className={styles.closeBar}></span>
             </button>
-          ) : (
-            <button
-              className={styles.menuItemMobile}
-              style={{
-                textAlign: "left",
-                background: "none",
-                border: "none",
-                width: "100%",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                closeMenu();
-                handleUserSignIn();
-              }}
-            >
-              Sign In
-            </button>
-          )}
+          </div>
+
+          <div className={styles.menuItemsMobile}>
+            {menuItems.map((item) => (
+              <Link
+                href={item.path}
+                key={item.name}
+                className={styles.menuItemMobile}
+                onClick={closeMenu}
+              >
+                {item.name}
+              </Link>
+            ))}
+            {user ? (
+              <button
+                className={styles.menuItemMobile}
+                style={{
+                  textAlign: "left",
+                  background: "none",
+                  border: "none",
+                  width: "100%",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  closeMenu();
+                  logout();
+                }}
+              >
+                Logout
+              </button>
+            ) : (
+              <button
+                className={styles.menuItemMobile}
+                style={{
+                  textAlign: "left",
+                  background: "none",
+                  border: "none",
+                  width: "100%",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  closeMenu();
+                  handleUserSignIn();
+                }}
+              >
+                Sign In
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </FocusTrap>
 
       {/* Modals */}
       {showSignInModal && (

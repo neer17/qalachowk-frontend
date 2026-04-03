@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import styles from "./SlidingBanner.module.css";
@@ -14,14 +14,14 @@ const SlidingBanner = () => {
     "Contact us for more info.",
   ];
 
-  const autoplayPlugin = Autoplay({ delay: 2000, stopOnInteraction: false });
+  const autoplayPlugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: false }));
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
       duration: 8000,
     },
-    [autoplayPlugin],
+    [autoplayPlugin.current],
   );
 
   const togglePlayPause = useCallback(() => {
