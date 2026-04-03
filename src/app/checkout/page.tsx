@@ -47,6 +47,7 @@ export default function Checkout() {
   const [isStateLoaded] = useState(true);
 
   const [selectedPayment, setSelectedPayment] = useState<string>("upi");
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
   const formRef = useRef<DeliveryFormRef>(null);
   const checkoutTracked = useRef(false);
@@ -307,136 +308,135 @@ export default function Checkout() {
   };
 
   const handlePayNow = async (data: DeliveryFormValues) => {
-    const {
-      shippingFirstName,
-      shippingLastName,
-      email,
-      shippingAddress,
-      shippingLandmark,
-      shippingCity,
-      shippingState,
-      shippingPhone,
-      shippingPinCode,
-      billingFirstName,
-      billingLastName,
-      billingAddress,
-      billingLandmark,
-      billingCity,
-      billingState,
-      billingPinCode,
-      billingPhone,
-      useDifferentBilling,
-    } = data;
-
-    const shippingAddressObj = {
-      firstName: shippingFirstName,
-      lastName: shippingLastName,
-      address: shippingAddress!,
-      city: shippingCity!,
-      street: shippingLandmark,
-      state: shippingState || "",
-      country: ACTIVE_COUNTRIES.INDIA,
-      pinCode: shippingPinCode || "",
-      phone: shippingPhone,
-    };
-    let billingAddressObj;
-    if (useDifferentBilling === true) {
-      billingAddressObj = {
-        firstName: billingFirstName!,
-        lastName: billingLastName!,
-        address: billingAddress!,
-        city: billingCity!,
-        street: billingLandmark || "",
-        state: billingState!,
-        country: ACTIVE_COUNTRIES.INDIA,
-        pinCode: billingPinCode!,
-        phone: billingPhone!,
-      };
-    }
-
-    let userIdForOrder: string;
-
-    if (authUser) {
-      // User already signed in via navbar — skip createUser, reuse existing session
-      userIdForOrder = authUser.id;
-    } else {
-      // Not signed in — findOrCreate user by phone, then establish session
-      let createdUser: CreateUserResponse;
-      try {
-        createdUser = await createUser({
-          firstName: shippingFirstName,
-          lastName: shippingLastName,
-          phone: shippingPhone,
-        });
-
-        // Sign the user into the auth context so they stay logged in
-        // after redirect (e.g. to order-confirmed → order-details).
-        await login(
-          {
-            userId: createdUser.userId!,
-            firstName: createdUser.firstName || shippingFirstName,
-            lastName: createdUser.lastName || shippingLastName,
-            phone: shippingPhone,
-          },
-          "phone",
-        );
-      } catch (error) {
-        console.error("Error in user creation: ", { error });
-        notifications.show({
-          title: "Error",
-          message: "Failed to save your details. Please try again.",
-          color: "red",
-          position: "top-right",
-        });
-        return;
-      }
-      userIdForOrder = createdUser.userId!;
-    }
-
-    const cartValues = cartData.values();
-
-    const items: { productId: string; quantity: number }[] = [];
-    cartValues.forEach(({ id, quantity }) => {
-      items.push({
-        productId: id,
-        quantity,
-      });
-    });
-
-    const orderData = {
-      userId: userIdForOrder,
-      items,
-      paymentId: "PAYMENT_ID_PLACEHOLDER",
-      email: email,
-      ...(appliedDiscountResponse?.isValid && {
-        discountCode: appliedDiscountCode,
-      }),
-      paymentMethod: "PREPAID" as const,
-      paymentStatus: "PAID" as const,
-      shippingAddress: {
-        address: shippingAddressObj.address,
-        city: shippingAddressObj.city,
-        state: shippingAddressObj.state,
-        country: shippingAddressObj.country,
-        pinCode: shippingAddressObj.pinCode,
-      },
-      ...(useDifferentBilling === true && {
-        billingAddress: {
-          address: billingAddressObj!.address,
-          city: billingAddressObj!.city,
-          state: billingAddressObj!.state,
-          country: billingAddressObj!.country,
-          pinCode: billingAddressObj!.pinCode,
-        },
-      }),
-    };
-
+    if (isPlacingOrder) return;
+    setIsPlacingOrder(true);
     try {
+      const {
+        shippingFirstName,
+        shippingLastName,
+        email,
+        shippingAddress,
+        shippingLandmark,
+        shippingCity,
+        shippingState,
+        shippingPhone,
+        shippingPinCode,
+        billingFirstName,
+        billingLastName,
+        billingAddress,
+        billingLandmark,
+        billingCity,
+        billingState,
+        billingPinCode,
+        billingPhone,
+        useDifferentBilling,
+      } = data;
+
+      const shippingAddressObj = {
+        firstName: shippingFirstName,
+        lastName: shippingLastName,
+        address: shippingAddress!,
+        city: shippingCity!,
+        street: shippingLandmark,
+        state: shippingState || "",
+        country: ACTIVE_COUNTRIES.INDIA,
+        pinCode: shippingPinCode || "",
+        phone: shippingPhone,
+      };
+      let billingAddressObj;
+      if (useDifferentBilling === true) {
+        billingAddressObj = {
+          firstName: billingFirstName!,
+          lastName: billingLastName!,
+          address: billingAddress!,
+          city: billingCity!,
+          street: billingLandmark || "",
+          state: billingState!,
+          country: ACTIVE_COUNTRIES.INDIA,
+          pinCode: billingPinCode!,
+          phone: billingPhone!,
+        };
+      }
+
+      let userIdForOrder: string;
+
+      if (authUser) {
+        userIdForOrder = authUser.id;
+      } else {
+        let createdUser: CreateUserResponse;
+        try {
+          createdUser = await createUser({
+            firstName: shippingFirstName,
+            lastName: shippingLastName,
+            phone: shippingPhone,
+          });
+
+          await login(
+            {
+              userId: createdUser.userId!,
+              firstName: createdUser.firstName || shippingFirstName,
+              lastName: createdUser.lastName || shippingLastName,
+              phone: shippingPhone,
+            },
+            "phone",
+          );
+        } catch (error) {
+          console.error("Error in user creation: ", { error });
+          notifications.show({
+            title: "Error",
+            message: "Failed to save your details. Please try again.",
+            color: "red",
+            position: "top-right",
+          });
+          return;
+        }
+        userIdForOrder = createdUser!.userId!;
+      }
+
+      const cartValues = cartData.values();
+
+      const items: { productId: string; quantity: number }[] = [];
+      cartValues.forEach(({ id, quantity }) => {
+        items.push({
+          productId: id,
+          quantity,
+        });
+      });
+
+      const orderData = {
+        userId: userIdForOrder,
+        items,
+        paymentId: "PAYMENT_ID_PLACEHOLDER",
+        email: email,
+        ...(appliedDiscountResponse?.isValid && {
+          discountCode: appliedDiscountCode,
+        }),
+        paymentMethod: "PREPAID" as const,
+        paymentStatus: "PAID" as const,
+        shippingAddress: {
+          address: shippingAddressObj.address,
+          city: shippingAddressObj.city,
+          state: shippingAddressObj.state,
+          country: shippingAddressObj.country,
+          pinCode: shippingAddressObj.pinCode,
+        },
+        ...(useDifferentBilling === true && {
+          billingAddress: {
+            address: billingAddressObj!.address,
+            city: billingAddressObj!.city,
+            state: billingAddressObj!.state,
+            country: billingAddressObj!.country,
+            pinCode: billingAddressObj!.pinCode,
+          },
+        }),
+      };
+
       const orderDetails = await OrderService.createOrder(orderData);
       const orderId = orderDetails.orderId;
 
       await clearCart();
       router.push(`/order-confirmed?orderId=${orderId}`);
+      return;
     } catch (error) {
       console.error("Error in order creation: ", { error });
       notifications.show({
@@ -445,7 +445,8 @@ export default function Checkout() {
         color: "red",
         position: "top-right",
       });
-      return;
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -649,20 +650,27 @@ export default function Checkout() {
               className={styles.placeOrderBtn}
               onClick={handleFormSubmit}
               aria-label="Place Order"
+              disabled={isPlacingOrder}
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                aria-hidden="true"
-              >
-                <path d="M7 1L1 4v6l6 3 6-3V4L7 1z" />
-              </svg>
-              Place Order · Pay <Rupee />
-              {total.toLocaleString("en-IN")}
+              {isPlacingOrder ? (
+                "Placing Order..."
+              ) : (
+                <>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 14 14"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    aria-hidden="true"
+                  >
+                    <path d="M7 1L1 4v6l6 3 6-3V4L7 1z" />
+                  </svg>
+                  Place Order · Pay <Rupee />
+                  {total.toLocaleString("en-IN")}
+                </>
+              )}
             </button>
             <div className={styles.secureNote}>
               <svg
