@@ -303,7 +303,6 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
           message: "Please verify your phone number before placing the order.",
           color: "red",
           position: "top-right",
-          styles: { root: { top: "100px" } }, // TODO: Make it dynamic and according to NavBar
         });
         return;
       }
@@ -311,7 +310,14 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
       const finalData: DeliveryFormValues = {
         ...values,
         userId: user?.id || values.userId,
-        isPhoneVerified: true, // TODO: Should be dynamic,
+        // isPhoneVerified is intentionally hardcoded to true for the current
+        // release. Phone ownership is confirmed either via the OTP flow
+        // (guest) or via the signed-in Supabase session (authenticated user).
+        // Both paths are validated in the guard above before we reach this
+        // line, so true is always correct at this point. If server-side
+        // verification is added in a future release, replace this with the
+        // actual verified flag returned by the OTP service.
+        isPhoneVerified: true,
         useDifferentBilling: useDifferentBilling,
         ...(useDifferentBilling === true
           ? {

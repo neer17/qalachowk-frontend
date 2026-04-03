@@ -100,13 +100,6 @@ export default function CartProvider({ children }: CartProviderProps) {
   const [isApiMode, setIsApiMode] = useState(false);
 
   useEffect(() => {
-    // console.info({
-    //   cartData,
-    //   wishlistData,
-    // });
-  }, [cartData, wishlistData]);
-
-  useEffect(() => {
     const loadCartData = async () => {
       if (!dbPromise) return;
 

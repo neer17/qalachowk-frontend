@@ -328,6 +328,16 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
+
+/* Editorial hierarchy: first product spans 2 columns and gets a taller image */
+@media (min-width: 1024px) {
+  .grid3 > .pcard:first-child {
+    grid-column: span 2;
+  }
+  .grid3 > .pcard:first-child .pcImg {
+    aspect-ratio: 16 / 9;
+  }
+}
 .pcard {
   background: var(--p);
   border: 0.5px solid var(--bo);
