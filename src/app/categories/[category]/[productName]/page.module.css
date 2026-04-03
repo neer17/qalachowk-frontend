@@ -245,8 +245,8 @@
 }
 
 .wishlistBtnActive {
-  color: #c0392b;
-  border-color: #c0392b;
+  color: var(--error);
+  border-color: var(--error);
 }
 
 .enquireButton {

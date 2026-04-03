@@ -210,7 +210,7 @@
 
 .summaryGstNote {
   font-size: 11px;
-  color: #888;
+  color: var(--muted);
   text-align: right;
   margin-top: 2px;
 }

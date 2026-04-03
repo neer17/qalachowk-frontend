@@ -322,7 +322,7 @@
 
 /* ── Right: Summary Side ── */
 .summarySide {
-  background: #ede3d4;
+  background: var(--l);
   padding: 56px 40px 80px;
   border-left: 0.5px solid var(--bo);
   position: sticky;

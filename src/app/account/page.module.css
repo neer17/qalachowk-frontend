@@ -185,6 +185,6 @@
 }
 
 .btnLogout:hover {
-  border-color: #c0392b;
-  color: #c0392b;
+  border-color: var(--error);
+  color: var(--error);
 }

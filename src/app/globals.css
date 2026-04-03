@@ -62,6 +62,10 @@
   --brand-bone-hover: #c9b9a5;
   --brand-primary-hover: #501f01;
 
+  /* ── Semantic color tokens ── */
+  --muted: #9a8070; /* warm taupe for secondary text, replaces #888 */
+  --error: #c0392b; /* error state red */
+
   /* ── Transitions ── */
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;

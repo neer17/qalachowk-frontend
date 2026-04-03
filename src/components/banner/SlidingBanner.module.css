@@ -61,6 +61,17 @@
   line-height: 1;
 }
 
+/* Extend tap target without affecting visual layout */
+.pausePlayButton::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 44px;
+  min-height: 44px;
+}
+
 .pausePlayButton:hover,
 .pausePlayButton:focus-visible {
   opacity: 1;

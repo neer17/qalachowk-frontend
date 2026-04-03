@@ -69,12 +69,11 @@
 
 /* ── Glass Pill ── */
 .glassPill {
-  background: rgba(245, 239, 230, 0.08);
+  background: rgba(253, 245, 230, 0.95);
   border: 1px solid rgba(200, 149, 108, 0.3);
   border-radius: 4px;
   padding: 20px 28px;
   text-align: center;
-  backdrop-filter: blur(8px);
 }
 
 .pillLabel {

@@ -1,4 +1,8 @@
 /* ════ SLIDE CART PANEL ════ */
+:root {
+  --overlay-bg: rgba(44, 26, 14, 0.5);
+}
+
 body.no-scroll {
   overflow: hidden;
   position: fixed;
@@ -30,7 +34,7 @@ body.no-scroll {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(44, 26, 14, 0.5);
+  background-color: var(--overlay-bg);
   z-index: 1099;
 }
 
@@ -67,8 +71,8 @@ body.no-scroll {
   color: var(--s);
   background: transparent;
   border: none;
-  width: 32px;
-  height: 32px;
+  min-width: 44px;
+  min-height: 44px;
   transition: opacity var(--transition-fast);
   padding: 0;
 }

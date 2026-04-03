@@ -109,7 +109,7 @@
 .otpInputError {
   width: 45px !important;
   height: 55px !important;
-  border: 0.5px solid #a05920 !important;
+  border: 0.5px solid var(--br) !important;
   border-radius: 2px !important;
   font-family: var(--font-cormorant-garamond), serif !important;
   font-size: 20px !important;
@@ -123,7 +123,7 @@
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
   font-size: 14px;
-  color: #a05920;
+  color: var(--br);
   text-align: center;
   margin-bottom: 20px;
   line-height: 1.6;

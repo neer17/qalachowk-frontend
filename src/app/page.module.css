@@ -166,11 +166,10 @@
   padding-bottom: 4px;
 }
 .hPill {
-  background: rgba(245, 239, 230, 0.12);
+  background: rgba(253, 245, 230, 0.95);
   border: 0.5px solid rgba(245, 239, 230, 0.22);
   border-radius: 2px;
   padding: 13px 17px;
-  backdrop-filter: blur(10px);
   text-align: right;
 }
 .pillLbl {
@@ -375,8 +374,8 @@
   background: rgba(245, 239, 230, 0.9);
   border: none;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  min-width: 44px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;

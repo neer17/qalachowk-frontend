@@ -208,11 +208,10 @@
 }
 
 .glassPill {
-  background: rgba(245, 239, 230, 0.1);
+  background: rgba(253, 245, 230, 0.95);
   border: 0.5px solid rgba(245, 239, 230, 0.2);
   border-radius: 2px;
   padding: 22px 26px;
-  backdrop-filter: blur(10px);
   min-width: 210px;
   max-width: 270px;
 }

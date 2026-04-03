@@ -47,7 +47,7 @@
 
 .productGstNote {
   font-size: 11px;
-  color: #888;
+  color: var(--muted);
   margin: 0;
 }
 
