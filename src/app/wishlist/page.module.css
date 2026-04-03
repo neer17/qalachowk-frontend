@@ -193,7 +193,7 @@
 
 .removeButton:hover {
   color: var(--s);
-  background-color: rgba(245, 239, 230, 1);
+  background-color: var(--l);
 }
 
 /* ════ HOVER OVERLAY ════ */

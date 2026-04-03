@@ -516,6 +516,7 @@
   justify-content: center;
   gap: 10px;
   transition: background 0.2s;
+  min-height: 44px;
 }
 .btnPrimary:hover {
   background: var(--br);
@@ -532,9 +533,10 @@
   border: none;
   border-bottom: 0.5px solid var(--bo);
   cursor: pointer;
-  padding: 0 0 1px;
+  padding: 12px 24px;
   transition: border-color 0.2s;
   align-self: center;
+  min-height: 44px;
 }
 .btnGhost:hover {
   border-color: var(--s);

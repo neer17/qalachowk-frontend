@@ -175,6 +175,7 @@
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
+  min-height: 44px;
 }
 
 .btnApply:hover:not(:disabled) {
@@ -214,6 +215,7 @@
   transition:
     border-color 0.2s,
     background 0.2s;
+  min-height: 44px;
 }
 
 .paymentOpt:hover {
@@ -300,6 +302,7 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
+  min-height: 44px;
 }
 
 .placeOrderBtn:hover {
