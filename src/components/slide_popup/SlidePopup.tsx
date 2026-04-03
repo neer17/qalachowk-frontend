@@ -43,7 +43,9 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
   const handleIncrementItemQuantity = async (id: string) => {
     const item = cartData.get(id);
     if (item === undefined) {
-      console.error(`Item does not exists for id: ${id}`);
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`Item does not exists for id: ${id}`);
+      }
       return;
     }
 
