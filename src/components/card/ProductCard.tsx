@@ -16,7 +16,7 @@ import { Product } from "@/utils/types";
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ProductCardProps extends Product {}
 
-export default function ProductCard({
+function ProductCard({
   slug,
   images,
   name,
@@ -218,3 +218,5 @@ export default function ProductCard({
     </>
   );
 }
+
+export default React.memo(ProductCard);

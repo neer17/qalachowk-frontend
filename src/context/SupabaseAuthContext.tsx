@@ -57,7 +57,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       );
     } catch (error) {
-      console.error("Backend logout error:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Backend logout error:", error);
+      }
     }
 
     await clearCheckoutState();
@@ -90,7 +92,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setUser(cachedUser);
         }
       } catch (error) {
-        console.error("Failed to initialize auth:", error);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Failed to initialize auth:", error);
+        }
       } finally {
         setIsAuthLoading(false);
       }
@@ -128,14 +132,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
 
             if (!res.ok) {
-              console.error("Google sign-in failed:", res.status);
+              if (process.env.NODE_ENV !== "production") {
+                console.error("Google sign-in failed:", res.status);
+              }
               return;
             }
 
             const userData: BackendAuthResponse = await res.json();
             await login(userData, "google");
           } catch (error) {
-            console.error("Google sign-in error:", error);
+            if (process.env.NODE_ENV !== "production") {
+              console.error("Google sign-in error:", error);
+            }
           }
         },
       });

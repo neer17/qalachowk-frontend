@@ -63,6 +63,7 @@ export default function Craft() {
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-FXJ-N1ezxhNbEv8mAYm-sftuCjDF0PnK6LUuoaXLO12LLu9NKy6Ld-e8dg17KISonKToDvqV4f9vwp05flYE9UwZ2JIn1WfQtyt86w_PE6v0b-tW8Egcg9b-OnxlpBRb2OIHD6zc_2gANCnEWzPL106iHqsVYvGdtaY5HGGxco62XTt633C4BKqzOJusZRBf_3pmPXPZTJtbKB6_J5mktq4FRjdLo6rfqHygDEdsTi7Y3ibYX4B9XqurTSB0EO2-QceWinc7bweD"
                 alt="Artisanal Process"
                 sizes="(min-width: 768px) 50vw, 100vw"
+                loading="lazy"
               />
             </div>
           </div>
@@ -204,6 +205,7 @@ export default function Craft() {
                 height={400}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuApAPjdTP9oFzwp6OElmhMUmGWMM5fFDWMOeS-lJHpkNW2iYEUYYU25Fn7oIHK3uo8pA3l-ff97ab8O1jQjd0nZJi9jsqJvkBaw8OyeN2doAoIQGWsNGO_VUbjCAptHwE4JqOint8bvo1AJ-jraawd--12r6j3XikRWLMC6LTYLFsGsv8zS6Ztnf4cv6fiz1kWX8Id00XLq3EobDZ-HcMj5K3OtEebkRRMiKuX4gj7bXFHnRe6S34AQHbyaja8pXbARp_ejP2mep_aE"
                 alt="Macro Detail"
+                loading="lazy"
               />
             </div>
             <div
@@ -215,6 +217,7 @@ export default function Craft() {
                 height={400}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNTIHUZVb3HeNpk7cEgK9pOVAvBxH2McSvAXK50g2OgpH7ibywvruTkTKzjYjMOEYrPRryLxMziSCHLdrYfcHUlTwErQNqUiWBHuJGeRTYCKDiTng4Oer3-KOWfnPxx2JLs2L5ez2ETPNCRn8gKb844arLza-1hw03FAxcCLlf_VclHm13EEDyOgbNBgp5CMFywVCyLj4BU6xtyMz7XALtXCrcoLf2kbd2luDSNZJECbEL8mVYi84I5tp4JMe8BCc7UTHOChgSlsL4"
                 alt="Macro Detail"
+                loading="lazy"
               />
             </div>
             <div className={styles.showcaseImageWrapper}>
@@ -224,6 +227,7 @@ export default function Craft() {
                 height={400}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuChAUvh6Aa0vj3YUOfWllAZK2hOFHrGrscVdrqwMwZaoeORbdC3fUqvBf1v94v2S3CILd0x_2K3YJq_W2H2aFnrR49PHpRUOpSXZaGwf3_Ps15QGCYUW2AhQy6ifl_WO16mBXJlSKEF0Jd5qPZUTOsvdwGpK3GRpwfiU8pKsfDnIf6mUG-D4ZYM1LyzYwRS-nB2B9Qj5rqHeaQOS37RPIu4VvY9_oalDomrRj7BJjCIOZDVIBqROrsy5RUXvLwKN0L3A_MLY9TT5lHZ"
                 alt="Macro Detail"
+                loading="lazy"
               />
             </div>
             <div
@@ -235,6 +239,7 @@ export default function Craft() {
                 height={400}
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy34uVAZ2dte1O5KhaWvqGTCnTnoMeEbi90B2I0kdiN7Tmb3m9N-45U6VNCWvLbp2qOSG-zBWJmusA4dyqKv1IG9rWkqgeGwXAbSY50e2XABR9xShhWGgZMoPId2tL_kjN-KSJkVHyHcgP-K7odjXHqV_z249oAmrMUqzcVck0eihm3TDfDlg1CX3AN3u7zpX6Rg9qEgJHZxL06SLIBrn6OMDbGFjNy2QPo0I9fC1jCaHv4yVsywdpvJMo8i10mfxcosIc8bBWsK-n"
                 alt="Macro Detail"
+                loading="lazy"
               />
             </div>
           </div>

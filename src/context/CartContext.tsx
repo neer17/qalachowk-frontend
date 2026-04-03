@@ -116,9 +116,13 @@ export default function CartProvider({ children }: CartProviderProps) {
         const initialCartData = new Map<string, Product>();
         allCartItems.forEach((item) => initialCartData.set(item.id, item));
         setCartDataState(initialCartData);
-        console.info("Cart data loaded from IndexedDB");
+        if (process.env.NODE_ENV !== "production") {
+          console.info("Cart data loaded from IndexedDB");
+        }
       } catch (error) {
-        console.error("Failed to load cart data:", error);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Failed to load cart data:", error);
+        }
       }
     };
 
@@ -142,7 +146,9 @@ export default function CartProvider({ children }: CartProviderProps) {
             Array.from(apiMap.values()).map((p) => db.put("wishlistStore", p)),
           );
         }
-        console.info("Wishlist data loaded from API and synced to IndexedDB");
+        if (process.env.NODE_ENV !== "production") {
+          console.info("Wishlist data loaded from API and synced to IndexedDB");
+        }
       } catch (apiError) {
         const isAuthError =
           apiError instanceof Error &&
@@ -150,9 +156,13 @@ export default function CartProvider({ children }: CartProviderProps) {
             apiError.message.includes("401"));
         if (isAuthError) {
           // User not authenticated with backend – use IndexedDB (guest mode)
-          console.info("No backend session; loading wishlist from IndexedDB");
+          if (process.env.NODE_ENV !== "production") {
+            console.info("No backend session; loading wishlist from IndexedDB");
+          }
         } else {
-          console.warn("API unavailable; falling back to IndexedDB:", apiError);
+          if (process.env.NODE_ENV !== "production") {
+            console.warn("API unavailable; falling back to IndexedDB:", apiError);
+          }
         }
         if (dbPromise) {
           try {
@@ -161,9 +171,13 @@ export default function CartProvider({ children }: CartProviderProps) {
             const idbMap = new Map<string, Product>();
             allWishlistItems.forEach((item) => idbMap.set(item.id, item));
             setWishlistDataState(idbMap);
-            console.info("Wishlist data loaded from IndexedDB");
+            if (process.env.NODE_ENV !== "production") {
+              console.info("Wishlist data loaded from IndexedDB");
+            }
           } catch (idbError) {
-            console.error("Failed to load wishlist from IndexedDB:", idbError);
+            if (process.env.NODE_ENV !== "production") {
+              console.error("Failed to load wishlist from IndexedDB:", idbError);
+            }
           }
         }
       } finally {
@@ -194,7 +208,9 @@ export default function CartProvider({ children }: CartProviderProps) {
       await db.put("cartStore", newCartData.get(cartItem.id)!);
       setCartDataState(newCartData);
     } catch (error) {
-      console.error("Failed to set cart data:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to set cart data:", error);
+      }
     }
   };
 
@@ -218,7 +234,9 @@ export default function CartProvider({ children }: CartProviderProps) {
       }
       setCartDataState(newCartData);
     } catch (error) {
-      console.error("Failed to remove cart data:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to remove cart data:", error);
+      }
     }
   };
 
@@ -227,7 +245,9 @@ export default function CartProvider({ children }: CartProviderProps) {
 
     try {
       if (!cartData.has(itemId)) {
-        console.warn(`Item with id: ${itemId} does not exist`);
+        if (process.env.NODE_ENV !== "production") {
+          console.warn(`Item with id: ${itemId} does not exist`);
+        }
         return;
       }
 
@@ -238,7 +258,9 @@ export default function CartProvider({ children }: CartProviderProps) {
       const db = await dbPromise;
       await db.delete("cartStore", itemId);
     } catch (error) {
-      console.error("Failed to delete cart data:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to delete cart data:", error);
+      }
     }
   };
 
@@ -259,7 +281,9 @@ export default function CartProvider({ children }: CartProviderProps) {
         const db = await dbPromise;
         await db.put("wishlistStore", wishlistItem);
       } catch (error) {
-        console.error("Failed to write wishlist item to IndexedDB:", error);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Failed to write wishlist item to IndexedDB:", error);
+        }
       }
     }
 
@@ -273,7 +297,9 @@ export default function CartProvider({ children }: CartProviderProps) {
           error instanceof Error &&
           !error.message.includes("409") // 409 = already in wishlist, that's fine
         ) {
-          console.warn("API wishlist add failed (non-auth):", error.message);
+          if (process.env.NODE_ENV !== "production") {
+            console.warn("API wishlist add failed (non-auth):", error.message);
+          }
         }
       }
     }
@@ -290,7 +316,9 @@ export default function CartProvider({ children }: CartProviderProps) {
         const db = await dbPromise;
         await db.delete("wishlistStore", itemId);
       } catch (error) {
-        console.error("Failed to remove wishlist item from IndexedDB:", error);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Failed to remove wishlist item from IndexedDB:", error);
+        }
       }
     }
 
@@ -301,7 +329,9 @@ export default function CartProvider({ children }: CartProviderProps) {
         if (error instanceof Error && error.message === "AUTH_REQUIRED") {
           setIsApiMode(false);
         } else {
-          console.warn("API wishlist remove failed:", error);
+          if (process.env.NODE_ENV !== "production") {
+            console.warn("API wishlist remove failed:", error);
+          }
         }
       }
     }
@@ -320,9 +350,13 @@ export default function CartProvider({ children }: CartProviderProps) {
       const db = await dbPromise;
       await db.clear("cartStore");
       setCartDataState(new Map());
-      console.info("Cart cleared successfully");
+      if (process.env.NODE_ENV !== "production") {
+        console.info("Cart cleared successfully");
+      }
     } catch (error) {
-      console.error("Failed to clear cart:", error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error("Failed to clear cart:", error);
+      }
     }
   };
 
