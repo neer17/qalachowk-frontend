@@ -167,9 +167,6 @@ export default function Wishlist() {
           </div>
         )}
       </div>
-
-      {/* Mandana Decorative Bar */}
-      <div className={styles.mandanaBar} />
     </main>
   );
 }

@@ -42,7 +42,7 @@
   height: 40px;
   object-fit: contain;
   flex-shrink: 0;
-  display: none;
+  display: block;
 }
 
 .navbar.solid .brandLogo {

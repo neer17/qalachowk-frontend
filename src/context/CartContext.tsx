@@ -7,13 +7,21 @@ import React, {
   useEffect,
   useContext,
 } from "react";
-import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 
+import { useAuth } from "@/context/SupabaseAuthContext";
 import { Product } from "@/utils/types";
 import {
   WishlistService,
   type WishlistApiItem,
 } from "@/lib/api/wishlistService";
+import { CartService, type CartApiItem } from "@/lib/api/cartService";
+import {
+  loadCartItems,
+  saveCartItem,
+  deleteCartItem,
+  clearCartIDB,
+} from "@/utils/idb/cart.idb";
 
 // Props for the CartProvider
 interface CartProviderProps {
@@ -39,11 +47,7 @@ interface WishlistContextType {
 }
 
 // Define the database schema
-interface CartDB extends DBSchema {
-  cartStore: {
-    key: string;
-    value: Product;
-  };
+interface WishlistDB extends DBSchema {
   wishlistStore: {
     key: string;
     value: Product;
@@ -77,18 +81,41 @@ function apiItemToProduct(item: WishlistApiItem): Product {
   };
 }
 
+function cartApiItemToProduct(item: CartApiItem): Product {
+  return {
+    id: item.productId,
+    name: item.productName,
+    price: item.productPrice,
+    images: item.productImages.map((img, index) => ({
+      id: `${item.productId}-img-${index}`,
+      url: img.url,
+      alt: img.alt ?? item.productName,
+      isMain: img.isMain,
+      sortOrder: index,
+    })),
+    description: item.productDescription,
+    material: item.productMaterial,
+    quantity: item.quantity,
+    category: item.productCategory,
+    slug: item.productSlug,
+  };
+}
+
 // Initialize IndexedDB only if in the browser
-let dbPromise: Promise<IDBPDatabase<CartDB>> | undefined;
+let dbPromise: Promise<IDBPDatabase<WishlistDB>> | undefined;
 if (typeof window !== "undefined") {
-  dbPromise = openDB<CartDB>("cartDB", 1, {
+  dbPromise = openDB<WishlistDB>("cartDB", 1, {
     upgrade(db) {
-      db.createObjectStore("cartStore", { keyPath: "id" });
-      db.createObjectStore("wishlistStore", { keyPath: "id" });
+      if (!db.objectStoreNames.contains("wishlistStore")) {
+        db.createObjectStore("wishlistStore", { keyPath: "id" });
+      }
     },
   });
 }
 
 export default function CartProvider({ children }: CartProviderProps) {
+  const { user } = useAuth();
+  const userId = user?.id;
   const [cartData, setCartDataState] = useState<Map<string, Product>>(
     new Map(),
   );
@@ -108,15 +135,10 @@ export default function CartProvider({ children }: CartProviderProps) {
 
   useEffect(() => {
     const loadCartData = async () => {
-      if (!dbPromise) return;
-
       try {
-        const db = await dbPromise;
-        const allCartItems = await db.getAll("cartStore");
-        const initialCartData = new Map<string, Product>();
-        allCartItems.forEach((item) => initialCartData.set(item.id, item));
-        setCartDataState(initialCartData);
-        console.info("Cart data loaded from IndexedDB");
+        const cartMap = await loadCartItems();
+        setCartDataState(cartMap);
+        console.info("Cart data loaded from IDB (with TTL)");
       } catch (error) {
         console.error("Failed to load cart data:", error);
       }
@@ -175,9 +197,70 @@ export default function CartProvider({ children }: CartProviderProps) {
     loadWishlistData();
   }, []);
 
-  const setCartData = async (cartItem: Product) => {
-    if (!dbPromise) return;
+  const syncCartCache = async (cartMap: Map<string, Product>) => {
+    await clearCartIDB();
+    await Promise.all(
+      Array.from(cartMap.values()).map((item) => saveCartItem(item)),
+    );
+  };
 
+  useEffect(() => {
+    if (userId) {
+      void (async () => {
+        try {
+          const { data: apiItems } = await CartService.getCart();
+          const apiMap = new Map<string, Product>();
+          apiItems.forEach((item) =>
+            apiMap.set(item.productId, cartApiItemToProduct(item)),
+          );
+          setCartDataState(apiMap);
+          await syncCartCache(apiMap);
+        } catch (error) {
+          console.warn(
+            "Failed to load cart from API; falling back to IDB:",
+            error,
+          );
+        }
+      })();
+      return;
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      void (async () => {
+        setIsWishlistLoading(true);
+        try {
+          const { data: apiItems } = await WishlistService.getWishlist();
+          const apiMap = new Map<string, Product>();
+          apiItems.forEach((item) =>
+            apiMap.set(item.productId, apiItemToProduct(item)),
+          );
+          setWishlistDataState(apiMap);
+          setIsApiMode(true);
+
+          if (dbPromise) {
+            const db = await dbPromise;
+            await db.clear("wishlistStore");
+            await Promise.all(
+              Array.from(apiMap.values()).map((product) =>
+                db.put("wishlistStore", product),
+              ),
+            );
+          }
+        } catch (error) {
+          console.warn("Failed to re-sync wishlist after auth change:", error);
+        } finally {
+          setIsWishlistLoading(false);
+        }
+      })();
+      return;
+    }
+
+    setIsApiMode(false);
+  }, [userId]);
+
+  const setCartData = async (cartItem: Product) => {
     try {
       const newCartData = new Map(cartData);
       if (newCartData.has(cartItem.id)) {
@@ -190,17 +273,37 @@ export default function CartProvider({ children }: CartProviderProps) {
         newCartData.set(cartItem.id, cartItem);
       }
 
-      const db = await dbPromise;
-      await db.put("cartStore", newCartData.get(cartItem.id)!);
+      await saveCartItem(newCartData.get(cartItem.id)!);
       setCartDataState(newCartData);
+
+      if (userId) {
+        void (async () => {
+          try {
+            const { data } = await CartService.addToCart(
+              cartItem.id,
+              cartItem.quantity || 1,
+            );
+            const syncedProduct = cartApiItemToProduct(data);
+            setCartDataState((prevCartData) => {
+              const syncedCartData = new Map(prevCartData);
+              syncedCartData.set(syncedProduct.id, syncedProduct);
+              return syncedCartData;
+            });
+            await saveCartItem(syncedProduct);
+          } catch (error) {
+            console.warn(
+              "Cart API add failed after optimistic local save:",
+              error,
+            );
+          }
+        })();
+      }
     } catch (error) {
       console.error("Failed to set cart data:", error);
     }
   };
 
   const removeCartData = async (itemId: string) => {
-    if (!dbPromise) return;
-
     try {
       const newCartData = new Map(cartData);
       if (newCartData.has(itemId)) {
@@ -208,23 +311,47 @@ export default function CartProvider({ children }: CartProviderProps) {
         if (item.quantity > 1) {
           const updatedItem = { ...item, quantity: item.quantity - 1 };
           newCartData.set(itemId, updatedItem);
-          const db = await dbPromise;
-          await db.put("cartStore", updatedItem);
+          await saveCartItem(updatedItem);
         } else {
           newCartData.delete(itemId);
-          const db = await dbPromise;
-          await db.delete("cartStore", itemId);
+          await deleteCartItem(itemId);
         }
       }
       setCartDataState(newCartData);
+
+      if (userId && cartData.has(itemId)) {
+        const item = cartData.get(itemId)!;
+        void (async () => {
+          try {
+            if (item.quantity > 1) {
+              const { data } = await CartService.updateCartItem(
+                itemId,
+                item.quantity - 1,
+              );
+              const syncedItem = cartApiItemToProduct(data);
+              setCartDataState((prevCartData) => {
+                const syncedCartData = new Map(prevCartData);
+                syncedCartData.set(itemId, syncedItem);
+                return syncedCartData;
+              });
+              await saveCartItem(syncedItem);
+            } else {
+              await CartService.removeFromCart(itemId);
+            }
+          } catch (error) {
+            console.warn(
+              "Cart API remove failed after optimistic local update:",
+              error,
+            );
+          }
+        })();
+      }
     } catch (error) {
       console.error("Failed to remove cart data:", error);
     }
   };
 
   const deleteCartData = async (itemId: string) => {
-    if (!dbPromise) return;
-
     try {
       if (!cartData.has(itemId)) {
         console.warn(`Item with id: ${itemId} does not exist`);
@@ -234,9 +361,20 @@ export default function CartProvider({ children }: CartProviderProps) {
       const newCartData = new Map(cartData);
       newCartData.delete(itemId);
       setCartDataState(newCartData);
+      await deleteCartItem(itemId);
 
-      const db = await dbPromise;
-      await db.delete("cartStore", itemId);
+      if (userId) {
+        void (async () => {
+          try {
+            await CartService.removeFromCart(itemId);
+          } catch (error) {
+            console.warn(
+              "Cart API delete failed after optimistic local update:",
+              error,
+            );
+          }
+        })();
+      }
     } catch (error) {
       console.error("Failed to delete cart data:", error);
     }
@@ -314,13 +452,23 @@ export default function CartProvider({ children }: CartProviderProps) {
   };
 
   const clearCart = async () => {
-    if (!dbPromise) return;
-
     try {
-      const db = await dbPromise;
-      await db.clear("cartStore");
+      await clearCartIDB();
       setCartDataState(new Map());
       console.info("Cart cleared successfully");
+
+      if (userId) {
+        void (async () => {
+          try {
+            await CartService.clearCart();
+          } catch (error) {
+            console.warn(
+              "Cart API clear failed after optimistic local update:",
+              error,
+            );
+          }
+        })();
+      }
     } catch (error) {
       console.error("Failed to clear cart:", error);
     }

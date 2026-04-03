@@ -8,6 +8,7 @@ import {
 } from "@/utils/idb/user.idb";
 import { clearCheckoutState } from "@/utils/idb/checkout.idb";
 import { API_ENDPOINTS } from "@/utils/constants";
+import { refreshSession } from "@/lib/api/common";
 
 /** Unified user type — no more Supabase User dependency */
 export interface AppUser {
@@ -81,13 +82,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await saveUserState(appUser);
   };
 
-  // Initialize auth from IndexedDB cache
+  // Initialize auth from IndexedDB cache, then verify session with backend in background
   useEffect(() => {
+    const BASE_URL = process.env["NEXT_PUBLIC_BACKEND_BASE_URL"] ?? "";
+
+    const verifySession = async (): Promise<boolean> => {
+      try {
+        const res = await fetch(`${BASE_URL}${API_ENDPOINTS.AUTH_ME.URL}`, {
+          method: API_ENDPOINTS.AUTH_ME.METHOD,
+          credentials: "include",
+        });
+
+        if (res.ok) {
+          return true;
+        }
+
+        if (res.status === 401) {
+          return refreshSession();
+        }
+
+        return false;
+      } catch {
+        // Network offline — keep local state, don't force logout
+        return true;
+      }
+    };
+
     const initializeAuth = async () => {
       try {
         const cachedUser = await loadUserState();
         if (cachedUser) {
-          setUser(cachedUser);
+          setUser(cachedUser); // optimistic: show user immediately, don't block UI
+          // Background verify — silently clear state if cookie is gone/revoked
+          verifySession().then((valid) => {
+            if (!valid) {
+              console.info("Session invalid — clearing local auth state");
+              clearUserState().then(() => setUser(null));
+            }
+          });
         }
       } catch (error) {
         console.error("Failed to initialize auth:", error);

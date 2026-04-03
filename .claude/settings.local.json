@@ -40,7 +40,18 @@
       "Bash(open:*)",
       "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-frontend/src/app/favicon* /Users/neesewan/Documents/Me_documents/qalachowk-frontend/src/app/icon*)",
       "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-backend/.env*)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8080/v1/auth/google -H \"Content-Type: application/json\" -d '{}')"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST http://localhost:8080/v1/auth/google -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(find /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src -name *.env* -o -name schema* -o -name env*)",
+      "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/*.env*)",
+      "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/.env*)",
+      "Bash(ls /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/next.config*)",
+      "Bash(npm install:*)",
+      "Bash(/Users/neesewan/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/scripts/start-server.sh --project-dir /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend)",
+      "Bash(/Users/neesewan/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/brainstorming/scripts/start-server.sh --project-dir /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend)",
+      "Bash(find /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend -name *.test.* -o -name *.spec.*)",
+      "Bash(mv /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print/PrintTrigger.tsx /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/print/[orderId]/PrintTrigger.tsx)",
+      "Bash(mv /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print/page.tsx /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/print/[orderId]/page.tsx)",
+      "Bash(rm -rf /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print)"
     ]
   }
 }

@@ -5,13 +5,15 @@ import styles from "./Navbar.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
-import { useCart } from "@/context/CartContext";
+import { useCart, useWishlist } from "@/context/CartContext";
 import { useAuth } from "@/context/SupabaseAuthContext";
 import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
 import { OtpService } from "@/lib/api/otpService";
 import { notifications } from "@mantine/notifications";
-import PeacockBrown from "@/assets/peacock.svg";
+import PeacockBrown from "@/assets/logos/peacock.svg";
+import UserStroke from "@/assets/svgs/user_stroke.svg";
+import UserFill from "@/assets/svgs/user_fill.svg";
 import Image from "next/image";
 
 interface MenuItem {
@@ -35,6 +37,7 @@ const NavigationBar: React.FC = () => {
   const pathname = usePathname();
 
   const { cartData } = useCart();
+  const { wishlistData } = useWishlist();
   const { user, login, logout } = useAuth();
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -166,16 +169,23 @@ const NavigationBar: React.FC = () => {
             <button
               className={styles.iconBtn}
               onClick={() => setShowAccountPanel((prev) => !prev)}
+              aria-label={user ? "Account" : "Sign in"}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="22px"
-                viewBox="0 -960 960 960"
-                width="22px"
-                fill="currentColor"
-              >
-                <path d="M480-480q-66 0-113-47t-113-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-32q0-34 17.5-62.5T224-292q62-31 126-46.5T480-354q66 0 130 15.5T736-292q29 15 46.5 43.5T800-186v26H160Z" />
-              </svg>
+              {user ? (
+                <Image
+                  src={UserFill}
+                  alt="User signed in icon"
+                  height={22}
+                  width={22}
+                />
+              ) : (
+                <Image
+                  src={UserStroke}
+                  alt="User signed out icon"
+                  height={22}
+                  width={22}
+                />
+              )}
             </button>
             {showAccountPanel && (
               <div className={styles.accountDropdown}>
@@ -224,6 +234,7 @@ const NavigationBar: React.FC = () => {
             >
               <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-640q0-90 60-150t150-60q61 0 114.5 28.5T480-738q34-55 87.5-83.5T670-850q90 0 150 60t60 150q0 46-15.5 90T810-447.5Q771-382 705-316T538-172l-58 52Z" />
             </svg>
+            <span className={styles.cartBadge}>{wishlistData.size}</span>
           </button>
 
           {/* Cart */}

@@ -119,6 +119,14 @@ export const API_ENDPOINTS = {
     URL: "/v1/wishlist",
     METHOD: "DELETE",
   },
+  CART: {
+    URL: "/v1/cart",
+    METHOD: "GET",
+  },
+  AUTH_ME: {
+    URL: "/v1/auth/me",
+    METHOD: "GET",
+  },
 };
 
 export const USER_ROLES = {

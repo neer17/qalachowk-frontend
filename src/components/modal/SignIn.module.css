@@ -85,7 +85,7 @@
 
 .continueButton {
   background-color: var(--l) !important;
-  color: var(--bo) !important;
+  color: var(--s) !important;
   border: none !important;
   border-radius: 2px !important;
   font-family: var(--font-dm-sans), sans-serif !important;

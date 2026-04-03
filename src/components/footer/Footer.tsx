@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Footer.module.css";
 import Link from "next/link";
 import Image from "next/image";
-import Peacock from "@/assets/peacock.svg";
+import Peacock from "@/assets/logos/peacock.svg";
 
 export default function Footer() {
   return (

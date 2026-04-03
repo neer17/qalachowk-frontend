@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Modal, TextInput, Button, Text, Box } from "@mantine/core";
 import Image from "next/image";
-import Peacock from "@/assets/peacock.svg";
+import Peacock from "@/assets/logos/peacock.svg";
 import styles from "./SignIn.module.css";
 
 interface SignInModalProps {
