@@ -71,6 +71,7 @@ export default function SignInModal({
 
         <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
           <TextInput
+            label="Email ID / Mobile number"
             placeholder="Email ID / Mobile number"
             size="md"
             value={input}
@@ -78,6 +79,7 @@ export default function SignInModal({
             radius={0}
             classNames={{
               input: styles.input,
+              label: styles.inputLabel,
             }}
           />
 

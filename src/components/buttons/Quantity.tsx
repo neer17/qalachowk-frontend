@@ -16,9 +16,23 @@ const QuantityButton: React.FC<QuantityButtonProps> = ({
 }) => {
   return (
     <div className={styles.quantityButtonContainer}>
-      <span onClick={() => incrementCallback(id)}>+</span>
+      <button
+        className={styles.quantityBtn}
+        onClick={() => incrementCallback(id)}
+        aria-label="Increase quantity"
+        type="button"
+      >
+        +
+      </button>
       <h5>{quantity}</h5>
-      <span onClick={() => decrementCallback(id)}>-</span>
+      <button
+        className={styles.quantityBtn}
+        onClick={() => decrementCallback(id)}
+        aria-label="Decrease quantity"
+        type="button"
+      >
+        -
+      </button>
     </div>
   );
 };

@@ -61,6 +61,15 @@
   gap: 1.5rem;
 }
 
+.inputLabel {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--t);
+  margin-bottom: 4px;
+}
+
 .input {
   border: 0.5px solid var(--bo) !important;
   border-radius: 0 !important;

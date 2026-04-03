@@ -17,7 +17,7 @@ export default function DetailCard(props: DetailCardProps) {
           src={props.imageSrc}
           width={0}
           height={0}
-          alt="Product"
+          alt={props.title}
           sizes="(max-width: 1024px) 100vw 30vw"
         />
       </div>

@@ -3,6 +3,7 @@ import styles from "./SlidePopup.module.css";
 import { useCart } from "@/context/CartContext";
 import CartProductCard from "../card/CartProductCard";
 import { useRouter } from "next/navigation";
+import { FocusTrap } from "@mantine/core";
 
 interface SlidePopupProps {
   isOpen: boolean;
@@ -73,9 +74,13 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
           onClick={backdropClickCallback}
         />
       )}
+      <FocusTrap active={isOpen}>
       <div
         className={`${styles.slidePanel} ${isOpen ? styles.open : ""}`}
-        aria-expanded={isOpen}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping cart"
+        aria-hidden={!isOpen}
       >
         <div className={styles.topSection}>
           <header className={styles.panelHeader}>
@@ -145,6 +150,7 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
           </button>
         </footer>
       </div>
+      </FocusTrap>
     </>
   );
 };

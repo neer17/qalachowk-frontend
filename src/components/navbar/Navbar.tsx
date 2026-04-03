@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Navbar.module.css";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -33,6 +33,8 @@ const NavigationBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const cartButtonRef = useRef<HTMLButtonElement>(null);
 
   const { cartData } = useCart();
   const { user, login, logout } = useAuth();
@@ -49,9 +51,23 @@ const NavigationBar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const openMenu = () => {
+    setIsMenuOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+    document.body.style.overflow = "unset";
+    hamburgerRef.current?.focus();
+  };
+
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-    document.body.style.overflow = isMenuOpen ? "unset" : "hidden";
+    if (isMenuOpen) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
   };
 
   const handleUserSignIn = (e?: React.MouseEvent<HTMLElement>) => {
@@ -119,9 +135,12 @@ const NavigationBar: React.FC = () => {
       <nav className={`${styles.navbar}${isSolid ? " " + styles.solid : ""}`}>
         {/* Hamburger — mobile only */}
         <button
+          ref={hamburgerRef}
           onClick={toggleMenu}
           className={styles.mobileMenuButton}
-          aria-label="Menu"
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
         >
           <div className={styles.hamburgerIcon}>
             <span className={styles.hamburgerBar}></span>
@@ -166,6 +185,8 @@ const NavigationBar: React.FC = () => {
             <button
               className={styles.iconBtn}
               onClick={() => setShowAccountPanel((prev) => !prev)}
+              aria-label="Account"
+              aria-expanded={showAccountPanel}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -214,6 +235,7 @@ const NavigationBar: React.FC = () => {
           <button
             className={styles.iconBtn}
             onClick={() => router.push("/wishlist")}
+            aria-label="Wishlist"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -227,10 +249,11 @@ const NavigationBar: React.FC = () => {
           </button>
 
           {/* Cart */}
-          <div
+          <button
+            ref={cartButtonRef}
             className={styles.iconBtn}
             onClick={() => setIsCartOpen(true)}
-            style={{ cursor: "pointer" }}
+            aria-label={`Cart${cartData.size > 0 ? `, ${cartData.size} item${cartData.size === 1 ? "" : "s"}` : ""}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -241,17 +264,26 @@ const NavigationBar: React.FC = () => {
             >
               <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
             </svg>
-            <span className={styles.cartBadge}>{cartData.size}</span>
-          </div>
+            <span className={styles.cartBadge} aria-hidden="true">{cartData.size}</span>
+          </button>
         </div>
       </nav>
 
       {/* Mobile slide-out menu */}
-      <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ""}`}>
+      <div
+        id="mobile-menu"
+        className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
+        onKeyDown={(e) => {
+          if (e.key === "Escape") closeMenu();
+        }}
+      >
         <div className={styles.menuHeader}>
           <span className={styles.menuTitle}>Menu</span>
           <button
-            onClick={toggleMenu}
+            onClick={closeMenu}
             className={styles.closeButton}
             aria-label="Close menu"
           >
@@ -266,7 +298,7 @@ const NavigationBar: React.FC = () => {
               href={item.path}
               key={item.name}
               className={styles.menuItemMobile}
-              onClick={toggleMenu}
+              onClick={closeMenu}
             >
               {item.name}
             </Link>
@@ -282,7 +314,7 @@ const NavigationBar: React.FC = () => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                toggleMenu();
+                closeMenu();
                 logout();
               }}
             >
@@ -299,7 +331,7 @@ const NavigationBar: React.FC = () => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                toggleMenu();
+                closeMenu();
                 handleUserSignIn();
               }}
             >
@@ -329,7 +361,10 @@ const NavigationBar: React.FC = () => {
       {/* Slide Cart Panel */}
       <SlidePopup
         isOpen={isCartOpen}
-        backdropClickCallback={() => setIsCartOpen(false)}
+        backdropClickCallback={() => {
+          setIsCartOpen(false);
+          cartButtonRef.current?.focus();
+        }}
       />
     </>
   );

@@ -41,3 +41,32 @@
   min-width: 0;
   height: 100%;
 }
+
+.pausePlayButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--p);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+  line-height: 1;
+}
+
+.pausePlayButton:hover,
+.pausePlayButton:focus-visible {
+  opacity: 1;
+}
+
+.pausePlayButton:focus-visible {
+  outline: 2px solid var(--p);
+  outline-offset: 2px;
+}

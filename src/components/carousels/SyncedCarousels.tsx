@@ -64,6 +64,11 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
   return (
     <section className={styles.embla}>
+      {/* Screen-reader live region announcing current slide */}
+      <div aria-live="polite" aria-atomic="true" className={styles.srOnly}>
+        {`Image ${selectedIndex + 1} of ${images.length}`}
+      </div>
+
       {/* Main Carousel */}
       <div className={styles.embla__viewport} ref={emblaMainRef}>
         <div className={styles.embla__container}>
@@ -86,7 +91,11 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       {/* Thumbnail Carousel */}
       <div className={styles.productImagesContainer}>
         <div className={styles.embla__thumbs__viewport} ref={emblaThumbsRef}>
-          <div className={styles.embla__thumbs__container}>
+          <div
+            className={styles.embla__thumbs__container}
+            role="tablist"
+            aria-label="Product image thumbnails"
+          >
             {images.map((src, index) => (
               <div
                 className={`${styles.embla__thumbs__slide} ${
@@ -100,6 +109,9 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                   onClick={() => onThumbClick(index)}
                   className={styles.embla__thumbs__slide__button}
                   type="button"
+                  role="tab"
+                  aria-selected={index === selectedIndex}
+                  aria-label={`View image ${index + 1}`}
                 >
                   <Image
                     width={50}

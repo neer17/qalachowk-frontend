@@ -13,12 +13,24 @@
   color: var(--c);
 }
 
-.quantityButtonContainer > span {
+.quantityBtn {
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
   color: var(--br);
   transition: color var(--transition-fast);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
 }
 
-.quantityButtonContainer > span:hover {
+.quantityBtn:hover {
   color: var(--s);
+}
+
+.quantityBtn:focus-visible {
+  outline: 2px solid var(--s);
+  outline-offset: 2px;
 }
