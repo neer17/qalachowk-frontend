@@ -53,6 +53,7 @@ function OrderConfirmedContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
+  const orderNumberFromUrl = searchParams.get("orderNumber");
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -116,7 +117,7 @@ function OrderConfirmedContent() {
     }
   }
 
-  const shortId = orderId ?? null;
+  const shortId = orderNumberFromUrl ?? order?.orderNumber ?? orderId ?? null;
   const shippingAddr = order?.shippingAddress;
 
   return (

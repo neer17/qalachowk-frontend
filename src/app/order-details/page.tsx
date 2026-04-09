@@ -144,7 +144,7 @@ export default function OrderDetailsPage() {
       {/* ── Page Header ── */}
       <div className={styles.pageHeader}>
         <span className={styles.eyebrow}>Your Order</span>
-        <h1 className={styles.pageTitle}>#{order.id}</h1>
+        <h1 className={styles.pageTitle}>#{order.orderNumber ?? order.id}</h1>
         <div className={styles.orderMeta}>
           <p className={styles.orderDate}>
             Placed on{" "}
@@ -386,7 +386,9 @@ export default function OrderDetailsPage() {
                 }}
               >
                 <div className={styles.historyLeft}>
-                  <span className={styles.historyId}>#{o.id}</span>
+                  <span className={styles.historyId}>
+                    #{o.orderNumber ?? o.id}
+                  </span>
                   <span className={styles.historyDate}>
                     {formatDate(o.createdAt)}
                   </span>

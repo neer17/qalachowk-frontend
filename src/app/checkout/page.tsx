@@ -456,9 +456,14 @@ export default function Checkout() {
 
       const orderDetails = await OrderService.createOrder(orderData);
       const orderId = orderDetails.orderId;
+      const orderNumber = (
+        orderDetails as { orderId: string; orderNumber?: string }
+      ).orderNumber;
 
       await clearCart();
-      router.push(`/order-confirmed?orderId=${orderId}`);
+      router.push(
+        `/order-confirmed?orderId=${orderId}${orderNumber ? `&orderNumber=${encodeURIComponent(orderNumber)}` : ""}`,
+      );
       return;
     } catch (error) {
       console.error("Error in order creation: ", { error });
