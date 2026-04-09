@@ -235,6 +235,70 @@
   background-color: var(--br);
 }
 
+.recommendationPanel {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 0.5px solid var(--bo);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.recommendationEyebrow {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--br);
+}
+
+.bundlePreview,
+.quickAddCard {
+  border: 0.5px solid var(--bo);
+  background: rgba(245, 239, 230, 0.45);
+  padding: 14px;
+}
+
+.bundlePreview p,
+.thresholdMessage {
+  margin: 6px 0 0 0;
+  color: var(--br);
+  line-height: 1.6;
+}
+
+.quickAddCard {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.quickAddImage {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  background: var(--p);
+}
+
+.quickAddContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--s);
+}
+
+.quickAddButton {
+  border: 1px solid var(--s);
+  background: transparent;
+  color: var(--s);
+  padding: 10px 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+  cursor: pointer;
+}
+
 /* ════ MOBILE STICKY BAR ════ */
 .mobileBar {
   display: none;

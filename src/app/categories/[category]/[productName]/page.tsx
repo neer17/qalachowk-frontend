@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import styles from "./page.module.css";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -10,10 +11,11 @@ import SlidePopup from "@/components/slide_popup/SlidePopup";
 import { SimpleGrid } from "@mantine/core";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
-import { Product } from "@/utils/types";
-import { API_ENDPOINTS, environments } from "@/utils/constants";
+import { BundleOffer, MerchandisingProduct, Product } from "@/utils/types";
+import { environments } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
 import { sendGAEvent } from "@next/third-parties/google";
+import { ProductService } from "@/lib/api/productService";
 
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
@@ -100,15 +102,12 @@ export default function ProductDetails() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS.URL}?slug=${slug}`,
-        );
-        const { data } = await response.json();
-        if (!data) return;
+        const data = await ProductService.getProductsBySlug(slug);
+        if (!data?.length) return;
 
         const [product] = data;
         setProduct(product);
-        setProductCollectionId(product.collectionId);
+        setProductCollectionId(product.collectionId ?? null);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -120,11 +119,9 @@ export default function ProductDetails() {
   useEffect(() => {
     const fetchSimilarProducts = async () => {
       try {
-        // Fetch similar products based on collectionId
-        const similarResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS.URL}?collectionId=${productCollectionId}`,
+        const data = await ProductService.getProductsByCollection(
+          productCollectionId!,
         );
-        const { data } = await similarResponse.json();
         if (!data) return;
         setSimilarProducts(data);
       } catch (error) {
@@ -138,7 +135,7 @@ export default function ProductDetails() {
   const handleAddToCart = async () => {
     if (!product) return;
 
-    const productToAdd = {
+    const productToAdd: Product = {
       id: product.id,
       name: product.name,
       price: product.price,
@@ -182,6 +179,59 @@ export default function ProductDetails() {
     toggleCartPopup();
   };
 
+  const addMerchandisingItemToCart = async (
+    item: MerchandisingProduct,
+    source:
+      | "upsell_add_to_cart"
+      | "silver_upgrade_click" = "upsell_add_to_cart",
+  ) => {
+    await setCartData({
+      id: item.id,
+      name: item.name,
+      price: item.discountedPrice ?? item.price,
+      originalPrice: item.discountedPrice ? item.price : undefined,
+      quantity: 1,
+      images: item.images,
+      category: item.category,
+      slug: item.slug,
+      material: "",
+      description: item.description || "",
+    });
+
+    if (isProduction) {
+      sendGAEvent("event", source, {
+        currency: "INR",
+        value: item.price,
+        items: [
+          {
+            item_id: item.id,
+            item_name: item.name,
+            price: item.price,
+            quantity: 1,
+            item_category: item.category?.name,
+          },
+        ],
+      });
+    }
+
+    setShowCartPopup(true);
+  };
+
+  const handleAddBundle = async (bundle: BundleOffer) => {
+    for (const item of bundle.products) {
+      await addMerchandisingItemToCart(item);
+    }
+
+    if (isProduction) {
+      sendGAEvent("event", "add_bundle_to_cart", {
+        currency: "INR",
+        value: bundle.finalAmount,
+        bundle_id: bundle.id,
+        bundle_name: bundle.name,
+      });
+    }
+  };
+
   const handleWishlistToggle = async () => {
     if (!product) return;
     if (isInWishlist) {
@@ -206,7 +256,18 @@ export default function ProductDetails() {
   };
 
   if (!product) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "40vh",
+        }}
+      >
+        Curating this piece…
+      </div>
+    );
   }
 
   return (
@@ -324,6 +385,7 @@ export default function ProductDetails() {
         {/* Right: Info Panel */}
         <div className={styles.productInfoPanel}>
           <header>
+            <p className={styles.breadcrumb}>{product.category?.name}</p>
             <h1 className={`${styles.fontSerif} ${styles.productTitle}`}>
               {product.name}
             </h1>
@@ -384,8 +446,132 @@ export default function ProductDetails() {
             <div>Authenticity Certified</div>
             <div>Artisan Signature Included</div>
           </div>
+
+          {product.merchandising?.upgradeOption && (
+            <div className={styles.promoPanel}>
+              <span className={styles.promoBadge}>
+                {product.merchandising.upgradeOption.badgeText}
+              </span>
+              <h3 className={`${styles.fontSerif} ${styles.promoTitle}`}>
+                {product.merchandising.upgradeOption.name}
+              </h3>
+              <p className={styles.promoText}>
+                Step up to silver for ₹{" "}
+                {product.merchandising.upgradeOption.priceDelta.toLocaleString(
+                  "en-IN",
+                )}{" "}
+                more.
+              </p>
+              <button
+                className={styles.secondaryActionBtn}
+                onClick={() =>
+                  addMerchandisingItemToCart(
+                    product.merchandising!.upgradeOption!,
+                    "silver_upgrade_click",
+                  )
+                }
+              >
+                Add silver version
+              </button>
+            </div>
+          )}
         </div>
       </section>
+
+      {product.merchandising?.bundleOffers?.length ? (
+        <section className={styles.bundleSection}>
+          <div className={styles.bundleHeader}>
+            <span className={styles.bundleEyebrow}>Set building</span>
+            <h2 className={`${styles.fontSerif} ${styles.bundleTitle}`}>
+              Complete the look
+            </h2>
+            <p className={styles.bundleSubtitle}>
+              Artisan-selected pieces chosen to complement your style.
+            </p>
+          </div>
+
+          <div className={styles.bundleGrid}>
+            {product.merchandising.bundleOffers.map((bundle) => (
+              <article className={styles.bundleCard} key={bundle.id}>
+                <div
+                  className={styles.bundleImageStrip}
+                  style={{
+                    gridTemplateColumns: `repeat(${bundle.products.length}, 1fr)`,
+                  }}
+                >
+                  {bundle.products.map((item) => (
+                    <div className={styles.bundleImageTile} key={item.id}>
+                      {item.images?.[0] ? (
+                        <Image
+                          src={item.images[0].url}
+                          alt={item.images[0].alt || item.name}
+                          fill
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          style={{ objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div className={styles.bundleImageFallback}>
+                          {item.name}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <span className={styles.promoBadge}>{bundle.badgeText}</span>
+                <h3 className={`${styles.fontSerif} ${styles.bundleCardTitle}`}>
+                  {bundle.headline}
+                </h3>
+                <p className={styles.bundleCardText}>{bundle.subheadline}</p>
+                <div className={styles.bundlePieces}>
+                  {bundle.products.map((item) => (
+                    <div className={styles.bundlePiece} key={item.id}>
+                      <span className={styles.bundlePieceName}>
+                        {item.name}
+                      </span>
+                      <div className={styles.bundlePiecePrice}>
+                        {item.discountedPrice !== undefined ? (
+                          <>
+                            <span className={styles.bundleItemStrike}>
+                              ₹{item.price.toLocaleString("en-IN")}
+                            </span>
+                            <strong className={styles.bundleItemDiscounted}>
+                              ₹{item.discountedPrice.toLocaleString("en-IN")}
+                            </strong>
+                            <span className={styles.bundleItemBadge}>
+                              {item.bundleDiscountPct}% OFF
+                            </span>
+                          </>
+                        ) : (
+                          <strong>₹{item.price.toLocaleString("en-IN")}</strong>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.bundlePriceRow}>
+                  <div>
+                    <div className={styles.bundleStrikePrice}>
+                      ₹{" "}
+                      {bundle.products
+                        .reduce((sum, item) => sum + item.price, 0)
+                        .toLocaleString("en-IN")}
+                    </div>
+                    <div className={styles.bundlePrice}>
+                      ₹ {bundle.finalAmount.toLocaleString("en-IN")}
+                    </div>
+                  </div>
+                  <button
+                    className={styles.secondaryActionBtn}
+                    onClick={() => handleAddBundle(bundle)}
+                  >
+                    Add set
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Mandana Divider */}
       <div className={styles.mandanaDividerWrapper}>
@@ -476,34 +662,85 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      {/* Keep the original More Products component for state functionality */}
-      <div className={styles.moreProductsLargerScreen}>
-        <h1>More from this collection</h1>
-        <div className={styles.moreProductsCardsWrapper}>
-          {similarProducts
-            ?.filter((product) => product.images && product.images.length > 0)
-            ?.map((similarProduct) => similarProduct.images[0])
-            ?.map((image) => (
-              <div className={styles.moreProductsCardContainer} key={image.id}>
-                <RegularCard
-                  productDescription={product.description}
-                  price={product.price}
-                  sizes="20vw"
-                  imageName={product.name}
-                  imageSrc={image.url}
-                />
-              </div>
+      {product.merchandising?.completeTheLook?.length ? (
+        <section className={styles.completeLookSection}>
+          <div className={styles.bundleHeader}>
+            <span className={styles.bundleEyebrow}>Style pairing</span>
+            <h2 className={`${styles.fontSerif} ${styles.bundleTitle}`}>
+              Style it with
+            </h2>
+          </div>
+          <div className={styles.completeLookGrid}>
+            {product.merchandising.completeTheLook.map((item) => (
+              <article className={styles.completeLookCard} key={item.id}>
+                {item.images?.[0] ? (
+                  <div className={styles.completeLookImage}>
+                    <Image
+                      src={item.images[0].url}
+                      alt={item.images[0].alt || item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                ) : null}
+                <div className={styles.completeLookContent}>
+                  <h3 className={styles.completeLookName}>{item.name}</h3>
+                  <p className={styles.completeLookPrice}>
+                    ₹ {item.price.toLocaleString("en-IN")}
+                  </p>
+                  <button
+                    className={styles.secondaryActionBtn}
+                    onClick={() => addMerchandisingItemToCart(item)}
+                  >
+                    Add to bag
+                  </button>
+                </div>
+              </article>
             ))}
-        </div>
-      </div>
+          </div>
+        </section>
+      ) : null}
 
-      <div className={styles.moreProductsSmallerScreen}>
-        <h1>More from this collection</h1>
-        <ScrollbarCarouselCards
-          products={similarProducts}
-          imageSizes="(min-width: 768px) 100vw 50vw"
-        />
-      </div>
+      {similarProducts.filter(
+        (p) => p.id !== product?.id && p.images?.length > 0,
+      ).length > 0 && (
+        <div className={styles.moreProductsLargerScreen}>
+          <h2>More from this collection</h2>
+          <div className={styles.moreProductsCardsWrapper}>
+            {similarProducts
+              .filter((p) => p.id !== product?.id && p.images?.length > 0)
+              .map((similarProduct) => (
+                <div
+                  className={styles.moreProductsCardContainer}
+                  key={similarProduct.id}
+                >
+                  <Link
+                    href={`/categories/${similarProduct.category.slug}/${similarProduct.slug}`}
+                  >
+                    <RegularCard
+                      productDescription={similarProduct.name}
+                      price={similarProduct.price}
+                      sizes="20vw"
+                      imageName={similarProduct.name}
+                      imageSrc={similarProduct.images[0].url}
+                    />
+                  </Link>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {similarProducts.filter((p) => p.id !== product?.id).length > 0 && (
+        <div className={styles.moreProductsSmallerScreen}>
+          <h2>More from this collection</h2>
+          <ScrollbarCarouselCards
+            products={similarProducts.filter((p) => p.id !== product?.id)}
+            imageSizes="(min-width: 768px) 100vw 50vw"
+          />
+        </div>
+      )}
 
       <SlidePopup
         isOpen={showCartPopup}

@@ -2,11 +2,16 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { useCart } from "@/context/CartContext";
 import CartProductCard from "@/components/card/CartProductCard";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import {
+  CartRecommendationsResponse,
+  ProductService,
+} from "@/lib/api/productService";
 
 export default function CartPage() {
   const router = useRouter();
@@ -17,6 +22,25 @@ export default function CartPage() {
     removeCartData,
     deleteCartData,
   } = useCart();
+  const [recommendations, setRecommendations] =
+    useState<CartRecommendationsResponse>({
+      recommendations: [],
+    });
+
+  useEffect(() => {
+    const loadRecommendations = async () => {
+      try {
+        const response = await ProductService.getCartRecommendations(
+          Array.from(cartData.keys()),
+        );
+        setRecommendations(response);
+      } catch (error) {
+        console.error("Failed to load cart recommendations:", error);
+      }
+    };
+
+    void loadRecommendations();
+  }, [cartData]);
 
   const handleQuantityIncrement = async (id: string) => {
     const item = cartData.get(id);
@@ -40,6 +64,22 @@ export default function CartPage() {
 
   const navigateToCheckoutPage = () => {
     router.push("/checkout");
+  };
+
+  const handleQuickAdd = async (
+    recommendation: CartRecommendationsResponse["recommendations"][number],
+  ) => {
+    await setCartData({
+      id: recommendation.id,
+      name: recommendation.name,
+      price: recommendation.price,
+      quantity: 1,
+      images: recommendation.images,
+      category: recommendation.category,
+      slug: recommendation.slug,
+      description: recommendation.description,
+      material: "",
+    });
   };
 
   const itemCount = cartData.size;
@@ -140,6 +180,60 @@ export default function CartPage() {
               >
                 Proceed to Checkout
               </button>
+
+              {(recommendations.bundlePreview ||
+                recommendations.recommendations.length > 0 ||
+                recommendations.thresholdMessage) && (
+                <div className={styles.recommendationPanel}>
+                  <p className={styles.recommendationEyebrow}>
+                    Complete your set
+                  </p>
+
+                  {recommendations.bundlePreview && (
+                    <div className={styles.bundlePreview}>
+                      <strong>{recommendations.bundlePreview.badgeText}</strong>
+                      <p>
+                        {recommendations.bundlePreview.name} available for ₹{" "}
+                        {recommendations.bundlePreview.finalAmount.toLocaleString(
+                          "en-IN",
+                        )}
+                      </p>
+                    </div>
+                  )}
+
+                  {recommendations.thresholdMessage && (
+                    <p className={styles.thresholdMessage}>
+                      {recommendations.thresholdMessage}
+                    </p>
+                  )}
+
+                  {recommendations.recommendations.slice(0, 1).map((item) => (
+                    <div className={styles.quickAddCard} key={item.id}>
+                      {item.images?.[0] ? (
+                        <div className={styles.quickAddImage}>
+                          <Image
+                            src={item.images[0].url}
+                            alt={item.images[0].alt || item.name}
+                            fill
+                            sizes="96px"
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                      ) : null}
+                      <div className={styles.quickAddContent}>
+                        <strong>{item.name}</strong>
+                        <span>₹ {item.price.toLocaleString("en-IN")}</span>
+                      </div>
+                      <button
+                        className={styles.quickAddButton}
+                        onClick={() => handleQuickAdd(item)}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

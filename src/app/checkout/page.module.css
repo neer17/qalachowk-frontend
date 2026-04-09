@@ -371,6 +371,36 @@
   min-height: 0;
 }
 
+.bundlePreviewCard,
+.bundleThresholdCard {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 0.5px solid var(--bo);
+  background: rgba(245, 239, 230, 0.65);
+  color: var(--s);
+}
+
+.bundlePreviewBadge {
+  width: fit-content;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background: rgba(106, 41, 1, 0.08);
+  color: var(--t);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bundlePreviewText,
+.bundleThresholdCard {
+  margin: 6px 0 0 0;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--br);
+}
+
 /* Totals */
 .summaryTotals {
   display: flex;

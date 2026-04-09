@@ -70,6 +70,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/products",
     METHOD: "GET",
   },
+  PRODUCT_CART_RECOMMENDATIONS: {
+    URL: "/v1/products/recommendations/cart",
+    METHOD: "POST",
+  },
   PRODUCTS_BY_CATEGORY: {
     // TODO: how to include param or slug?
     URL: "/v1/products/categories",

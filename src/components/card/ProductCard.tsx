@@ -78,7 +78,7 @@ export default function ProductCard({
     e: React.MouseEvent<HTMLDivElement>,
   ) => {
     e.preventDefault();
-    router.push(`/categories/rings/${slug}`);
+    router.push(`/categories/${category.slug}/${slug}`);
   };
 
   const handleDotClick = (

@@ -18,6 +18,7 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
   name,
   quantity,
   price,
+  originalPrice,
   imageSizes = "10vw",
   images,
   isOrderSummaryCard = false,
@@ -25,6 +26,10 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
   decrementCallback,
   deleteCartItem,
 }) => {
+  const discountPct = originalPrice
+    ? Math.round((1 - price / originalPrice) * 100)
+    : 0;
+
   return (
     <div className={styles.contentsContainer}>
       <div className={styles.imageContainer}>
@@ -41,7 +46,21 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
       </div>
       <div className={styles.detailsContainer}>
         <h3 className={styles.productTitle}>{name}</h3>
-        <p className={styles.productPrice}>₹ {price.toLocaleString("en-IN")}</p>
+        {originalPrice ? (
+          <div className={styles.priceRow}>
+            <span className={styles.originalPrice}>
+              ₹ {originalPrice.toLocaleString("en-IN")}
+            </span>
+            <span className={styles.productPrice}>
+              ₹ {price.toLocaleString("en-IN")}
+            </span>
+            <span className={styles.discountBadge}>{discountPct}% off</span>
+          </div>
+        ) : (
+          <p className={styles.productPrice}>
+            ₹ {price.toLocaleString("en-IN")}
+          </p>
+        )}
         <p className={styles.productGstNote}>Incl. 3% GST</p>
 
         {isOrderSummaryCard ? (

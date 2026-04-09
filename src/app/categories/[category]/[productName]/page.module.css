@@ -112,11 +112,11 @@
 }
 
 .fontSerif {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-playfair), serif;
 }
 
 .productTitle {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-playfair), serif;
   font-weight: 600;
   font-size: clamp(28px, 3vw, 42px);
   color: var(--s);
@@ -124,15 +124,15 @@
 }
 
 .productPrice {
-  font-family: var(--font-cormorant-garamond), serif;
-  color: var(--g);
+  font-family: var(--font-playfair), serif;
+  color: var(--s);
   font-size: 22px;
   margin-top: 8px;
   font-weight: 600;
 }
 
 .productProse {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-style: italic;
   font-size: 16px;
   color: var(--br);
@@ -245,8 +245,8 @@
 }
 
 .wishlistBtnActive {
-  color: #c0392b;
-  border-color: #c0392b;
+  color: var(--s);
+  border-color: var(--s);
 }
 
 .enquireButton {
@@ -306,14 +306,14 @@
   margin-bottom: 52px;
 }
 .craftTitle {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-playfair), serif;
   font-weight: 600;
   font-size: clamp(28px, 3vw, 42px);
   color: var(--s);
   margin-bottom: 10px;
 }
 .craftSubtitle {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-style: italic;
   font-size: 16px;
   max-width: 480px;
@@ -352,13 +352,13 @@
   opacity: 0.6;
 }
 .craftStepTitle {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-playfair), serif;
   font-weight: 600;
   font-size: 18px;
   color: var(--s);
 }
 .craftStepDesc {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-style: italic;
   font-size: 14px;
   color: var(--br);
@@ -379,13 +379,236 @@
   gap: 12px;
 }
 
+.promoPanel,
+.bundleSection,
+.completeLookSection {
+  margin-top: 32px;
+}
+
+.promoPanel {
+  border: 1px solid rgba(68, 46, 32, 0.14);
+  background: linear-gradient(
+    180deg,
+    rgba(250, 245, 239, 0.9),
+    rgba(243, 235, 224, 0.8)
+  );
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promoBadge,
+.bundleEyebrow {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  background: rgba(122, 87, 58, 0.1);
+  color: var(--t);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+}
+
+.promoTitle,
+.bundleTitle {
+  font-family: var(--font-playfair), serif;
+  color: var(--s);
+  font-size: clamp(28px, 3vw, 38px);
+  margin: 0;
+}
+
+.promoText,
+.bundleSubtitle,
+.bundleCardText {
+  color: var(--br);
+  line-height: 1.7;
+}
+
+.secondaryActionBtn {
+  width: fit-content;
+  border: 1px solid var(--s);
+  background: transparent;
+  color: var(--s);
+  padding: 12px 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.bundleHeader {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto 28px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.bundleGrid,
+.completeLookGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.bundleCard,
+.completeLookCard {
+  border: 1px solid rgba(68, 46, 32, 0.12);
+  background: rgba(255, 252, 248, 0.9);
+  padding: 20px;
+}
+
+.bundleCard {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 252, 248, 0.96),
+    rgba(248, 242, 234, 0.92)
+  );
+  box-shadow: 0 18px 40px rgba(77, 49, 29, 0.06);
+}
+
+.bundleCardTitle,
+.completeLookName {
+  font-family: var(--font-playfair), serif;
+  color: var(--s);
+  margin: 10px 0 8px 0;
+  font-size: 24px;
+}
+
+.bundlePieces {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.bundleImageStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.bundleImageTile {
+  position: relative;
+  aspect-ratio: 1 / 1.15;
+  overflow: hidden;
+  background: var(--l);
+  border: 1px solid rgba(68, 46, 32, 0.08);
+}
+
+.bundleImageFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  color: var(--br);
+  font-family: var(--font-playfair), serif;
+}
+
+.bundlePiece,
+.bundlePriceRow,
+.completeLookContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bundlePieceName {
+  max-width: 55%;
+  line-height: 1.4;
+}
+
+.bundlePiecePrice {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.bundleItemStrike {
+  color: var(--br);
+  opacity: 0.65;
+  text-decoration: line-through;
+  font-size: 13px;
+}
+
+.bundleItemDiscounted {
+  color: var(--s);
+  font-weight: 600;
+}
+
+.bundleItemBadge {
+  background: rgba(122, 87, 58, 0.12);
+  color: var(--t);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+}
+
+.bundleStrikePrice {
+  color: var(--br);
+  opacity: 0.7;
+  text-decoration: line-through;
+  font-size: 14px;
+}
+
+.bundlePrice,
+.completeLookPrice {
+  color: var(--s);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.completeLookImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.1;
+  margin-bottom: 16px;
+  overflow: hidden;
+  background: var(--l);
+}
+
+.completeLookContent {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .bundleGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .completeLookGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .bundleImageStrip {
+    gap: 8px;
+  }
+
+  .bundlePieceName {
+    max-width: 50%;
+  }
+}
+
 /* ── Related products ── */
 .moreProductsLargerScreen {
   display: flex;
   flex-direction: column;
 }
-.moreProductsLargerScreen h1 {
-  font-family: var(--font-cormorant-garamond), serif;
+.moreProductsLargerScreen h2 {
+  font-family: var(--font-playfair), serif;
   font-weight: 600;
   font-size: 22px;
   color: var(--s);
@@ -415,8 +638,8 @@
     align-items: center;
     padding: 32px;
   }
-  .moreProductsSmallerScreen h1 {
-    font-family: var(--font-cormorant-garamond), serif;
+  .moreProductsSmallerScreen h2 {
+    font-family: var(--font-playfair), serif;
     font-weight: 600;
     font-size: 22px;
     color: var(--s);

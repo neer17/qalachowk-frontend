@@ -2,6 +2,7 @@ import React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import styles from "./ScrollbarCarouselCards.module.css";
 import Image from "next/image";
+import Link from "next/link";
 import { Product } from "@/utils/types";
 
 interface ScrollbarCarouselCardsProps {
@@ -35,21 +36,26 @@ const ScrollbarCarouselCards: React.FC<ScrollbarCarouselCardsProps> = ({
             .filter((product) => product.images && product.images.length > 0)
             .map((product) => (
               <div className={styles.emblaSlide} key={product.id}>
-                <div className={styles.productCard}>
-                  <div className={styles.productImage}>
-                    <Image
-                      src={product.images[0].url}
-                      alt={product.name}
-                      width={0}
-                      height={0}
-                      sizes={imageSizes}
-                    />
+                <Link
+                  href={`/categories/${product.category.slug}/${product.slug}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <div className={styles.productCard}>
+                    <div className={styles.productImage}>
+                      <Image
+                        src={product.images[0].url}
+                        alt={product.name}
+                        width={0}
+                        height={0}
+                        sizes={imageSizes}
+                      />
+                    </div>
+                    <div className={styles.productInfo}>
+                      <h3>{product.name}</h3>
+                      <p className={styles.price}>{product.price}</p>
+                    </div>
                   </div>
-                  <div className={styles.productInfo}>
-                    <h3>{product.name}</h3>
-                    <p className={styles.price}>{product.price}</p>
-                  </div>
-                </div>
+                </Link>
               </div>
             ))}
         </div>

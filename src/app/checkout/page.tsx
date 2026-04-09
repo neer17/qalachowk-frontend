@@ -23,6 +23,10 @@ import {
 import { OrderService } from "@/lib/api/orderService";
 import { DeliveryFormValues } from "@/types/ui/checkoutForm";
 import { sendGAEvent } from "@next/third-parties/google";
+import {
+  CartRecommendationsResponse,
+  ProductService,
+} from "@/lib/api/productService";
 
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
@@ -48,6 +52,10 @@ export default function Checkout() {
 
   const [selectedPayment, setSelectedPayment] = useState<string>("upi");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [cartRecommendations, setCartRecommendations] =
+    useState<CartRecommendationsResponse>({
+      recommendations: [],
+    });
 
   const formRef = useRef<DeliveryFormRef>(null);
   const checkoutTracked = useRef(false);
@@ -132,6 +140,21 @@ export default function Checkout() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
+
+  useEffect(() => {
+    const loadCartRecommendations = async () => {
+      try {
+        const response = await ProductService.getCartRecommendations(
+          Array.from(cartData.keys()),
+        );
+        setCartRecommendations(response);
+      } catch (error) {
+        console.error("Failed to load checkout recommendations:", error);
+      }
+    };
+
+    void loadCartRecommendations();
+  }, [cartData]);
 
   const handleDeleteItem = async (id: string) => {
     await deleteCartData(id);
@@ -468,8 +491,13 @@ export default function Checkout() {
     );
   }
 
-  const total =
-    getTotalPrice() - (appliedDiscountResponse?.discountAmount || 0);
+  const bundlePreview =
+    appliedDiscountResponse?.isValid === true
+      ? undefined
+      : cartRecommendations.bundlePreview;
+  const total = appliedDiscountResponse?.isValid
+    ? getTotalPrice() - (appliedDiscountResponse?.discountAmount || 0)
+    : bundlePreview?.finalAmount ?? getTotalPrice();
   const itemCount = cartData.size;
 
   return (
@@ -710,13 +738,32 @@ export default function Checkout() {
               ))}
             </div>
 
+            {bundlePreview && (
+              <div className={styles.bundlePreviewCard}>
+                <div className={styles.bundlePreviewBadge}>
+                  {bundlePreview.badgeText}
+                </div>
+                <strong>{bundlePreview.name}</strong>
+                <p className={styles.bundlePreviewText}>
+                  Your bag qualifies for a curated set saving of ₹{" "}
+                  {bundlePreview.discountAmount.toLocaleString("en-IN")}.
+                </p>
+              </div>
+            )}
+
+            {!bundlePreview && cartRecommendations.thresholdMessage && (
+              <div className={styles.bundleThresholdCard}>
+                {cartRecommendations.thresholdMessage}
+              </div>
+            )}
+
             {/* Totals */}
             <div className={styles.summaryTotals}>
               <div className={styles.totalRow}>
                 <span className={styles.totalLabel}>Subtotal</span>
                 <span className={styles.totalVal}>
                   <Rupee />
-                  {total.toLocaleString("en-IN")}
+                  {getTotalPrice().toLocaleString("en-IN")}
                 </span>
               </div>
               <div className={styles.totalRow}>
@@ -741,6 +788,23 @@ export default function Checkout() {
                     {appliedDiscountResponse.discountAmount?.toLocaleString(
                       "en-IN",
                     )}
+                  </span>
+                </div>
+              )}
+              {!appliedDiscountResponse?.isValid && bundlePreview && (
+                <div className={styles.totalRow}>
+                  <span
+                    className={styles.totalLabel}
+                    style={{ color: "#7a5e2e" }}
+                  >
+                    Set Saving
+                  </span>
+                  <span
+                    className={styles.totalVal}
+                    style={{ color: "#7a5e2e" }}
+                  >
+                    − <Rupee />
+                    {bundlePreview.discountAmount.toLocaleString("en-IN")}
                   </span>
                 </div>
               )}
