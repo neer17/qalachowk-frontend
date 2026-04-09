@@ -497,7 +497,7 @@ export default function Checkout() {
       : cartRecommendations.bundlePreview;
   const total = appliedDiscountResponse?.isValid
     ? getTotalPrice() - (appliedDiscountResponse?.discountAmount || 0)
-    : bundlePreview?.finalAmount ?? getTotalPrice();
+    : (bundlePreview?.finalAmount ?? getTotalPrice());
   const itemCount = cartData.size;
 
   return (
