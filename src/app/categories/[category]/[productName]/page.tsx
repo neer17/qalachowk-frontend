@@ -114,7 +114,7 @@ function CompleteLookItemCard({
             </strong>
           )}
         </div>
-        <button className={styles.secondaryActionBtn} onClick={onAddToCart}>
+        <button className={styles.completeLookAddBtn} onClick={onAddToCart}>
           Add to bag
         </button>
       </div>
