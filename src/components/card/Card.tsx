@@ -21,16 +21,18 @@ const Card: React.FC<CardProps> = ({
     <div className={styles.cardContainer}>
       <div className={styles.imageContainer}>
         <Image
-          width={0}
-          height={0}
+          fill
           alt={imageName}
           src={imageSrc}
           sizes={sizes}
+          style={{ objectFit: "cover" }}
         />
       </div>
       <div className={styles.textContainer}>
         <div className={styles.productDescription}>{productDescription}</div>
-        <div className={styles.productPrice}>{price}</div>
+        <div className={styles.productPrice}>
+          ₹ {price.toLocaleString("en-IN")}
+        </div>
       </div>
     </div>
   );

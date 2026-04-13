@@ -186,7 +186,6 @@ export default function ProductCard({
             <span className={styles.productPrice}>
               ₹{price.toLocaleString("en-IN")}
             </span>
-            <span className={styles.productGstNote}>Incl. 3% GST</span>
           </div>
 
           <div className={styles.buyContainer}>

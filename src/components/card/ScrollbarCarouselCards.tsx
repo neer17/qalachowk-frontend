@@ -45,14 +45,16 @@ const ScrollbarCarouselCards: React.FC<ScrollbarCarouselCardsProps> = ({
                       <Image
                         src={product.images[0].url}
                         alt={product.name}
-                        width={0}
-                        height={0}
+                        fill
                         sizes={imageSizes}
+                        style={{ objectFit: "cover" }}
                       />
                     </div>
                     <div className={styles.productInfo}>
                       <h3>{product.name}</h3>
-                      <p className={styles.price}>{product.price}</p>
+                      <p className={styles.price}>
+                        ₹ {product.price.toLocaleString("en-IN")}
+                      </p>
                     </div>
                   </div>
                 </Link>

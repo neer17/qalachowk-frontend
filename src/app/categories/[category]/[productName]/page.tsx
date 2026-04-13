@@ -20,6 +20,109 @@ import { ProductService } from "@/lib/api/productService";
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
 
+function CompleteLookItemCard({
+  item,
+  onAddToCart,
+}: {
+  item: MerchandisingProduct;
+  onAddToCart: () => void;
+}) {
+  const [clEmblaRef, clEmblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    dragFree: false,
+    containScroll: "trimSnaps",
+  });
+  const [clSelectedIndex, setClSelectedIndex] = useState(0);
+  const [clScrollSnaps, setClScrollSnaps] = useState<number[]>([]);
+
+  const clScrollTo = useCallback(
+    (index: number) => clEmblaApi && clEmblaApi.scrollTo(index),
+    [clEmblaApi],
+  );
+
+  useEffect(() => {
+    if (!clEmblaApi) return;
+    setClScrollSnaps(clEmblaApi.scrollSnapList());
+    setClSelectedIndex(clEmblaApi.selectedScrollSnap());
+    clEmblaApi.on("reInit", () => {
+      setClScrollSnaps(clEmblaApi.scrollSnapList());
+    });
+    clEmblaApi.on("select", () => {
+      setClSelectedIndex(clEmblaApi.selectedScrollSnap());
+    });
+  }, [clEmblaApi]);
+
+  const filteredImages = (item.images ?? []).filter(
+    (img) => !img.url.includes(".mp4"),
+  );
+
+  return (
+    <article className={styles.completeLookCard}>
+      <div className={styles.completeLookImageCarousel}>
+        {filteredImages.length > 0 ? (
+          <>
+            <div className={styles.clEmbla} ref={clEmblaRef}>
+              <div className={styles.clEmblaContainer}>
+                {filteredImages.map((img, i) => (
+                  <div className={styles.clEmblaSlide} key={img.id ?? i}>
+                    <Image
+                      src={img.url}
+                      alt={img.alt || item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            {filteredImages.length > 1 && (
+              <div className={styles.clEmblaDots}>
+                {clScrollSnaps.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`${styles.emblaDot} ${
+                      index === clSelectedIndex ? styles.emblaDotSelected : ""
+                    }`}
+                    type="button"
+                    onClick={() => clScrollTo(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className={styles.bundleImageFallback}>{item.name}</div>
+        )}
+      </div>
+      <div className={styles.completeLookDetails}>
+        <h3 className={styles.completeLookName}>{item.name}</h3>
+        <div className={styles.completeLookPriceRow}>
+          {item.discountedPrice !== undefined ? (
+            <>
+              <span className={styles.bundleItemStrike}>
+                ₹{item.price.toLocaleString("en-IN")}
+              </span>
+              <strong className={styles.completeLookPrice}>
+                ₹{item.discountedPrice.toLocaleString("en-IN")}
+              </strong>
+            </>
+          ) : (
+            <strong className={styles.completeLookPrice}>
+              ₹{item.price.toLocaleString("en-IN")}
+            </strong>
+          )}
+        </div>
+        <button className={styles.secondaryActionBtn} onClick={onAddToCart}>
+          Add to bag
+        </button>
+      </div>
+    </article>
+  );
+}
+
 export default function ProductDetails() {
   const params = useParams();
   const slug = params.productName as string;
@@ -672,31 +775,11 @@ export default function ProductDetails() {
           </div>
           <div className={styles.completeLookGrid}>
             {product.merchandising.completeTheLook.map((item) => (
-              <article className={styles.completeLookCard} key={item.id}>
-                {item.images?.[0] ? (
-                  <div className={styles.completeLookImage}>
-                    <Image
-                      src={item.images[0].url}
-                      alt={item.images[0].alt || item.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                ) : null}
-                <div className={styles.completeLookContent}>
-                  <h3 className={styles.completeLookName}>{item.name}</h3>
-                  <p className={styles.completeLookPrice}>
-                    ₹ {item.price.toLocaleString("en-IN")}
-                  </p>
-                  <button
-                    className={styles.secondaryActionBtn}
-                    onClick={() => addMerchandisingItemToCart(item)}
-                  >
-                    Add to bag
-                  </button>
-                </div>
-              </article>
+              <CompleteLookItemCard
+                key={item.id}
+                item={item}
+                onAddToCart={() => addMerchandisingItemToCart(item)}
+              />
             ))}
           </div>
         </section>
@@ -717,6 +800,7 @@ export default function ProductDetails() {
                 >
                   <Link
                     href={`/categories/${similarProduct.category.slug}/${similarProduct.slug}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
                   >
                     <RegularCard
                       productDescription={similarProduct.name}

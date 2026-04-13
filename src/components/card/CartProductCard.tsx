@@ -61,7 +61,6 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
             ₹ {price.toLocaleString("en-IN")}
           </p>
         )}
-        <p className={styles.productGstNote}>Incl. 3% GST</p>
 
         {isOrderSummaryCard ? (
           <div className={styles.quantityWrapper}>

@@ -34,31 +34,31 @@
 }
 
 .productImage {
+  aspect-ratio: 4 / 5;
+  position: relative;
+  background: var(--l);
+  overflow: hidden;
   width: 100%;
-  background-color: var(--l);
-}
-
-.productImage img {
-  width: 100%;
-  height: auto;
 }
 
 .productInfo {
-  padding: 12px 14px;
+  padding: 12px 14px 14px;
 }
 
 .productInfo h3 {
-  margin: 0 0 4px;
+  margin: 0 0 5px;
   font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--s);
+  line-height: 1.2;
 }
 
 .price {
   margin: 0;
   font-family: var(--font-cormorant-garamond), serif;
-  font-size: 17px;
+  font-size: 15px;
+  font-weight: 600;
   color: var(--g);
 }
 
