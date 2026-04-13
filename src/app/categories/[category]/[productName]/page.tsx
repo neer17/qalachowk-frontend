@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 import ScrollbarCarouselCards from "@/components/card/ScrollbarCarouselCards";
 import RegularCard from "@/components/card/Card";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
-import { SimpleGrid } from "@mantine/core";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
 import { BundleOffer, MerchandisingProduct, Product } from "@/utils/types";
@@ -153,6 +152,30 @@ export default function ProductDetails() {
     [emblaApi],
   );
 
+  const [emblaMainRef, emblaMainApi] = useEmblaCarousel({
+    loop: false,
+    containScroll: "trimSnaps",
+  });
+  const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
+  const [selectedThumbIndex, setSelectedThumbIndex] = useState(0);
+
+  const onThumbClick = useCallback(
+    (index: number) => {
+      if (!emblaMainApi || !emblaThumbsApi) return;
+      emblaMainApi.scrollTo(index);
+    },
+    [emblaMainApi, emblaThumbsApi],
+  );
+
+  const onMainSelect = useCallback(() => {
+    if (!emblaMainApi || !emblaThumbsApi) return;
+    setSelectedThumbIndex(emblaMainApi.selectedScrollSnap());
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
+  }, [emblaMainApi, emblaThumbsApi]);
+
   const onInit = useCallback((emblaApi: EmblaCarouselType) => {
     setScrollSnaps(emblaApi.scrollSnapList());
   }, []);
@@ -201,6 +224,12 @@ export default function ProductDetails() {
     emblaApi.on("reInit", onInit);
     emblaApi.on("select", onSelect);
   }, [emblaApi, onInit, onSelect]);
+
+  useEffect(() => {
+    if (!emblaMainApi) return;
+    onMainSelect();
+    emblaMainApi.on("select", onMainSelect).on("reInit", onMainSelect);
+  }, [emblaMainApi, onMainSelect]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -381,49 +410,84 @@ export default function ProductDetails() {
         <div className={styles.productImageFocus}>
           {product.images && product.images.length > 0 ? (
             <>
-              {/* Desktop Grid */}
+              {/* Desktop Thumbnail Carousel */}
               <div className={styles.desktopImageGrid}>
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-                  {product.images.map((img) => (
-                    <div
-                      key={img.id}
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
-                        minHeight: "400px",
-                      }}
-                    >
-                      {img.url.includes(".mp4") ? (
-                        <video
-                          width={1920}
-                          height={1080}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                          }}
-                          src={img.url}
-                          autoPlay
-                          muted
-                          loop
-                        />
-                      ) : (
-                        <Image
-                          src={img.url}
-                          alt={img.alt || product.name}
-                          className={styles.productImageCover}
-                          fill
-                          style={{ objectFit: "cover" }}
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                      )}
+                <div className={styles.emblaMainViewport} ref={emblaMainRef}>
+                  <div className={styles.emblaMainContainer}>
+                    {product.images.map((img) => (
+                      <div className={styles.emblaMainSlide} key={img.id}>
+                        {img.url.includes(".mp4") ? (
+                          <video
+                            width={1920}
+                            height={1080}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                            }}
+                            src={img.url}
+                            autoPlay
+                            muted
+                            loop
+                          />
+                        ) : (
+                          <Image
+                            src={img.url}
+                            alt={img.alt || product.name}
+                            className={styles.productImageCover}
+                            fill
+                            style={{ objectFit: "cover" }}
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {product.images.length > 1 && (
+                  <div
+                    className={styles.emblaThumbsViewport}
+                    ref={emblaThumbsRef}
+                  >
+                    <div className={styles.emblaThumbsContainer}>
+                      {product.images.map((img, index) => (
+                        <button
+                          key={img.id}
+                          onClick={() => onThumbClick(index)}
+                          type="button"
+                          className={`${styles.emblaThumbsSlide} ${
+                            index === selectedThumbIndex
+                              ? styles.emblaThumbsSlideSelected
+                              : ""
+                          }`}
+                        >
+                          {img.url.includes(".mp4") ? (
+                            <video
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                              src={img.url}
+                              muted
+                            />
+                          ) : (
+                            <Image
+                              src={img.url}
+                              alt={img.alt || product.name}
+                              fill
+                              style={{ objectFit: "cover" }}
+                              sizes="10vw"
+                            />
+                          )}
+                        </button>
+                      ))}
                     </div>
-                  ))}
-                </SimpleGrid>
+                  </div>
+                )}
               </div>
 
               {/* Mobile Carousel */}
