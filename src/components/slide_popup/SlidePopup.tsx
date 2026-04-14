@@ -103,6 +103,7 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
                 id,
                 name,
                 price,
+                originalPrice,
                 quantity,
                 images,
                 category,
@@ -115,6 +116,7 @@ const SlidePopup: React.FC<SlidePopupProps> = ({
                   id={id}
                   name={name}
                   price={price}
+                  originalPrice={originalPrice}
                   quantity={quantity}
                   images={images}
                   slug={slug}

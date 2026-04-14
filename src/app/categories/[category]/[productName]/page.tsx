@@ -1,22 +1,126 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import styles from "./page.module.css";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import ScrollbarCarouselCards from "@/components/card/ScrollbarCarouselCards";
 import RegularCard from "@/components/card/Card";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
-import { SimpleGrid } from "@mantine/core";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
-import { Product } from "@/utils/types";
-import { API_ENDPOINTS, environments } from "@/utils/constants";
+import { BundleOffer, MerchandisingProduct, Product } from "@/utils/types";
+import { environments } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
 import { sendGAEvent } from "@next/third-parties/google";
+import { ProductService } from "@/lib/api/productService";
 
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
+
+function CompleteLookItemCard({
+  item,
+  onAddToCart,
+}: {
+  item: MerchandisingProduct;
+  onAddToCart: () => void;
+}) {
+  const [clEmblaRef, clEmblaApi] = useEmblaCarousel({
+    loop: false,
+    align: "start",
+    dragFree: false,
+    containScroll: "trimSnaps",
+  });
+  const [clSelectedIndex, setClSelectedIndex] = useState(0);
+  const [clScrollSnaps, setClScrollSnaps] = useState<number[]>([]);
+
+  const clScrollTo = useCallback(
+    (index: number) => clEmblaApi && clEmblaApi.scrollTo(index),
+    [clEmblaApi],
+  );
+
+  useEffect(() => {
+    if (!clEmblaApi) return;
+    setClScrollSnaps(clEmblaApi.scrollSnapList());
+    setClSelectedIndex(clEmblaApi.selectedScrollSnap());
+    clEmblaApi.on("reInit", () => {
+      setClScrollSnaps(clEmblaApi.scrollSnapList());
+    });
+    clEmblaApi.on("select", () => {
+      setClSelectedIndex(clEmblaApi.selectedScrollSnap());
+    });
+  }, [clEmblaApi]);
+
+  const filteredImages = (item.images ?? []).filter(
+    (img) => !img.url.includes(".mp4"),
+  );
+
+  return (
+    <article className={styles.completeLookCard}>
+      <div className={styles.completeLookImageCarousel}>
+        {filteredImages.length > 0 ? (
+          <>
+            <div className={styles.clEmbla} ref={clEmblaRef}>
+              <div className={styles.clEmblaContainer}>
+                {filteredImages.map((img, i) => (
+                  <div className={styles.clEmblaSlide} key={img.id ?? i}>
+                    <Image
+                      src={img.url}
+                      alt={img.alt || item.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+            {filteredImages.length > 1 && (
+              <div className={styles.clEmblaDots}>
+                {clScrollSnaps.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`${styles.emblaDot} ${
+                      index === clSelectedIndex ? styles.emblaDotSelected : ""
+                    }`}
+                    type="button"
+                    onClick={() => clScrollTo(index)}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className={styles.bundleImageFallback}>{item.name}</div>
+        )}
+      </div>
+      <div className={styles.completeLookDetails}>
+        <h3 className={styles.completeLookName}>{item.name}</h3>
+        <div className={styles.completeLookPriceRow}>
+          {item.discountedPrice !== undefined ? (
+            <>
+              <span className={styles.bundleItemStrike}>
+                ₹{item.price.toLocaleString("en-IN")}
+              </span>
+              <strong className={styles.completeLookPrice}>
+                ₹{item.discountedPrice.toLocaleString("en-IN")}
+              </strong>
+            </>
+          ) : (
+            <strong className={styles.completeLookPrice}>
+              ₹{item.price.toLocaleString("en-IN")}
+            </strong>
+          )}
+        </div>
+        <button className={styles.completeLookAddBtn} onClick={onAddToCart}>
+          Add to bag
+        </button>
+      </div>
+    </article>
+  );
+}
 
 export default function ProductDetails() {
   const params = useParams();
@@ -47,6 +151,30 @@ export default function ProductDetails() {
     (index: number) => emblaApi && emblaApi.scrollTo(index),
     [emblaApi],
   );
+
+  const [emblaMainRef, emblaMainApi] = useEmblaCarousel({
+    loop: false,
+    containScroll: "trimSnaps",
+  });
+  const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
+  const [selectedThumbIndex, setSelectedThumbIndex] = useState(0);
+
+  const onThumbClick = useCallback(
+    (index: number) => {
+      if (!emblaMainApi || !emblaThumbsApi) return;
+      emblaMainApi.scrollTo(index);
+    },
+    [emblaMainApi, emblaThumbsApi],
+  );
+
+  const onMainSelect = useCallback(() => {
+    if (!emblaMainApi || !emblaThumbsApi) return;
+    setSelectedThumbIndex(emblaMainApi.selectedScrollSnap());
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
+  }, [emblaMainApi, emblaThumbsApi]);
 
   const onInit = useCallback((emblaApi: EmblaCarouselType) => {
     setScrollSnaps(emblaApi.scrollSnapList());
@@ -98,17 +226,20 @@ export default function ProductDetails() {
   }, [emblaApi, onInit, onSelect]);
 
   useEffect(() => {
+    if (!emblaMainApi) return;
+    onMainSelect();
+    emblaMainApi.on("select", onMainSelect).on("reInit", onMainSelect);
+  }, [emblaMainApi, onMainSelect]);
+
+  useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS.URL}?slug=${slug}`,
-        );
-        const { data } = await response.json();
-        if (!data) return;
+        const data = await ProductService.getProductsBySlug(slug);
+        if (!data?.length) return;
 
         const [product] = data;
         setProduct(product);
-        setProductCollectionId(product.collectionId);
+        setProductCollectionId(product.collectionId ?? null);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
@@ -120,11 +251,9 @@ export default function ProductDetails() {
   useEffect(() => {
     const fetchSimilarProducts = async () => {
       try {
-        // Fetch similar products based on collectionId
-        const similarResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS.URL}?collectionId=${productCollectionId}`,
+        const data = await ProductService.getProductsByCollection(
+          productCollectionId!,
         );
-        const { data } = await similarResponse.json();
         if (!data) return;
         setSimilarProducts(data);
       } catch (error) {
@@ -138,7 +267,7 @@ export default function ProductDetails() {
   const handleAddToCart = async () => {
     if (!product) return;
 
-    const productToAdd = {
+    const productToAdd: Product = {
       id: product.id,
       name: product.name,
       price: product.price,
@@ -182,6 +311,59 @@ export default function ProductDetails() {
     toggleCartPopup();
   };
 
+  const addMerchandisingItemToCart = async (
+    item: MerchandisingProduct,
+    source:
+      | "upsell_add_to_cart"
+      | "silver_upgrade_click" = "upsell_add_to_cart",
+  ) => {
+    await setCartData({
+      id: item.id,
+      name: item.name,
+      price: item.discountedPrice ?? item.price,
+      originalPrice: item.discountedPrice ? item.price : undefined,
+      quantity: 1,
+      images: item.images,
+      category: item.category,
+      slug: item.slug,
+      material: "",
+      description: item.description || "",
+    });
+
+    if (isProduction) {
+      sendGAEvent("event", source, {
+        currency: "INR",
+        value: item.price,
+        items: [
+          {
+            item_id: item.id,
+            item_name: item.name,
+            price: item.price,
+            quantity: 1,
+            item_category: item.category?.name,
+          },
+        ],
+      });
+    }
+
+    setShowCartPopup(true);
+  };
+
+  const handleAddBundle = async (bundle: BundleOffer) => {
+    for (const item of bundle.products) {
+      await addMerchandisingItemToCart(item);
+    }
+
+    if (isProduction) {
+      sendGAEvent("event", "add_bundle_to_cart", {
+        currency: "INR",
+        value: bundle.finalAmount,
+        bundle_id: bundle.id,
+        bundle_name: bundle.name,
+      });
+    }
+  };
+
   const handleWishlistToggle = async () => {
     if (!product) return;
     if (isInWishlist) {
@@ -206,7 +388,18 @@ export default function ProductDetails() {
   };
 
   if (!product) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "40vh",
+        }}
+      >
+        Curating this piece…
+      </div>
+    );
   }
 
   return (
@@ -217,49 +410,84 @@ export default function ProductDetails() {
         <div className={styles.productImageFocus}>
           {product.images && product.images.length > 0 ? (
             <>
-              {/* Desktop Grid */}
+              {/* Desktop Thumbnail Carousel */}
               <div className={styles.desktopImageGrid}>
-                <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
-                  {product.images.map((img) => (
-                    <div
-                      key={img.id}
-                      style={{
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
-                        minHeight: "400px",
-                      }}
-                    >
-                      {img.url.includes(".mp4") ? (
-                        <video
-                          width={1920}
-                          height={1080}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                          }}
-                          src={img.url}
-                          autoPlay
-                          muted
-                          loop
-                        />
-                      ) : (
-                        <Image
-                          src={img.url}
-                          alt={img.alt || product.name}
-                          className={styles.productImageCover}
-                          fill
-                          style={{ objectFit: "cover" }}
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                        />
-                      )}
+                <div className={styles.emblaMainViewport} ref={emblaMainRef}>
+                  <div className={styles.emblaMainContainer}>
+                    {product.images.map((img) => (
+                      <div className={styles.emblaMainSlide} key={img.id}>
+                        {img.url.includes(".mp4") ? (
+                          <video
+                            width={1920}
+                            height={1080}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                            }}
+                            src={img.url}
+                            autoPlay
+                            muted
+                            loop
+                          />
+                        ) : (
+                          <Image
+                            src={img.url}
+                            alt={img.alt || product.name}
+                            className={styles.productImageCover}
+                            fill
+                            style={{ objectFit: "cover" }}
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {product.images.length > 1 && (
+                  <div
+                    className={styles.emblaThumbsViewport}
+                    ref={emblaThumbsRef}
+                  >
+                    <div className={styles.emblaThumbsContainer}>
+                      {product.images.map((img, index) => (
+                        <button
+                          key={img.id}
+                          onClick={() => onThumbClick(index)}
+                          type="button"
+                          className={`${styles.emblaThumbsSlide} ${
+                            index === selectedThumbIndex
+                              ? styles.emblaThumbsSlideSelected
+                              : ""
+                          }`}
+                        >
+                          {img.url.includes(".mp4") ? (
+                            <video
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                              src={img.url}
+                              muted
+                            />
+                          ) : (
+                            <Image
+                              src={img.url}
+                              alt={img.alt || product.name}
+                              fill
+                              style={{ objectFit: "cover" }}
+                              sizes="10vw"
+                            />
+                          )}
+                        </button>
+                      ))}
                     </div>
-                  ))}
-                </SimpleGrid>
+                  </div>
+                )}
               </div>
 
               {/* Mobile Carousel */}
@@ -324,6 +552,7 @@ export default function ProductDetails() {
         {/* Right: Info Panel */}
         <div className={styles.productInfoPanel}>
           <header>
+            <p className={styles.breadcrumb}>{product.category?.name}</p>
             <h1 className={`${styles.fontSerif} ${styles.productTitle}`}>
               {product.name}
             </h1>
@@ -384,8 +613,132 @@ export default function ProductDetails() {
             <div>Authenticity Certified</div>
             <div>Artisan Signature Included</div>
           </div>
+
+          {product.merchandising?.upgradeOption && (
+            <div className={styles.promoPanel}>
+              <span className={styles.promoBadge}>
+                {product.merchandising.upgradeOption.badgeText}
+              </span>
+              <h3 className={`${styles.fontSerif} ${styles.promoTitle}`}>
+                {product.merchandising.upgradeOption.name}
+              </h3>
+              <p className={styles.promoText}>
+                Step up to silver for ₹{" "}
+                {product.merchandising.upgradeOption.priceDelta.toLocaleString(
+                  "en-IN",
+                )}{" "}
+                more.
+              </p>
+              <button
+                className={styles.secondaryActionBtn}
+                onClick={() =>
+                  addMerchandisingItemToCart(
+                    product.merchandising!.upgradeOption!,
+                    "silver_upgrade_click",
+                  )
+                }
+              >
+                Add silver version
+              </button>
+            </div>
+          )}
         </div>
       </section>
+
+      {product.merchandising?.bundleOffers?.length ? (
+        <section className={styles.bundleSection}>
+          <div className={styles.bundleHeader}>
+            <span className={styles.bundleEyebrow}>Set building</span>
+            <h2 className={`${styles.fontSerif} ${styles.bundleTitle}`}>
+              Complete the look
+            </h2>
+            <p className={styles.bundleSubtitle}>
+              Artisan-selected pieces chosen to complement your style.
+            </p>
+          </div>
+
+          <div className={styles.bundleGrid}>
+            {product.merchandising.bundleOffers.map((bundle) => (
+              <article className={styles.bundleCard} key={bundle.id}>
+                <div
+                  className={styles.bundleImageStrip}
+                  style={{
+                    gridTemplateColumns: `repeat(${bundle.products.length}, 1fr)`,
+                  }}
+                >
+                  {bundle.products.map((item) => (
+                    <div className={styles.bundleImageTile} key={item.id}>
+                      {item.images?.[0] ? (
+                        <Image
+                          src={item.images[0].url}
+                          alt={item.images[0].alt || item.name}
+                          fill
+                          sizes="(max-width: 768px) 33vw, 20vw"
+                          style={{ objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div className={styles.bundleImageFallback}>
+                          {item.name}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <span className={styles.promoBadge}>{bundle.badgeText}</span>
+                <h3 className={`${styles.fontSerif} ${styles.bundleCardTitle}`}>
+                  {bundle.headline}
+                </h3>
+                <p className={styles.bundleCardText}>{bundle.subheadline}</p>
+                <div className={styles.bundlePieces}>
+                  {bundle.products.map((item) => (
+                    <div className={styles.bundlePiece} key={item.id}>
+                      <span className={styles.bundlePieceName}>
+                        {item.name}
+                      </span>
+                      <div className={styles.bundlePiecePrice}>
+                        {item.discountedPrice !== undefined ? (
+                          <>
+                            <span className={styles.bundleItemStrike}>
+                              ₹{item.price.toLocaleString("en-IN")}
+                            </span>
+                            <strong className={styles.bundleItemDiscounted}>
+                              ₹{item.discountedPrice.toLocaleString("en-IN")}
+                            </strong>
+                            <span className={styles.bundleItemBadge}>
+                              {item.bundleDiscountPct}% OFF
+                            </span>
+                          </>
+                        ) : (
+                          <strong>₹{item.price.toLocaleString("en-IN")}</strong>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.bundlePriceRow}>
+                  <div>
+                    <div className={styles.bundleStrikePrice}>
+                      ₹{" "}
+                      {bundle.products
+                        .reduce((sum, item) => sum + item.price, 0)
+                        .toLocaleString("en-IN")}
+                    </div>
+                    <div className={styles.bundlePrice}>
+                      ₹ {bundle.finalAmount.toLocaleString("en-IN")}
+                    </div>
+                  </div>
+                  <button
+                    className={styles.secondaryActionBtn}
+                    onClick={() => handleAddBundle(bundle)}
+                  >
+                    Add set
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Mandana Divider */}
       <div className={styles.mandanaDividerWrapper}>
@@ -476,34 +829,66 @@ export default function ProductDetails() {
         </div>
       </div>
 
-      {/* Keep the original More Products component for state functionality */}
-      <div className={styles.moreProductsLargerScreen}>
-        <h1>More from this collection</h1>
-        <div className={styles.moreProductsCardsWrapper}>
-          {similarProducts
-            ?.filter((product) => product.images && product.images.length > 0)
-            ?.map((similarProduct) => similarProduct.images[0])
-            ?.map((image) => (
-              <div className={styles.moreProductsCardContainer} key={image.id}>
-                <RegularCard
-                  productDescription={product.description}
-                  price={product.price}
-                  sizes="20vw"
-                  imageName={product.name}
-                  imageSrc={image.url}
-                />
-              </div>
+      {product.merchandising?.completeTheLook?.length ? (
+        <section className={styles.completeLookSection}>
+          <div className={styles.bundleHeader}>
+            <span className={styles.bundleEyebrow}>Style pairing</span>
+            <h2 className={`${styles.fontSerif} ${styles.bundleTitle}`}>
+              Style it with
+            </h2>
+          </div>
+          <div className={styles.completeLookGrid}>
+            {product.merchandising.completeTheLook.map((item) => (
+              <CompleteLookItemCard
+                key={item.id}
+                item={item}
+                onAddToCart={() => addMerchandisingItemToCart(item)}
+              />
             ))}
-        </div>
-      </div>
+          </div>
+        </section>
+      ) : null}
 
-      <div className={styles.moreProductsSmallerScreen}>
-        <h1>More from this collection</h1>
-        <ScrollbarCarouselCards
-          products={similarProducts}
-          imageSizes="(min-width: 768px) 100vw 50vw"
-        />
-      </div>
+      {similarProducts.filter(
+        (p) => p.id !== product?.id && p.images?.length > 0,
+      ).length > 0 && (
+        <div className={styles.moreProductsLargerScreen}>
+          <h2>More from this collection</h2>
+          <div className={styles.moreProductsCardsWrapper}>
+            {similarProducts
+              .filter((p) => p.id !== product?.id && p.images?.length > 0)
+              .map((similarProduct) => (
+                <div
+                  className={styles.moreProductsCardContainer}
+                  key={similarProduct.id}
+                >
+                  <Link
+                    href={`/categories/${similarProduct.category.slug}/${similarProduct.slug}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <RegularCard
+                      productDescription={similarProduct.name}
+                      price={similarProduct.price}
+                      sizes="20vw"
+                      imageName={similarProduct.name}
+                      imageSrc={similarProduct.images[0].url}
+                    />
+                  </Link>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {similarProducts.filter((p) => p.id !== product?.id).length > 0 && (
+        <div className={styles.moreProductsSmallerScreen}>
+          <h2>More from this collection</h2>
+          <ScrollbarCarouselCards
+            products={similarProducts.filter((p) => p.id !== product?.id)}
+            imageSizes="(min-width: 768px) 100vw 50vw"
+          />
+        </div>
+      )}
 
       <SlidePopup
         isOpen={showCartPopup}

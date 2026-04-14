@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import {
+  Cormorant_Garamond,
+  DM_Sans,
+  Playfair_Display,
+} from "next/font/google";
 import "./globals.css";
 import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -32,6 +36,14 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const playfairDisplay = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Qala Chowk",
   description: "Qala Chowk - Premium Indian E-commerce",
@@ -60,7 +72,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body className={`${cormorantGaramond.variable} ${dmSans.variable}`}>
+      <body
+        className={`${cormorantGaramond.variable} ${dmSans.variable} ${playfairDisplay.variable}`}
+      >
         <MantineProvider theme={theme}>
           <AuthProvider>
             <CartProvider>

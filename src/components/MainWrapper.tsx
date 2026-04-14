@@ -18,7 +18,7 @@ export default function MainWrapper({
         paddingTop: noTopPadding ? 0 : "var(--navbar-height, 64px)",
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        minHeight: "100dvh",
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./CartProductCard.module.css";
 import { Product } from "@/utils/types";
 
@@ -18,31 +19,74 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
   name,
   quantity,
   price,
+  originalPrice,
   imageSizes = "10vw",
   images,
+  category,
+  slug,
   isOrderSummaryCard = false,
   incrementCallback,
   decrementCallback,
   deleteCartItem,
 }) => {
+  const productUrl =
+    category?.slug && slug ? `/categories/${category.slug}/${slug}` : undefined;
+  const discountPct = originalPrice
+    ? Math.round((1 - price / originalPrice) * 100)
+    : 0;
+
   return (
     <div className={styles.contentsContainer}>
-      <div className={styles.imageContainer}>
-        {images && images.length > 0 && (
-          <Image
-            width={96}
-            height={96}
-            src={images[0].url}
-            alt={name}
-            sizes={imageSizes}
-            unoptimized={images[0].url.includes("lh3.googleusercontent.com")}
-          />
-        )}
-      </div>
+      {productUrl ? (
+        <Link href={productUrl} className={styles.imageContainer}>
+          {images && images.length > 0 && (
+            <Image
+              width={96}
+              height={96}
+              src={images[0].url}
+              alt={name}
+              sizes={imageSizes}
+              unoptimized={images[0].url.includes("lh3.googleusercontent.com")}
+            />
+          )}
+        </Link>
+      ) : (
+        <div className={styles.imageContainer}>
+          {images && images.length > 0 && (
+            <Image
+              width={96}
+              height={96}
+              src={images[0].url}
+              alt={name}
+              sizes={imageSizes}
+              unoptimized={images[0].url.includes("lh3.googleusercontent.com")}
+            />
+          )}
+        </div>
+      )}
       <div className={styles.detailsContainer}>
-        <h3 className={styles.productTitle}>{name}</h3>
-        <p className={styles.productPrice}>₹ {price.toLocaleString("en-IN")}</p>
-        <p className={styles.productGstNote}>Incl. 3% GST</p>
+        {productUrl ? (
+          <Link href={productUrl} className={styles.productTitleLink}>
+            <h3 className={styles.productTitle}>{name}</h3>
+          </Link>
+        ) : (
+          <h3 className={styles.productTitle}>{name}</h3>
+        )}
+        {originalPrice ? (
+          <div className={styles.priceRow}>
+            <span className={styles.originalPrice}>
+              ₹ {originalPrice.toLocaleString("en-IN")}
+            </span>
+            <span className={styles.productPrice}>
+              ₹ {price.toLocaleString("en-IN")}
+            </span>
+            <span className={styles.discountBadge}>{discountPct}% off</span>
+          </div>
+        ) : (
+          <p className={styles.productPrice}>
+            ₹ {price.toLocaleString("en-IN")}
+          </p>
+        )}
 
         {isOrderSummaryCard ? (
           <div className={styles.quantityWrapper}>

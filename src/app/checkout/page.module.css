@@ -142,7 +142,7 @@
   padding: 12px 14px;
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--c);
   outline: none;
   transition: border-color 0.2s;
@@ -153,8 +153,9 @@
 .couponInput::placeholder {
   text-transform: none;
   letter-spacing: 0;
-  opacity: 0.45;
+  opacity: 0.55;
   color: var(--t);
+  font-weight: 400;
 }
 
 .couponInput:focus {
@@ -191,7 +192,7 @@
 .couponMsg {
   margin-top: 8px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.06em;
 }
 
@@ -256,7 +257,7 @@
 
 .payLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.04em;
   color: var(--s);
   flex: 1;
@@ -328,7 +329,7 @@
 /* ── Right: Summary Side ── */
 .summarySide {
   background: #ede3d4;
-  padding: 56px 40px 80px;
+  padding: 20px 40px 24px;
   border-left: 0.5px solid var(--bo);
   position: sticky;
   top: calc(var(--navbar-height) + 48px);
@@ -344,7 +345,7 @@
   font-weight: 600;
   font-size: 22px;
   color: var(--s);
-  margin-bottom: 28px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -353,7 +354,7 @@
 
 .summaryCount {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--br);
@@ -365,10 +366,63 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-bottom: 24px;
-  overflow-y: auto;
-  flex: 1;
+  margin-bottom: 16px;
+  overflow-y: scroll;
+  flex: 3;
   min-height: 0;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(106, 41, 1, 0.35) rgba(106, 41, 1, 0.1);
+}
+
+.summaryItems::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+.summaryItems::-webkit-scrollbar-track {
+  background: rgba(106, 41, 1, 0.1);
+  border-radius: 4px;
+}
+
+.summaryItems::-webkit-scrollbar-thumb {
+  background: rgba(106, 41, 1, 0.35);
+  border-radius: 4px;
+}
+
+.summaryItems::-webkit-scrollbar-thumb:hover {
+  background: rgba(106, 41, 1, 0.5);
+}
+
+.bundlePreviewCard,
+.bundleThresholdCard {
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border: 0.5px solid var(--bo);
+  background: rgba(245, 239, 230, 0.65);
+  color: var(--s);
+}
+
+.bundlePreviewBadge {
+  width: fit-content;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  background: rgba(106, 41, 1, 0.08);
+  color: var(--t);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.bundlePreviewText,
+.bundleThresholdCard {
+  margin: 6px 0 0 0;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--br);
 }
 
 /* Totals */
@@ -389,15 +443,21 @@
 
 .totalLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.06em;
   color: var(--br);
 }
 
 .totalVal {
   font-family: var(--font-cormorant-garamond), serif;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--s);
+}
+
+.totalValDiscount {
+  font-weight: 700;
+  font-size: 17px;
 }
 
 .totalValItalic {
@@ -424,6 +484,7 @@
 .totalValGrand {
   font-family: var(--font-cormorant-garamond), serif;
   font-size: 22px;
+  font-weight: 600;
   color: var(--g);
   display: block;
   text-align: right;
@@ -441,24 +502,24 @@
 
 /* Craft Assurance Strip */
 .assuranceStrip {
-  margin-top: 28px;
+  margin-top: 14px;
   flex-shrink: 0;
-  padding: 16px;
+  padding: 14px 18px;
   border: 0.5px solid var(--bo);
   border-radius: 4px;
   background: var(--p);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .assuranceItem {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.05em;
+  font-size: 13px;
+  letter-spacing: 0.04em;
   color: var(--br);
 }
 

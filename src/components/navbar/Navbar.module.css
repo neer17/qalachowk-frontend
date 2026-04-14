@@ -175,7 +175,7 @@
 .accountDropdown li {
   padding: 0.5rem 1rem;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--s);
@@ -282,7 +282,7 @@
 .menuItemMobile {
   padding: 16px 24px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   font-size: 14px;

@@ -262,19 +262,25 @@ export default function CartProvider({ children }: CartProviderProps) {
 
   const setCartData = async (cartItem: Product) => {
     try {
-      const newCartData = new Map(cartData);
-      if (newCartData.has(cartItem.id)) {
-        const existingItem = newCartData.get(cartItem.id)!;
-        newCartData.set(cartItem.id, {
-          ...existingItem,
-          quantity: existingItem.quantity + (cartItem.quantity || 1),
-        });
-      } else {
-        newCartData.set(cartItem.id, cartItem);
-      }
+      let itemToSave: Product = cartItem;
 
-      await saveCartItem(newCartData.get(cartItem.id)!);
-      setCartDataState(newCartData);
+      setCartDataState((prev) => {
+        const newCartData = new Map(prev);
+        if (newCartData.has(cartItem.id)) {
+          const existingItem = newCartData.get(cartItem.id)!;
+          itemToSave = {
+            ...existingItem,
+            quantity: existingItem.quantity + (cartItem.quantity || 1),
+            originalPrice: cartItem.originalPrice ?? existingItem.originalPrice,
+          };
+        } else {
+          itemToSave = cartItem;
+        }
+        newCartData.set(cartItem.id, itemToSave);
+        return newCartData;
+      });
+
+      await saveCartItem(itemToSave);
 
       if (userId) {
         void (async () => {
@@ -283,7 +289,10 @@ export default function CartProvider({ children }: CartProviderProps) {
               cartItem.id,
               cartItem.quantity || 1,
             );
-            const syncedProduct = cartApiItemToProduct(data);
+            const syncedProduct = {
+              ...cartApiItemToProduct(data),
+              originalPrice: cartItem.originalPrice,
+            };
             setCartDataState((prevCartData) => {
               const syncedCartData = new Map(prevCartData);
               syncedCartData.set(syncedProduct.id, syncedProduct);
