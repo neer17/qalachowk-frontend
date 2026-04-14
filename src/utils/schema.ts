@@ -23,6 +23,12 @@ const envSchema = Joi.object({
     then: Joi.string().required(),
     otherwise: Joi.string().optional(),
   }),
+  SENTRY_AUTH_TOKEN: Joi.string().optional(), // Build-time only: used by Sentry webpack plugin to upload source maps
+  NEXT_PUBLIC_SENTRY_DSN: Joi.string().when("NEXT_PUBLIC_ENVIRONMENT", {
+    is: "production",
+    then: Joi.string().required(),
+    otherwise: Joi.string().optional(),
+  }),
 })
   .unknown() // This allows Joi to accept other environment variables if they exist
   .required();
