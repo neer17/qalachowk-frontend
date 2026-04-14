@@ -786,7 +786,7 @@ export default function Checkout() {
                     Discount Applied
                   </span>
                   <span
-                    className={styles.totalVal}
+                    className={`${styles.totalVal} ${styles.totalValDiscount}`}
                     style={{ color: "#5a7a3a" }}
                   >
                     − <Rupee />
@@ -805,7 +805,7 @@ export default function Checkout() {
                     Set Saving
                   </span>
                   <span
-                    className={styles.totalVal}
+                    className={`${styles.totalVal} ${styles.totalValDiscount}`}
                     style={{ color: "#7a5e2e" }}
                   >
                     − <Rupee />
