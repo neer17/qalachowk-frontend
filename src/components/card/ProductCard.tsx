@@ -12,6 +12,10 @@ import CartSVG from "@/assets/svgs/cart.svg";
 import { useCart, useWishlist } from "@/context/CartContext";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
 import { Product } from "@/utils/types";
+import { environments } from "@/utils/constants";
+
+const isProduction =
+  process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ProductCardProps extends Product {}
@@ -127,6 +131,19 @@ export default function ProductCard({
       await removeWishlistItem(id);
     } else {
       await addWishlistItem(productToWishlist);
+
+      if (isProduction) {
+        const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
+        if (typeof fbq === "function") {
+          fbq("track", "AddToWishlist", {
+            content_ids: [id],
+            content_name: name,
+            content_type: "product",
+            value: price,
+            currency: "INR",
+          });
+        }
+      }
     }
   };
 

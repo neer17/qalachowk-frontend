@@ -89,13 +89,18 @@ function OrderConfirmedContent() {
 
     const fbq = (window as { fbq?: (...args: unknown[]) => void }).fbq;
     if (typeof fbq === "function") {
-      fbq("track", "Purchase", {
-        value: order.total ?? 0,
-        currency: "INR",
-        content_ids: order.orderItems.map((i) => i.productId),
-        content_type: "product",
-        num_items: order.orderItems.length,
-      });
+      fbq(
+        "track",
+        "Purchase",
+        {
+          value: order.total ?? 0,
+          currency: "INR",
+          content_ids: order.orderItems.map((i) => i.productId),
+          content_type: "product",
+          num_items: order.orderItems.length,
+        },
+        { eventID: `purchase_${order.id}` },
+      );
     }
   }, [order]);
 

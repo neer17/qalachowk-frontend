@@ -51,6 +51,8 @@ export const metadata: Metadata = {
 
 import Footer from "@/components/footer/Footer";
 import MainWrapper from "@/components/MainWrapper";
+import { Suspense } from "react";
+import MetaPixelPageView from "@/components/MetaPixelPageView";
 
 export default function RootLayout({
   children,
@@ -113,6 +115,9 @@ export default function RootLayout({
                 alt=""
               />
             </noscript>
+            <Suspense fallback={null}>
+              <MetaPixelPageView />
+            </Suspense>
           </>
         )}
       </body>
