@@ -93,7 +93,7 @@ a.imageContainer:hover {
 
 .productGstNote {
   font-size: 11px;
-  color: #888;
+  color: var(--text-muted);
   margin: 0;
 }
 

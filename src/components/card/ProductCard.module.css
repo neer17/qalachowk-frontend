@@ -110,7 +110,7 @@
 
 .productGstNote {
   font-size: 11px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -138,8 +138,8 @@
 }
 
 .wishlistSvgContainer:hover {
-  background: #fff0f0;
-  border-color: #e8a0a0;
+  background: var(--wishlist-hover-bg);
+  border-color: var(--wishlist-hover-border);
   transform: scale(1.15);
 }
 

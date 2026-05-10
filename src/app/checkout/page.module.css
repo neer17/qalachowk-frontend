@@ -328,7 +328,7 @@
 
 /* ── Right: Summary Side ── */
 .summarySide {
-  background: #ede3d4;
+  background: var(--surface-warm);
   padding: 20px 40px 24px;
   border-left: 0.5px solid var(--bo);
   position: sticky;

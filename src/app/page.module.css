@@ -1,14 +1,5 @@
-/* ════ DESIGN TOKENS (scoped to .page) ════ */
+/* ════ HOME PAGE ════ */
 .page {
-  --s: #6a2901;
-  --br: #8b4513;
-  --t: #c8956c;
-  --p: #f5efe6;
-  --l: #e8d9c5;
-  --g: #b8860b;
-  --c: #2c1a0e;
-  --bo: #d9c9b5;
-
   background: var(--p);
   color: var(--s);
   font-family: var(--font-dm-sans), sans-serif;

@@ -1,5 +1,5 @@
 :root {
-  /* ── Design-system core palette (from design-system.css) ── */
+  /* ── Core palette ── */
   --s: #6a2901; /* Primary Brown */
   --br: #8b4513; /* Saddle Brown */
   --t: #c8956c; /* Warm Gold / accent */
@@ -9,62 +9,24 @@
   --c: #2c1a0e; /* Near-black / body text */
   --bo: #d9c9b5; /* Bone / borders */
 
-  /* ── Semantic aliases ── */
-  --color-primary: var(--s);
-  --color-secondary: var(--br);
-  --color-accent: var(--t);
-  --color-background: var(--p);
-  --color-surface: var(--l);
-  --color-price: var(--g);
-  --color-text: var(--c);
-  --color-border: var(--bo);
-
-  /* ── Legacy aliases (backward compat) ── */
+  /* ── Extended palette ── */
   --brand-primary: var(--s);
-  --brand-deep-umber: #3d1800;
-  --brand-saddle-brown: var(--br);
-  --brand-warm-gold: var(--t);
-  --brand-old-lace: #fdf5e6;
-  --brand-champagne: #f5e6cc;
-  --brand-bone: var(--bo);
   --brand-warm-white: var(--p);
   --brand-terracotta: #a05920;
-  --brand-dark-espresso: var(--c);
-  --brand-sage: #a3a67c;
+  --surface-warm: #ede3d4;
 
-  --brand-primary-rgb: 106, 41, 1;
-  --brand-deep-umber-rgb: 61, 24, 0;
-  --brand-dark-espresso-rgb: 44, 26, 14;
-  --brand-bone-rgb: 217, 201, 181;
+  /* ── Semantic colors ── */
+  --text-muted: #888;
+  --color-danger: #c0392b;
+  --wishlist-hover-bg: #fff0f0;
+  --wishlist-hover-border: #e8a0a0;
 
-  --opacity-subtle: 0.05;
-  --opacity-light: 0.1;
-  --opacity-medium: 0.15;
-  --opacity-visible: 0.3;
-  --opacity-strong: 0.5;
-
-  --background: var(--p);
-  --foreground: var(--c);
-  --text-primary: var(--c);
-  --text-secondary: var(--br);
-  --text-accent: var(--t);
+  /* ── Borders (used by Mantine theme) ── */
   --border-primary: var(--bo);
   --border-focus: var(--s);
 
-  --shadow-sm: 0 2px 4px rgba(var(--brand-deep-umber-rgb), var(--opacity-light));
-  --shadow-md: 0 4px 6px
-    rgba(var(--brand-deep-umber-rgb), var(--opacity-medium));
-  --shadow-lg: 0 8px 16px
-    rgba(var(--brand-deep-umber-rgb), var(--opacity-medium));
-  --shadow-popup: -2px 0 5px
-    rgba(var(--brand-dark-espresso-rgb), var(--opacity-light));
-
-  --brand-bone-hover: #c9b9a5;
-  --brand-primary-hover: #501f01;
-
   /* ── Transitions ── */
   --transition-fast: 0.2s ease;
-  --transition-medium: 0.3s ease;
 
   /* ── Layout ── */
   --navbar-height: 64px;
@@ -78,8 +40,8 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: var(--c);
+  background: var(--p);
   font-family: "DM Sans", var(--font-dm-sans), sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;

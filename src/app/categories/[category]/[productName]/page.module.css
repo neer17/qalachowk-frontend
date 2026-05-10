@@ -659,7 +659,7 @@
 
 .clGstNote {
   font-size: 11px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: -4px;
 }
 
