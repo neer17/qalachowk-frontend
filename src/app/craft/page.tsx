@@ -1,245 +1,343 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Craft() {
+import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
+import styles from "./page.module.css";
+import {
+  HeroGlyph,
+  StageSketch,
+  StageWax,
+  StagePour,
+  StageStone,
+  StageEngrave,
+  StagePolish,
+  FinalPiece,
+} from "./stages";
+
+const STAGES = [
+  {
+    id: "i",
+    roman: "I",
+    kicker: "Stage One",
+    title: "The Sketch",
+    sub: "Pencil to vellum",
+    Comp: StageSketch,
+    body: [
+      "Every piece begins as a thought, then a line, then a quiet conversation between the designer and the page.",
+      "The first drawing is rarely the last \u2014 proportions are tested, weights re-imagined, until the silhouette feels inevitable.",
+    ],
+    meta: {
+      Material: "Graphite, vellum",
+      Time: "2\u20134 days",
+      Tool: "No. 4 pencil",
+    },
+    prompt: "Hover to watch the sketch draw itself",
+  },
+  {
+    id: "ii",
+    roman: "II",
+    kicker: "Stage Two",
+    title: "The Wax",
+    sub: "Carving the form",
+    Comp: StageWax,
+    body: [
+      "A block of jeweller\u2019s wax becomes the negative of a future heirloom. Cut, scraped, warmed, and breathed upon.",
+      "It must be exact: every gram removed here will be a gram of gold cast in its place.",
+    ],
+    meta: { Material: "Blue wax", Time: "1 week", Tool: "Spatula, blade" },
+    prompt: "Drag across to carve",
+  },
+  {
+    id: "iii",
+    roman: "III",
+    kicker: "Stage Three",
+    title: "The Cast",
+    sub: "Molten gold meets mould",
+    Comp: StagePour,
+    body: [
+      "At 1,064\u00B0C, gold becomes a slow, honey-bright liquid. It is poured in a single, held breath \u2014 once, only once.",
+      "What emerges from the plaster is rough and hot, but it is, at last, a thing of metal.",
+    ],
+    meta: {
+      Material: "22kt yellow gold",
+      Temp: "1064 \u00B0C",
+      Time: "45 minutes",
+    },
+    prompt: "Press and hold to pour",
+  },
+  {
+    id: "iv",
+    roman: "IV",
+    kicker: "Stage Four",
+    title: "The Stone",
+    sub: "A single gemstone, set",
+    Comp: StageStone,
+    body: [
+      "A 2.4-carat Burmese ruby is chosen from a tray of forty. Each prong is bent, tested, bent again.",
+      "When the bezel closes, the stone is held by hands that will never let go.",
+    ],
+    meta: { Stone: "Burmese ruby", Carats: "2.40 ct", Cut: "Rose / cabochon" },
+    prompt: "Drag the ruby into the bezel",
+  },
+  {
+    id: "v",
+    roman: "V",
+    kicker: "Stage Five",
+    title: "The Hand",
+    sub: "Filigree, by candlelight",
+    Comp: StageEngrave,
+    body: [
+      "The finest line on a piece is no thicker than a human hair. It is engraved, not printed; felt, not specified.",
+      "Forty hours of slow, patient hand-work, the kind that is becoming rare in the world.",
+    ],
+    meta: {
+      Tool: "Burin No. 2",
+      Hours: "14\u201340",
+      Margin: "\u00B1 0.05 mm",
+    },
+    prompt: "Press and trace the path",
+  },
+  {
+    id: "vi",
+    roman: "VI",
+    kicker: "Stage Six",
+    title: "The Finish",
+    sub: "From rouge to mirror",
+    Comp: StagePolish,
+    body: [
+      "Three rouges, four buffs, a final wash in soft water. The piece is held to the light and turned, slowly, until it answers back.",
+      "Only then is it stamped, signed, and tucked into a box that smells faintly of cedar.",
+    ],
+    meta: {
+      Compound: "Tripoli \u2192 rouge",
+      Buffs: "4 stages",
+      Stamp: "QC \u00B7 916",
+    },
+    prompt: "Drag the seam to compare",
+  },
+];
+
+function Divider({ label }: { label: string }) {
+  return (
+    <div className={styles.divider}>
+      <span className={styles.dividerL} />
+      <span className={styles.dividerGlyph}>\u2766</span>
+      <span>{label}</span>
+      <span className={styles.dividerGlyph}>\u2766</span>
+      <span className={styles.dividerR} />
+    </div>
+  );
+}
+
+function Rail({
+  activeIdx,
+  onJump,
+}: {
+  activeIdx: number;
+  onJump: (i: number) => void;
+}) {
+  return (
+    <nav className={styles.rail} aria-label="Craft stages">
+      {STAGES.map((s, i) => (
+        <div
+          key={s.id}
+          className={`${styles.railItem} ${activeIdx === i ? styles.railItemActive : ""}`}
+          onClick={() => onJump(i)}
+        >
+          <span className={styles.railDot} />
+          <span className={styles.railNum}>{s.roman}.</span>
+          <span>{s.title.replace("The ", "")}</span>
+        </div>
+      ))}
+    </nav>
+  );
+}
+
+export default function CraftJourney() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const stageRefs = useRef<(HTMLElement | null)[]>([]);
+
+  const registerRef = useCallback((i: number, el: HTMLElement | null) => {
+    stageRefs.current[i] = el;
+  }, []);
+
+  const jumpTo = (i: number) => {
+    const el = stageRefs.current[i];
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  };
+
   return (
     <div className={styles.page}>
-      <main>
-        {/* Navigation placeholder -> Nextjs site has global navbar layout, assuming we don't recreate it here specifically */}
-        {/* Hero Section */}
-        <header className={styles.heroHeader}>
-          <div className={styles.heroContent}>
-            <h1
-              className={`${styles.fontSerif} ${styles.italic} ${styles.heroTitle}`}
-            >
-              The Soul of the Maker
+      {/* Hero */}
+      <header className={styles.hero}>
+        <div className={styles.heroCenter}>
+          <div>
+            <div className={styles.heroKicker}>From hand to heirloom</div>
+            <h1 className={styles.heroTitle}>
+              Six
+              <br />
+              <em>quiet</em>
+              <br />
+              hands<span className={styles.ornament}>.</span>
             </h1>
-            <p className={styles.heroDescription}>
-              At Qala Chowk, we don&apos;t just create jewelry; we weave
-              narratives. Our craft is a silent dialogue between the ancient
-              rhythmic strokes of tribal India and the clean, bold lines of
-              contemporary design.
+          </div>
+          <div className={styles.heroSide}>
+            <p>
+              &ldquo;To make a piece of jewellery is to spend a hundred small
+              hours teaching gold a single, deliberate shape.&rdquo;
             </p>
+            <div className={styles.heroMeta}>
+              <span>&mdash; Master Atelier</span>
+              <span>Six stages &middot; 60+ days</span>
+              <span>1 finished piece</span>
+            </div>
           </div>
-        </header>
+        </div>
+        <div className={styles.heroFoot}>
+          <HeroGlyph />
+          <div className={styles.scrollCue}>
+            <span>Scroll to begin</span>
+            <span className={styles.scrollLine} />
+          </div>
+        </div>
+      </header>
 
-        {/* Mandana Divider */}
-        <div aria-hidden="true" className={styles.mandanaDivider}></div>
+      {/* Side rail */}
+      <Rail activeIdx={activeIdx} onJump={jumpTo} />
 
-        {/* The Narrative Section */}
-        <section className={styles.narrativeSection}>
-          <div className={styles.narrativeGrid}>
-            <div className={styles.narrativeTextWrapper}>
-              <h2
-                className={`${styles.fontSerif} ${styles.italic} ${styles.narrativeTitle}`}
+      {/* Stages */}
+      <main className={styles.journey}>
+        {STAGES.map((stage, i) => {
+          const Comp = stage.Comp;
+          return (
+            <div key={stage.id}>
+              <StageSection
+                stage={stage}
+                index={i}
+                onActive={setActiveIdx}
+                registerRef={registerRef}
               >
-                A Fusion of Eras
-              </h2>
-              <p className={styles.narrativeParagraph}>
-                Our journey began in the &quot;Chowk&quot;—the village
-                square—where every wall tells a story and every ritual is etched
-                in pigment. By fusing contemporary jewelry silhouettes with the
-                primal geometry of{" "}
-                <span className={styles.semibold}>Warli</span>, the intricate
-                tapestries of <span className={styles.semibold}>Madhubani</span>
-                , and the earthy symmetry of{" "}
-                <span className={styles.semibold}>Mandana</span>, we bring the
-                wall-art of the ancestors to the skin of the modern individual.
-              </p>
-              <blockquote className={styles.narrativeQuote}>
-                <p
-                  className={`${styles.fontSerif} ${styles.italic} ${styles.quoteText}`}
-                >
-                  &quot;We don&apos;t wear jewelry; we wear the memory of the
-                  earth.&quot;
-                </p>
-              </blockquote>
+                <Comp />
+              </StageSection>
+              {i < STAGES.length - 1 && (
+                <Divider
+                  label={`Then, the ${STAGES[i + 1].title.replace("The ", "").toLowerCase()}`}
+                />
+              )}
             </div>
-            <div className={styles.narrativeImageWrapper}>
-              <Image
-                className={styles.narrativeImage}
-                width={800}
-                height={600}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-FXJ-N1ezxhNbEv8mAYm-sftuCjDF0PnK6LUuoaXLO12LLu9NKy6Ld-e8dg17KISonKToDvqV4f9vwp05flYE9UwZ2JIn1WfQtyt86w_PE6v0b-tW8Egcg9b-OnxlpBRb2OIHD6zc_2gANCnEWzPL106iHqsVYvGdtaY5HGGxco62XTt633C4BKqzOJusZRBf_3pmPXPZTJtbKB6_J5mktq4FRjdLo6rfqHygDEdsTi7Y3ibYX4B9XqurTSB0EO2-QceWinc7bweD"
-                alt="Artisanal Process"
-                sizes="(min-width: 768px) 50vw, 100vw"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Art Styles Breakdown */}
-        <section className={styles.artStylesSection}>
-          <div className={styles.container}>
-            <div className={styles.artStylesHeader}>
-              <h2
-                className={`${styles.fontSerif} ${styles.italic} ${styles.artStylesTitle}`}
-              >
-                Our Ancestral Alphabet
-              </h2>
-              <p className={styles.artStylesSubtitle}>
-                The three pillars of Qala Chowk’s aesthetic identity.
-              </p>
-            </div>
-            <div className={styles.artStylesGrid}>
-              {/* Warli Style */}
-              <div className={styles.artStyleCard}>
-                <div className={styles.artStyleIcon}>
-                  <svg
-                    fill="none"
-                    height="80"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 100 100"
-                    width="80"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M50 80 L60 60 L40 60 Z"></path>
-                    <circle cx="50" cy="50" r="10"></circle>
-                    <path d="M50 40 L50 20 M40 30 L60 30"></path>
-                    <path
-                      d="M60 60 Q 80 70 90 40 M40 60 Q 20 70 10 40"
-                      strokeDasharray="2 2"
-                    ></path>
-                  </svg>
-                </div>
-                <h3 className={styles.artStyleName}>Warli</h3>
-                <p className={styles.artStyleDescription}>
-                  Hailing from the Sahyadri range, Warli uses basic geometric
-                  shapes—circles, triangles, and squares—to represent the circle
-                  of life and the harmony of nature.
-                </p>
-              </div>
-              {/* Madhubani Style */}
-              <div className={styles.artStyleCard}>
-                <div className={styles.artStyleIcon}>
-                  <svg
-                    fill="none"
-                    height="80"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 100 100"
-                    width="80"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect height="30" rx="10" width="50" x="25" y="40"></rect>
-                    <path d="M25 50 Q 10 50 10 70"></path>
-                    <circle cx="65" cy="50" fill="currentColor" r="4"></circle>
-                    <path d="M35 70 L35 85 M65 70 L65 85"></path>
-                    <path d="M30 40 Q 50 30 70 40" strokeDasharray="1 3"></path>
-                  </svg>
-                </div>
-                <h3 className={styles.artStyleName}>Madhubani</h3>
-                <p className={styles.artStyleDescription}>
-                  The Mithila art of Bihar, known for its vibrant complexity and
-                  &apos;Kachni&apos; (line work), celebrating divinity and the
-                  wild flora of the Indian landscape.
-                </p>
-              </div>
-              {/* Mandana Style */}
-              <div className={styles.artStyleCard}>
-                <div className={styles.artStyleIcon}>
-                  <svg
-                    fill="none"
-                    height="80"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    viewBox="0 0 100 100"
-                    width="80"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <circle cx="50" cy="50" r="5"></circle>
-                    <path d="M50 30 Q 70 10 90 30 T 50 50"></path>
-                    <path d="M50 30 Q 30 10 10 30 T 50 50"></path>
-                    <path d="M50 70 Q 70 90 90 70 T 50 50"></path>
-                    <path d="M50 70 Q 30 90 10 70 T 50 50"></path>
-                  </svg>
-                </div>
-                <h3 className={styles.artStyleName}>Mandana</h3>
-                <p className={styles.artStyleDescription}>
-                  A ritualistic art from Rajasthan, Mandana uses white chalk on
-                  red clay walls. It is a protective art, meant to invite
-                  auspiciousness through symmetrical grids.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Art Square Philosophy */}
-        <section className={styles.philosophySection}>
-          <div className={styles.philosophyBox}>
-            <div className={styles.philosophyCornerTopLeft}></div>
-            <div className={styles.philosophyCornerBottomRight}></div>
-            <h2 className={styles.philosophyLabel}>The Philosophy</h2>
-            <h3
-              className={`${styles.fontSerif} ${styles.italic} ${styles.philosophyTitle}`}
-            >
-              The &apos;Art Square&apos; Concept
-            </h3>
-            <p className={styles.philosophyDescription}>
-              At the heart of every Qala Chowk piece is the{" "}
-              <span className={styles.semibold}>Art Square</span>. Just as
-              traditional artists defined their sacred spaces with a boundary,
-              we treat each piece of jewelry as a canvas. We don&apos;t just
-              decorate; we compose. Every earring, necklace, and ring is
-              designed within a structural framework that honors the balance of
-              the original tribal formats.
-            </p>
-            <div className={styles.philosophyDivider}>
-              <div className={styles.philosophyLine}></div>
-              <div className={styles.philosophySymbol}>❈</div>
-              <div className={styles.philosophyLine}></div>
-            </div>
-          </div>
-        </section>
-
-        {/* Visual Showcase */}
-        <section className={`${styles.container} ${styles.showcaseSection}`}>
-          <div className={styles.showcaseGrid}>
-            <div className={styles.showcaseImageWrapper}>
-              <Image
-                className={styles.showcaseImage}
-                width={400}
-                height={400}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuApAPjdTP9oFzwp6OElmhMUmGWMM5fFDWMOeS-lJHpkNW2iYEUYYU25Fn7oIHK3uo8pA3l-ff97ab8O1jQjd0nZJi9jsqJvkBaw8OyeN2doAoIQGWsNGO_VUbjCAptHwE4JqOint8bvo1AJ-jraawd--12r6j3XikRWLMC6LTYLFsGsv8zS6Ztnf4cv6fiz1kWX8Id00XLq3EobDZ-HcMj5K3OtEebkRRMiKuX4gj7bXFHnRe6S34AQHbyaja8pXbARp_ejP2mep_aE"
-                alt="Macro Detail"
-              />
-            </div>
-            <div
-              className={`${styles.showcaseImageWrapper} ${styles.showcaseImageOffset}`}
-            >
-              <Image
-                className={styles.showcaseImage}
-                width={400}
-                height={400}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNTIHUZVb3HeNpk7cEgK9pOVAvBxH2McSvAXK50g2OgpH7ibywvruTkTKzjYjMOEYrPRryLxMziSCHLdrYfcHUlTwErQNqUiWBHuJGeRTYCKDiTng4Oer3-KOWfnPxx2JLs2L5ez2ETPNCRn8gKb844arLza-1hw03FAxcCLlf_VclHm13EEDyOgbNBgp5CMFywVCyLj4BU6xtyMz7XALtXCrcoLf2kbd2luDSNZJECbEL8mVYi84I5tp4JMe8BCc7UTHOChgSlsL4"
-                alt="Macro Detail"
-              />
-            </div>
-            <div className={styles.showcaseImageWrapper}>
-              <Image
-                className={styles.showcaseImage}
-                width={400}
-                height={400}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuChAUvh6Aa0vj3YUOfWllAZK2hOFHrGrscVdrqwMwZaoeORbdC3fUqvBf1v94v2S3CILd0x_2K3YJq_W2H2aFnrR49PHpRUOpSXZaGwf3_Ps15QGCYUW2AhQy6ifl_WO16mBXJlSKEF0Jd5qPZUTOsvdwGpK3GRpwfiU8pKsfDnIf6mUG-D4ZYM1LyzYwRS-nB2B9Qj5rqHeaQOS37RPIu4VvY9_oalDomrRj7BJjCIOZDVIBqROrsy5RUXvLwKN0L3A_MLY9TT5lHZ"
-                alt="Macro Detail"
-              />
-            </div>
-            <div
-              className={`${styles.showcaseImageWrapper} ${styles.showcaseImageOffset}`}
-            >
-              <Image
-                className={styles.showcaseImage}
-                width={400}
-                height={400}
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBy34uVAZ2dte1O5KhaWvqGTCnTnoMeEbi90B2I0kdiN7Tmb3m9N-45U6VNCWvLbp2qOSG-zBWJmusA4dyqKv1IG9rWkqgeGwXAbSY50e2XABR9xShhWGgZMoPId2tL_kjN-KSJkVHyHcgP-K7odjXHqV_z249oAmrMUqzcVck0eihm3TDfDlg1CX3AN3u7zpX6Rg9qEgJHZxL06SLIBrn6OMDbGFjNy2QPo0I9fC1jCaHv4yVsywdpvJMo8i10mfxcosIc8bBWsK-n"
-                alt="Macro Detail"
-              />
-            </div>
-          </div>
-        </section>
+          );
+        })}
       </main>
+
+      {/* Finale */}
+      <section className={styles.finale}>
+        <div className={styles.finaleKicker}>
+          Stage Seven &middot; The Heirloom
+        </div>
+        <h2 className={styles.finaleTitle}>
+          An <em>heirloom</em>,<br />
+          at last.
+        </h2>
+        <p className={styles.finaleSub}>
+          Sixty-three days, six pairs of hands, a single piece. It will outlive
+          us &mdash; and that, exactly, is the point.
+        </p>
+        <FinalPiece />
+        <div className={styles.ctaRow}>
+          <Link href="/shop" className={styles.btnPrimary}>
+            Shop the Collection
+          </Link>
+          <Link href="/contact" className={styles.btn}>
+            Commission a piece
+          </Link>
+        </div>
+        <div className={styles.signature}>
+          <span>Signed</span>
+          <hr />
+          <span className={styles.sigMark}>Qala Chowk</span>
+          <hr />
+          <span>QC &middot; 916</span>
+        </div>
+      </section>
     </div>
+  );
+}
+
+function StageSection({
+  stage,
+  index,
+  onActive,
+  registerRef,
+  children,
+}: {
+  stage: (typeof STAGES)[number];
+  index: number;
+  onActive: (i: number) => void;
+  registerRef: (i: number, el: HTMLElement | null) => void;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    registerRef(index, ref.current);
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && e.intersectionRatio > 0.45) {
+          onActive(index);
+        }
+      },
+      { threshold: [0.45, 0.6] },
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [index, onActive, registerRef]);
+
+  const flip = index % 2 === 1;
+  const Comp = children;
+
+  return (
+    <>
+      <section
+        ref={ref}
+        id={`stage-${stage.id}`}
+        className={`${styles.stage} ${flip ? styles.stageFlip : ""}`}
+      >
+        <div className={styles.stageText}>
+          <div className={styles.stageNum}>
+            <span>{stage.roman}</span>
+            <span className={styles.stageOf}>/ VI &middot; {stage.kicker}</span>
+          </div>
+          <div className={styles.stageKicker}>{stage.sub}</div>
+          <h2 className={styles.stageTitle}>
+            <em>The</em>{" "}
+            <span className={styles.stageTitleBlock}>
+              {stage.title.replace("The ", "")}
+              <span className={styles.ornament}>.</span>
+            </span>
+          </h2>
+          {stage.body.map((p, j) => (
+            <p key={j} className={styles.stageBody}>
+              {p}
+            </p>
+          ))}
+          <dl className={styles.stageMeta}>
+            {Object.entries(stage.meta).map(([k, v]) => (
+              <div key={k}>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className={styles.stagePrompt}>
+            <span className={styles.promptArrow} />
+            {stage.prompt}
+          </div>
+        </div>
+        {Comp}
+      </section>
+    </>
   );
 }

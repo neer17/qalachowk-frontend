@@ -586,6 +586,23 @@ export default function ProductDetailContent({
             <div>Artisan Signature Included</div>
           </div>
 
+          <Link href="/craft" className={styles.craftJourneyLink}>
+            <span className={styles.craftJourneyIcon}>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              >
+                <path d="M9 2L11 7L16 9L11 11L9 16L7 11L2 9L7 7L9 2Z" />
+              </svg>
+            </span>
+            <span>Know how your jewellery was made</span>
+            <span className={styles.craftJourneyArrow}>&rarr;</span>
+          </Link>
+
           {product.merchandising?.upgradeOption && (
             <div className={styles.promoPanel}>
               <span className={styles.promoBadge}>

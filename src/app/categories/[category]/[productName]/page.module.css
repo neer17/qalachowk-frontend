@@ -147,7 +147,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: rgba(106, 41, 1, 0.2);
+  background-color: rgba(30, 30, 30, 0.2);
   border: none;
   cursor: pointer;
   padding: 0;
@@ -211,7 +211,7 @@
 
 .addToCartBtn {
   width: 100%;
-  background-color: var(--s);
+  background-color: var(--btn);
   color: var(--p);
   padding: 13px 28px;
   border-radius: 2px;
@@ -229,7 +229,9 @@
 }
 
 .addToCartBtn:hover {
-  background-color: var(--br);
+  outline: 1px solid var(--hover-outline);
+  outline-offset: -1px;
+  background-color: var(--btn);
 }
 
 .dot {
@@ -347,6 +349,42 @@
   color: var(--t);
 }
 
+.craftJourneyLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border: 0.5px solid var(--bo);
+  text-decoration: none;
+  color: var(--s);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  transition: all 0.25s ease;
+}
+
+.craftJourneyLink:hover {
+  border-color: var(--t);
+  background: rgba(200, 149, 108, 0.05);
+}
+
+.craftJourneyIcon {
+  color: var(--t);
+  display: flex;
+  align-items: center;
+}
+
+.craftJourneyArrow {
+  margin-left: auto;
+  color: var(--t);
+  transition: transform 0.2s ease;
+}
+
+.craftJourneyLink:hover .craftJourneyArrow {
+  transform: translateX(4px);
+}
+
 .mandanaDividerWrapper {
   padding-top: 88px;
   padding-bottom: 88px;
@@ -453,7 +491,7 @@
 }
 
 .promoPanel {
-  border: 1px solid rgba(68, 46, 32, 0.14);
+  border: 1px solid rgba(100, 100, 90, 0.14);
   background: linear-gradient(
     180deg,
     rgba(250, 245, 239, 0.9),
@@ -470,7 +508,7 @@
   display: inline-flex;
   width: fit-content;
   padding: 6px 10px;
-  background: rgba(122, 87, 58, 0.1);
+  background: rgba(107, 107, 97, 0.1);
   color: var(--t);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -510,7 +548,7 @@
 }
 
 .secondaryActionBtn:hover {
-  background-color: var(--s);
+  background-color: var(--btn);
   color: var(--p);
 }
 
@@ -533,7 +571,7 @@
 }
 
 .completeLookAddBtn:hover {
-  background-color: var(--s);
+  background-color: var(--btn);
   color: var(--p);
 }
 
@@ -578,18 +616,18 @@
 }
 
 .bundleCard {
-  border: 1px solid rgba(68, 46, 32, 0.12);
+  border: 1px solid rgba(100, 100, 90, 0.12);
   background: linear-gradient(
     180deg,
     rgba(255, 252, 248, 0.96),
     rgba(248, 242, 234, 0.92)
   );
   padding: 20px;
-  box-shadow: 0 18px 40px rgba(77, 49, 29, 0.06);
+  box-shadow: 0 18px 40px rgba(60, 60, 55, 0.06);
 }
 
 .completeLookCard {
-  border: 1px solid rgba(68, 46, 32, 0.12);
+  border: 1px solid rgba(100, 100, 90, 0.12);
   background: linear-gradient(
     180deg,
     rgba(255, 252, 248, 0.96),
@@ -601,7 +639,7 @@
   flex: 0 0 260px;
   scroll-snap-align: start;
   min-width: 0;
-  box-shadow: 0 18px 40px rgba(77, 49, 29, 0.06);
+  box-shadow: 0 18px 40px rgba(60, 60, 55, 0.06);
 }
 
 .completeLookCard:hover {
@@ -698,7 +736,7 @@
   aspect-ratio: 1 / 1.15;
   overflow: hidden;
   background: var(--l);
-  border: 1px solid rgba(68, 46, 32, 0.08);
+  border: 1px solid rgba(100, 100, 90, 0.08);
 }
 
 .bundleImageFallback {
@@ -748,7 +786,7 @@
 }
 
 .bundleItemBadge {
-  background: rgba(122, 87, 58, 0.12);
+  background: rgba(107, 107, 97, 0.12);
   color: var(--t);
   font-size: 11px;
   letter-spacing: 0.08em;
