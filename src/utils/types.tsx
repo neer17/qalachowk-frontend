@@ -62,6 +62,7 @@ export interface ProductImage {
   thumbnailUrl?: string | null;
   mediumUrl?: string | null;
   largeUrl?: string | null;
+  mimeType?: string | null;
   alt: string;
   isMain: boolean;
   sortOrder?: number;

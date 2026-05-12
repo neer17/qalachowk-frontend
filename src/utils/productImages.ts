@@ -5,6 +5,7 @@ export interface ProductImageRenditions {
   thumbnailUrl?: string | null;
   mediumUrl?: string | null;
   largeUrl?: string | null;
+  mimeType?: string | null;
 }
 
 export function getProductImageUrl(
@@ -27,5 +28,10 @@ export function getProductImageUrl(
 }
 
 export function isVideoImage(image: ProductImageRenditions): boolean {
-  return image.url.includes(".mp4");
+  const mimeType = image.mimeType?.toLowerCase();
+  if (mimeType?.startsWith("video/")) {
+    return true;
+  }
+
+  return /\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(image.url);
 }

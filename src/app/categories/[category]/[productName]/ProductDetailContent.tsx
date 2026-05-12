@@ -393,6 +393,7 @@ export default function ProductDetailContent({
                           <video
                             width={1920}
                             height={1080}
+                            poster={getProductImageUrl(img, "large")}
                             style={{
                               width: "100%",
                               height: "100%",
@@ -405,6 +406,8 @@ export default function ProductDetailContent({
                             autoPlay
                             muted
                             loop
+                            playsInline
+                            preload="metadata"
                           />
                         ) : (
                           <Image
@@ -438,14 +441,12 @@ export default function ProductDetailContent({
                           }`}
                         >
                           {isVideoImage(img) ? (
-                            <video
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                              src={img.url}
-                              muted
+                            <Image
+                              src={getProductImageUrl(img, "thumbnail")}
+                              alt={img.alt || product.name}
+                              fill
+                              style={{ objectFit: "cover" }}
+                              sizes="10vw"
                             />
                           ) : (
                             <Image
@@ -473,6 +474,7 @@ export default function ProductDetailContent({
                           <video
                             width={1920}
                             height={1080}
+                            poster={getProductImageUrl(img, "large")}
                             style={{
                               width: "100%",
                               height: "100%",
@@ -485,6 +487,8 @@ export default function ProductDetailContent({
                             autoPlay
                             muted
                             loop
+                            playsInline
+                            preload="metadata"
                           />
                         ) : (
                           <Image
