@@ -42,14 +42,16 @@
 
 .qc-root {
   /* — Core palette — */
-  --s: #6a2901; /* Primary Brown          (brand primary)       */
-  --br: #8b4513; /* Saddle Brown           (secondary text)      */
+  --s: #1e1e1e; /* Near-black             (brand primary)       */
+  --br: #6b6b6b; /* Medium gray            (secondary text)      */
   --t: #c8956c; /* Warm Gold              (accent / highlight)  */
-  --p: #f5efe6; /* Paper                  (page background)     */
-  --l: #e8d9c5; /* Linen                  (card / image bg)     */
+  --p: #f5f0e8; /* Paper                  (page background)     */
+  --l: #edeae2; /* Linen                  (card / image bg)     */
   --g: #b8860b; /* Dark Goldenrod         (price accent)        */
-  --c: #2c1a0e; /* Near-black             (body text)           */
-  --bo: #d9c9b5; /* Bone                   (borders)             */
+  --c: #1e1e1e; /* Near-black             (body text)           */
+  --bo: #d5d0c8; /* Bone                   (borders)             */
+  --btn: #7d0531; /* Deep crimson           (button background)   */
+  --hover-outline: #b8860b; /* Gold                   (hover outline)       */
 
   /* — Semantic aliases — */
   --color-primary: var(--s);
@@ -60,16 +62,6 @@
   --color-price: var(--g);
   --color-text: var(--c);
   --color-border: var(--bo);
-
-  /* — Surfaces on dark backgrounds — */
-  --color-on-dark-text: var(--p); /* #f5efe6  */
-  --color-on-dark-text-muted: rgba(245, 239, 230, 0.78);
-  --color-on-dark-text-dim: rgba(245, 239, 230, 0.4);
-  --color-on-dark-border: rgba(200, 149, 108, 0.14);
-
-  /* — Glass / frosted effects — */
-  --glass-bg: rgba(245, 239, 230, 0.12);
-  --glass-border: rgba(245, 239, 230, 0.22);
 
   /* — Transitions — */
   --transition-fast: 0.2s ease;
@@ -162,12 +154,12 @@
   color: var(--t);
 }
 
-/* Editorial headline — mid-size serif on dark background */
+/* Editorial headline — mid-size serif on light background */
 .qc-editorial-headline {
   font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
   font-size: clamp(32px, 4.5vw, 58px);
-  color: var(--p);
+  color: var(--s);
   line-height: 1.06;
 }
 .qc-editorial-headline em {
@@ -185,12 +177,12 @@
   line-height: 1.78;
 }
 
-/* Body prose on dark backgrounds */
+/* Body prose on light backgrounds */
 .qc-body-prose-light {
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
   font-size: 16px;
-  color: rgba(245, 239, 230, 0.78);
+  color: var(--br);
   line-height: 1.7;
 }
 
@@ -212,12 +204,12 @@
   color: var(--g);
 }
 
-/* Pillar / feature title — medium serif on dark bg */
+/* Pillar / feature title — medium serif on light bg */
 .qc-feature-title {
   font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
   font-size: 22px;
-  color: var(--p);
+  color: var(--s);
 }
 
 /* Tag / craft label — tiny caps */
@@ -242,9 +234,9 @@
    3. BUTTONS
    ──────────────────────────────────────────────────────────────── */
 
-/* Primary filled button — dark brown bg, paper text */
+/* Primary filled button — crimson bg, paper text */
 .qc-btn-primary {
-  background: var(--s);
+  background: var(--btn);
   color: var(--p);
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 400;
@@ -260,7 +252,9 @@
   transition: background var(--transition-fast);
 }
 .qc-btn-primary:hover {
-  background: var(--br);
+  outline: 1px solid var(--hover-outline);
+  outline-offset: -1px;
+  background: var(--btn);
 }
 
 /* Outline button — transparent bg, border */
@@ -307,7 +301,7 @@
 
 /* Ghost link button — text + bottom border, for dark bg */
 .qc-btn-ghost {
-  color: var(--p);
+  color: var(--s);
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 400;
   font-size: 12px;
@@ -316,14 +310,14 @@
   padding: 13px 0;
   background: none;
   border: none;
-  border-bottom: 0.5px solid rgba(245, 239, 230, 0.5);
+  border-bottom: 0.5px solid rgba(30, 30, 30, 0.3);
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
   transition: border-color var(--transition-fast);
 }
 .qc-btn-ghost:hover {
-  border-color: var(--p);
+  border-color: var(--s);
 }
 
 /* Arrow link — inline text link with underline */
@@ -407,7 +401,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(245, 239, 230, 0.9);
+  background: rgba(245, 240, 232, 0.9);
   border: none;
   border-radius: var(--radius-full);
   width: 30px;
@@ -452,19 +446,10 @@
   opacity: 0.4;
 }
 
-/* Frosted glass pill (hero side info) */
-.qc-glass-pill {
-  background: var(--glass-bg);
-  border: 0.5px solid var(--glass-border);
-  border-radius: var(--radius-sm);
-  padding: 13px 17px;
-  backdrop-filter: blur(10px);
-}
-
-/* Pillar card — on dark background sections */
+/* Pillar card */
 .qc-pillar {
   padding: 38px 32px;
-  border: 0.5px solid var(--color-on-dark-border);
+  border: 0.5px solid var(--bo);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -496,14 +481,6 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-}
-
-/* Dark section (pillars, craft story) */
-.qc-section-dark {
-  padding: 80px var(--space-section-x);
-  background: var(--s);
-  position: relative;
-  overflow: hidden;
 }
 
 /* Light tinted section (email capture, art square) */
@@ -556,10 +533,10 @@
   z-index: 1;
   background: linear-gradient(
     to bottom,
-    rgba(26, 10, 0, 0.08) 0%,
-    rgba(26, 10, 0, 0.04) 28%,
-    rgba(26, 10, 0, 0.32) 58%,
-    rgba(26, 10, 0, 0.76) 100%
+    rgba(30, 30, 30, 0.08) 0%,
+    rgba(30, 30, 30, 0.04) 28%,
+    rgba(30, 30, 30, 0.32) 58%,
+    rgba(30, 30, 30, 0.76) 100%
   );
 }
 .qc-scrim-left {
@@ -568,9 +545,9 @@
   z-index: 1;
   background: linear-gradient(
     105deg,
-    rgba(26, 10, 0, 0.82) 0%,
-    rgba(26, 10, 0, 0.55) 38%,
-    rgba(26, 10, 0, 0.15) 68%,
+    rgba(30, 30, 30, 0.82) 0%,
+    rgba(30, 30, 30, 0.55) 38%,
+    rgba(30, 30, 30, 0.15) 68%,
     transparent 100%
   );
 }
@@ -578,16 +555,6 @@
 /* ────────────────────────────────────────────────────────────────
    6. DECORATIVE ELEMENTS
    ──────────────────────────────────────────────────────────────── */
-
-/* Mandana pattern divider bar */
-.qc-mandana-bar {
-  height: 28px;
-  background: var(--s);
-  overflow: hidden;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='28'%3E%3Crect width='36' height='28' fill='%236A2901'/%3E%3Cpolygon points='18,6 22,14 18,22 14,14' fill='%23C8956C'/%3E%3Ccircle cx='4' cy='14' r='2' fill='%23F5EFE6'/%3E%3Ccircle cx='32' cy='14' r='2' fill='%23F5EFE6'/%3E%3Cline x1='0' y1='1' x2='36' y2='1' stroke='%238B4513' stroke-width='0.5'/%3E%3Cline x1='0' y1='27' x2='36' y2='27' stroke='%238B4513' stroke-width='0.5'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  background-size: 36px 28px;
-}
 
 /* Marquee / scrolling ticker */
 .qc-marquee-wrap {
@@ -637,7 +604,8 @@
   font-size: 10px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(245, 239, 230, 0.4);
+  color: var(--br);
+  opacity: 0.4;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -645,7 +613,7 @@
 .qc-scroll-line {
   width: 0.5px;
   height: 36px;
-  background: rgba(245, 239, 230, 0.22);
+  background: rgba(30, 30, 30, 0.22);
   position: relative;
   overflow: hidden;
 }
@@ -703,7 +671,7 @@
 
 /* Submit button (pairs with .qc-input) */
 .qc-input-submit {
-  background: var(--s);
+  background: var(--btn);
   color: var(--p);
   border: none;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
@@ -717,7 +685,9 @@
   transition: background var(--transition-fast);
 }
 .qc-input-submit:hover {
-  background: var(--br);
+  outline: 1px solid var(--hover-outline);
+  outline-offset: -1px;
+  background: var(--btn);
 }
 
 /* Helper / note text below forms */

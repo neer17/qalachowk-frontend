@@ -800,13 +800,13 @@ export default function Checkout() {
                 <div className={styles.totalRow}>
                   <span
                     className={styles.totalLabel}
-                    style={{ color: "#7a5e2e" }}
+                    style={{ color: "var(--br)" }}
                   >
                     Set Saving
                   </span>
                   <span
                     className={`${styles.totalVal} ${styles.totalValDiscount}`}
-                    style={{ color: "#7a5e2e" }}
+                    style={{ color: "var(--br)" }}
                   >
                     − <Rupee />
                     {bundlePreview.discountAmount.toLocaleString("en-IN")}

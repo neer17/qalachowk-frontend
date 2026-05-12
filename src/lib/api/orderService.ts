@@ -18,6 +18,9 @@ export interface OrderAddress {
 
 export interface ProductImage {
   url: string;
+  thumbnailUrl?: string | null;
+  mediumUrl?: string | null;
+  largeUrl?: string | null;
 }
 
 export interface OrderItemProduct {

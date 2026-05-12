@@ -69,6 +69,9 @@ function apiItemToProduct(item: WishlistApiItem): Product {
     images: item.productImages.map((img, index) => ({
       id: `${item.productId}-img-${index}`,
       url: img.url,
+      thumbnailUrl: img.thumbnailUrl,
+      mediumUrl: img.mediumUrl,
+      largeUrl: img.largeUrl,
       alt: img.alt ?? item.productName,
       isMain: img.isMain,
       sortOrder: index,
@@ -89,6 +92,9 @@ function cartApiItemToProduct(item: CartApiItem): Product {
     images: item.productImages.map((img, index) => ({
       id: `${item.productId}-img-${index}`,
       url: img.url,
+      thumbnailUrl: img.thumbnailUrl,
+      mediumUrl: img.mediumUrl,
+      largeUrl: img.largeUrl,
       alt: img.alt ?? item.productName,
       isMain: img.isMain,
       sortOrder: index,

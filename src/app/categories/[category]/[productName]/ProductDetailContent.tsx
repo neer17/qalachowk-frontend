@@ -13,6 +13,7 @@ import { BundleOffer, MerchandisingProduct, Product } from "@/utils/types";
 import { environments } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
 import { sendGAEvent } from "@next/third-parties/google";
+import { getProductImageUrl, isVideoImage } from "@/utils/productImages";
 
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
@@ -51,7 +52,7 @@ function CompleteLookItemCard({
   }, [clEmblaApi]);
 
   const filteredImages = (item.images ?? []).filter(
-    (img) => !img.url.includes(".mp4"),
+    (img) => !isVideoImage(img),
   );
 
   return (
@@ -64,7 +65,7 @@ function CompleteLookItemCard({
                 {filteredImages.map((img, i) => (
                   <div className={styles.clEmblaSlide} key={img.id ?? i}>
                     <Image
-                      src={img.url}
+                      src={getProductImageUrl(img, "medium")}
                       alt={img.alt || item.name}
                       fill
                       sizes="(max-width: 768px) 100vw, 33vw"
@@ -388,7 +389,7 @@ export default function ProductDetailContent({
                   <div className={styles.emblaMainContainer}>
                     {product.images.map((img) => (
                       <div className={styles.emblaMainSlide} key={img.id}>
-                        {img.url.includes(".mp4") ? (
+                        {isVideoImage(img) ? (
                           <video
                             width={1920}
                             height={1080}
@@ -407,7 +408,7 @@ export default function ProductDetailContent({
                           />
                         ) : (
                           <Image
-                            src={img.url}
+                            src={getProductImageUrl(img, "large")}
                             alt={img.alt || product.name}
                             className={styles.productImageCover}
                             fill
@@ -436,7 +437,7 @@ export default function ProductDetailContent({
                               : ""
                           }`}
                         >
-                          {img.url.includes(".mp4") ? (
+                          {isVideoImage(img) ? (
                             <video
                               style={{
                                 width: "100%",
@@ -448,7 +449,7 @@ export default function ProductDetailContent({
                             />
                           ) : (
                             <Image
-                              src={img.url}
+                              src={getProductImageUrl(img, "thumbnail")}
                               alt={img.alt || product.name}
                               fill
                               style={{ objectFit: "cover" }}
@@ -468,7 +469,7 @@ export default function ProductDetailContent({
                   <div className={styles.emblaContainer}>
                     {product.images.map((img) => (
                       <div className={styles.emblaSlide} key={img.id}>
-                        {img.url.includes(".mp4") ? (
+                        {isVideoImage(img) ? (
                           <video
                             width={1920}
                             height={1080}
@@ -487,7 +488,7 @@ export default function ProductDetailContent({
                           />
                         ) : (
                           <Image
-                            src={img.url}
+                            src={getProductImageUrl(img, "large")}
                             alt={img.alt || product.name}
                             className={styles.productImageCover}
                             fill
@@ -659,7 +660,7 @@ export default function ProductDetailContent({
                     <div className={styles.bundleImageTile} key={item.id}>
                       {item.images?.[0] ? (
                         <Image
-                          src={item.images[0].url}
+                          src={getProductImageUrl(item.images[0], "thumbnail")}
                           alt={item.images[0].alt || item.name}
                           fill
                           sizes="(max-width: 768px) 33vw, 20vw"
@@ -860,7 +861,10 @@ export default function ProductDetailContent({
                       price={similarProduct.price}
                       sizes="20vw"
                       imageName={similarProduct.name}
-                      imageSrc={similarProduct.images[0].url}
+                      imageSrc={getProductImageUrl(
+                        similarProduct.images[0],
+                        "medium",
+                      )}
                     />
                   </Link>
                 </div>

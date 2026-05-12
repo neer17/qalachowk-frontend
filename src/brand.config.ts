@@ -10,9 +10,9 @@ export const BRAND = {
   stateCode: "08", // Rajasthan
   invoicePrefix: "QC",
   colors: {
-    primary: "#6A2901",
-    accent: "#A3A67C",
-    warmWhite: "#FFFAF5",
-    dark: "#2E1503",
+    primary: "#1E1E1E",
+    accent: "#7D0531",
+    warmWhite: "#FFFCF7",
+    dark: "#1E1E1E",
   },
 } as const;

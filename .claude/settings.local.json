@@ -51,7 +51,10 @@
       "Bash(find /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend -name *.test.* -o -name *.spec.*)",
       "Bash(mv /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print/PrintTrigger.tsx /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/print/[orderId]/PrintTrigger.tsx)",
       "Bash(mv /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print/page.tsx /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/print/[orderId]/page.tsx)",
-      "Bash(rm -rf /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print)"
+      "Bash(rm -rf /Users/neesewan/Documents/Me_documents/qalachowk-admin-frontend/src/app/admin/orders/[orderId]/print)",
+      "Bash(cp /Users/neesewan/.claude/projects/-Users-neesewan-Documents-Me-documents-qalachowk-frontend/ebf04e41-4803-4e9e-8809-12b380bc9595/tool-results/webfetch-1778398485150-uc71oq.bin /tmp/design.gz)",
+      "Bash(gunzip -f /tmp/design.gz)",
+      "Read(//tmp/**)"
     ]
   }
 }

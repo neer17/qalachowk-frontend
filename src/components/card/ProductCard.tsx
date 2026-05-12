@@ -13,6 +13,7 @@ import { useCart, useWishlist } from "@/context/CartContext";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
 import { Product } from "@/utils/types";
 import { environments } from "@/utils/constants";
+import { getProductImageUrl, isVideoImage } from "@/utils/productImages";
 
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
@@ -47,9 +48,7 @@ export default function ProductCard({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
-  const filteredImages = images
-    .map((image) => image.url)
-    .filter((imageSrc) => !imageSrc.includes(".mp4"));
+  const filteredImages = images.filter((image) => !isVideoImage(image));
 
   // Check if item is in wishlist on mount and when wishlist changes
   useEffect(() => {
@@ -160,23 +159,30 @@ export default function ProductCard({
         <div className={styles.imageContainer}>
           <div className={styles.embla} ref={emblaRef}>
             <div className={styles.emblaContainer}>
-              {filteredImages.map((imageSrc, index) => (
-                <div className={styles.emblaSlide} key={`${imageSrc}-${index}`}>
-                  <Image
-                    src={imageSrc}
-                    alt={name}
-                    width={1920}
-                    height={1080}
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                    }}
-                    sizes={imageSizes}
-                    priority={index === 0}
-                    className={styles.productImage}
-                  />
-                </div>
-              ))}
+              {filteredImages.map((image, index) => {
+                const imageSrc = getProductImageUrl(image, "medium");
+
+                return (
+                  <div
+                    className={styles.emblaSlide}
+                    key={`${imageSrc}-${index}`}
+                  >
+                    <Image
+                      src={imageSrc}
+                      alt={name}
+                      width={1920}
+                      height={1080}
+                      style={{
+                        width: "100%",
+                        height: "auto",
+                      }}
+                      sizes={imageSizes}
+                      priority={index === 0}
+                      className={styles.productImage}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
 

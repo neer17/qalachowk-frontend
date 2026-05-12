@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./CartProductCard.module.css";
 import { Product } from "@/utils/types";
+import { getProductImageUrl } from "@/utils/productImages";
 
 interface CartProductCardProps extends Product {
   imageSizes?: string;
@@ -34,6 +35,10 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
   const discountPct = originalPrice
     ? Math.round((1 - price / originalPrice) * 100)
     : 0;
+  const firstImage = images?.[0];
+  const firstImageSrc = firstImage
+    ? getProductImageUrl(firstImage, "thumbnail")
+    : undefined;
 
   return (
     <div className={styles.contentsContainer}>
@@ -43,10 +48,10 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
             <Image
               width={96}
               height={96}
-              src={images[0].url}
+              src={firstImageSrc!}
               alt={name}
               sizes={imageSizes}
-              unoptimized={images[0].url.includes("lh3.googleusercontent.com")}
+              unoptimized={firstImageSrc!.includes("lh3.googleusercontent.com")}
             />
           )}
         </Link>
@@ -56,10 +61,10 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
             <Image
               width={96}
               height={96}
-              src={images[0].url}
+              src={firstImageSrc!}
               alt={name}
               sizes={imageSizes}
-              unoptimized={images[0].url.includes("lh3.googleusercontent.com")}
+              unoptimized={firstImageSrc!.includes("lh3.googleusercontent.com")}
             />
           )}
         </div>

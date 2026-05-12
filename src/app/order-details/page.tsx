@@ -10,6 +10,7 @@ import {
 import { useAuth } from "@/context/SupabaseAuthContext";
 import Image from "next/image";
 import { notifications } from "@mantine/notifications";
+import { getProductImageUrl } from "@/utils/productImages";
 
 const STATUS_STEPS = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"];
 
@@ -210,7 +211,10 @@ export default function OrderDetailsPage() {
                   {item.product?.images?.[0] && (
                     <Image
                       className={styles.itemImage}
-                      src={item.product.images[0].url}
+                      src={getProductImageUrl(
+                        item.product.images[0],
+                        "thumbnail",
+                      )}
                       alt={item.product?.name ?? "Product"}
                       objectFit="contain"
                       fill

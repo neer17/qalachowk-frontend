@@ -6,6 +6,7 @@ import { useCart, useWishlist } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { getProductImageUrl } from "@/utils/productImages";
 
 export default function Wishlist() {
   const { wishlistData, removeWishlistItem, isLoading } = useWishlist();
@@ -98,71 +99,77 @@ export default function Wishlist() {
         ) : (
           <div className={styles.wishlistGrid}>
             {Array.from(wishlistData.values()).map(
-              ({ id, name, price, images }) => (
-                <div key={id} className={styles.productCard}>
-                  {/* Image Area */}
-                  <div className={styles.imageArea}>
-                    {images && images.length > 0 ? (
-                      <Image
-                        src={images[0].url}
-                        alt={name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className={styles.productImage}
-                        unoptimized={images[0].url.includes(
-                          "lh3.googleusercontent.com",
-                        )}
-                      />
-                    ) : (
-                      <div className={styles.imagePlaceholder} />
-                    )}
+              ({ id, name, price, images }) => {
+                const imageSrc = images?.[0]
+                  ? getProductImageUrl(images[0], "medium")
+                  : undefined;
 
-                    {/* Remove Button */}
-                    <button
-                      aria-label="Remove from wishlist"
-                      className={styles.removeButton}
-                      onClick={() => handleRemoveItem(id)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="16px"
-                        viewBox="0 -960 960 960"
-                        width="16px"
-                        fill="currentColor"
-                      >
-                        <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                      </svg>
-                    </button>
-                  </div>
+                return (
+                  <div key={id} className={styles.productCard}>
+                    {/* Image Area */}
+                    <div className={styles.imageArea}>
+                      {imageSrc ? (
+                        <Image
+                          src={imageSrc}
+                          alt={name}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className={styles.productImage}
+                          unoptimized={imageSrc.includes(
+                            "lh3.googleusercontent.com",
+                          )}
+                        />
+                      ) : (
+                        <div className={styles.imagePlaceholder} />
+                      )}
 
-                  {/* Product Info */}
-                  <div className={styles.productInfo}>
-                    <div className={styles.productInfoRow}>
-                      <div>
-                        <h3 className={styles.productName}>{name}</h3>
-                        <span className={styles.productPrice}>
-                          ₹ {price.toLocaleString("en-IN")}
-                        </span>
-                      </div>
+                      {/* Remove Button */}
                       <button
-                        aria-label="Move to cart"
-                        className={styles.cartIconBtn}
-                        onClick={() => handleMoveToCart(id)}
+                        aria-label="Remove from wishlist"
+                        className={styles.removeButton}
+                        onClick={() => handleRemoveItem(id)}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          height="18px"
+                          height="16px"
                           viewBox="0 -960 960 960"
-                          width="18px"
+                          width="16px"
                           fill="currentColor"
                         >
-                          <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
+                          <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                         </svg>
                       </button>
                     </div>
+
+                    {/* Product Info */}
+                    <div className={styles.productInfo}>
+                      <div className={styles.productInfoRow}>
+                        <div>
+                          <h3 className={styles.productName}>{name}</h3>
+                          <span className={styles.productPrice}>
+                            ₹ {price.toLocaleString("en-IN")}
+                          </span>
+                        </div>
+                        <button
+                          aria-label="Move to cart"
+                          className={styles.cartIconBtn}
+                          onClick={() => handleMoveToCart(id)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="18px"
+                            viewBox="0 -960 960 960"
+                            width="18px"
+                            fill="currentColor"
+                          >
+                            <path d="M280-80q-33 0-56.5-23.5T200-160q0-33 23.5-56.5T280-240q33 0 56.5 23.5T360-160q0 33-23.5 56.5T280-80Zm400 0q-33 0-56.5-23.5T600-160q0-33 23.5-56.5T680-240q33 0 56.5 23.5T760-160q0 33-23.5 56.5T680-80ZM246-720l96 200h280l110-200H246Zm-38-80h590q23 0 35 20.5t1 41.5L692-482q-11 20-29.5 31T622-440H324l-44 80h480v80H280q-45 0-68-39.5t-2-78.5l54-98-144-304H40v-80h130l38 80Zm134 280h280-280Z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ),
+                );
+              },
             )}
           </div>
         )}

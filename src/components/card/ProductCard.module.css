@@ -62,7 +62,7 @@
 }
 
 .emblaDot {
-  background-color: rgba(106, 41, 1, 0.2);
+  background-color: rgba(30, 30, 30, 0.2);
   border: none;
   border-radius: 50%;
   width: 6px;
@@ -72,7 +72,7 @@
 }
 
 .emblaDot:hover {
-  background-color: rgba(106, 41, 1, 0.4);
+  background-color: rgba(30, 30, 30, 0.4);
 }
 
 .emblaDotSelected {
@@ -122,7 +122,7 @@
 }
 
 .wishlistSvgContainer {
-  background: rgba(245, 239, 230, 0.9);
+  background: rgba(245, 240, 232, 0.9);
   border: 0.5px solid var(--bo);
   border-radius: 50%;
   width: 32px;
@@ -148,8 +148,8 @@
 }
 
 .bagSvgContainer {
-  background: var(--s);
-  border: 0.5px solid var(--s);
+  background: var(--btn);
+  border: 0.5px solid var(--btn);
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -168,8 +168,10 @@
 }
 
 .bagSvgContainer:hover {
-  background: var(--br);
-  border-color: var(--br);
+  outline: 1px solid var(--hover-outline);
+  outline-offset: -1px;
+  background: var(--btn);
+  border-color: var(--btn);
   transform: scale(1.15);
 }
 

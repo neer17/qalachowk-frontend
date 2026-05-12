@@ -1,6 +1,9 @@
 interface ProductImage {
   id: string;
   url: string;
+  thumbnailUrl?: string | null;
+  mediumUrl?: string | null;
+  largeUrl?: string | null;
   alt: string;
   isMain: boolean;
   sortOrder: number;

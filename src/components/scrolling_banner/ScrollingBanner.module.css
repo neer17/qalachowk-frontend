@@ -1,6 +1,6 @@
 /* ════ SCROLLING BANNER ════ */
 .wrapper {
-  background-color: var(--s);
+  background-color: var(--l);
   height: 45px;
   padding-top: 10px;
 }
@@ -9,8 +9,8 @@
   width: max-content;
   overflow: hidden;
   overflow-x: scroll;
-  background-color: var(--s);
-  color: var(--p);
+  background-color: var(--l);
+  color: var(--s);
   margin-top: auto;
   margin-bottom: auto;
   font-family: var(--font-dm-sans), sans-serif;

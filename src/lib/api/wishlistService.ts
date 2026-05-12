@@ -6,7 +6,14 @@ export interface WishlistApiItem {
   productId: string;
   productName: string;
   productPrice: number;
-  productImages: { url: string; alt?: string; isMain: boolean }[];
+  productImages: {
+    url: string;
+    thumbnailUrl?: string | null;
+    mediumUrl?: string | null;
+    largeUrl?: string | null;
+    alt?: string;
+    isMain: boolean;
+  }[];
   createdAt: string;
 }
 

@@ -10,6 +10,7 @@ import {
 } from "@/lib/api/orderService";
 import { sendGAEvent } from "@next/third-parties/google";
 import { notifications } from "@mantine/notifications";
+import { getProductImageUrl } from "@/utils/productImages";
 
 function formatDate(dateStr?: string): string {
   if (!dateStr) return "—";
@@ -308,9 +309,6 @@ function OrderConfirmedContent() {
         </div>
       </section>
 
-      {/* ═══ MANDANA DIVIDER ═══ */}
-      <div className={styles.mandanaBar} />
-
       {/* ═══════ ORDER DETAILS ═══════ */}
       {loading ? (
         <section className={styles.loadingSection}>
@@ -335,7 +333,10 @@ function OrderConfirmedContent() {
                       {item.product?.images?.[0] ? (
                         <Image
                           className={styles.itemImage}
-                          src={item.product.images[0].url}
+                          src={getProductImageUrl(
+                            item.product.images[0],
+                            "thumbnail",
+                          )}
                           alt={item.product.name}
                           fill
                           style={{ objectFit: "contain" }}

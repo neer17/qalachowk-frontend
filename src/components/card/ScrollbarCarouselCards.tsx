@@ -4,6 +4,7 @@ import styles from "./ScrollbarCarouselCards.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/utils/types";
+import { getProductImageUrl } from "@/utils/productImages";
 
 interface ScrollbarCarouselCardsProps {
   products: Product[];
@@ -43,7 +44,7 @@ const ScrollbarCarouselCards: React.FC<ScrollbarCarouselCardsProps> = ({
                   <div className={styles.productCard}>
                     <div className={styles.productImage}>
                       <Image
-                        src={product.images[0].url}
+                        src={getProductImageUrl(product.images[0], "medium")}
                         alt={product.name}
                         fill
                         sizes={imageSizes}

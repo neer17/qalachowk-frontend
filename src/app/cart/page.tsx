@@ -12,6 +12,7 @@ import {
   CartRecommendationsResponse,
   ProductService,
 } from "@/lib/api/productService";
+import { getProductImageUrl } from "@/utils/productImages";
 
 export default function CartPage() {
   const router = useRouter();
@@ -212,7 +213,10 @@ export default function CartPage() {
                       {item.images?.[0] ? (
                         <div className={styles.quickAddImage}>
                           <Image
-                            src={item.images[0].url}
+                            src={getProductImageUrl(
+                              item.images[0],
+                              "thumbnail",
+                            )}
                             alt={item.images[0].alt || item.name}
                             fill
                             sizes="96px"
@@ -256,9 +260,6 @@ export default function CartPage() {
           </button>
         </div>
       )}
-
-      {/* Mandana Divider */}
-      <div className={styles.mandanaBar} />
     </div>
   );
 }

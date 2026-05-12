@@ -10,7 +10,14 @@ export interface CartApiItem {
   productDescription: string;
   productMaterial: string;
   productPrice: number;
-  productImages: { url: string; alt?: string; isMain: boolean }[];
+  productImages: {
+    url: string;
+    thumbnailUrl?: string | null;
+    mediumUrl?: string | null;
+    largeUrl?: string | null;
+    alt?: string;
+    isMain: boolean;
+  }[];
   productCategory: {
     id: string;
     name: string;

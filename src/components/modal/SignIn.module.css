@@ -99,13 +99,15 @@
 }
 
 .validButton {
-  background-color: var(--s) !important;
+  background-color: var(--btn) !important;
   color: var(--p) !important;
   cursor: pointer;
 }
 
 .validButton:hover {
-  background-color: var(--br) !important;
+  outline: 1px solid var(--hover-outline) !important;
+  outline-offset: -1px !important;
+  background-color: var(--btn) !important;
 }
 
 .divider {

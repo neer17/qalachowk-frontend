@@ -7,9 +7,6 @@ import Peacock from "@/assets/logos/peacock.svg";
 export default function Footer() {
   return (
     <footer className={styles.footerContainer} data-purpose="main-footer">
-      {/* Top Mandana Border */}
-      <div aria-hidden="true" className={styles.mandanaPattern}></div>
-
       <div className={styles.container}>
         <div className={styles.grid}>
           {/* Logo & Tagline */}

@@ -56,8 +56,6 @@ export default function ShopContent({ products }: { products: Product[] }) {
         </div>
       </section>
 
-      <div className={styles.mandanaBar} />
-
       {/* Content */}
       <div className={styles.content}>
         {/* Category tabs */}

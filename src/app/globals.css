@@ -1,19 +1,21 @@
 :root {
   /* ── Core palette ── */
-  --s: #6a2901; /* Primary Brown */
-  --br: #8b4513; /* Saddle Brown */
+  --s: #1e1e1e; /* Near-black — headings, title text */
+  --br: #6b6b6b; /* Medium gray — secondary/muted text */
   --t: #c8956c; /* Warm Gold / accent */
-  --p: #f5efe6; /* Paper background */
-  --l: #e8d9c5; /* Linen / card bg */
+  --p: #f5f0e8; /* Warm off-white — background */
+  --l: #edeae2; /* Neutral linen — card/image surfaces */
   --g: #b8860b; /* Dark Goldenrod / price */
-  --c: #2c1a0e; /* Near-black / body text */
-  --bo: #d9c9b5; /* Bone / borders */
+  --c: #1e1e1e; /* Near-black — body text */
+  --bo: #d5d0c8; /* Warm gray — borders */
+
+  /* ── Button palette ── */
+  --btn: #7d0531; /* Deep crimson — button fills (primary CTA) */
+  --hover-outline: #b8860b; /* Gold — hover outline (complements crimson) */
 
   /* ── Extended palette ── */
   --brand-primary: var(--s);
   --brand-warm-white: var(--p);
-  --brand-terracotta: #a05920;
-  --surface-warm: #ede3d4;
 
   /* ── Semantic colors ── */
   --text-muted: #888;

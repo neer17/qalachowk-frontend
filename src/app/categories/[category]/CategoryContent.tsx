@@ -120,9 +120,6 @@ export default function CategoryContent({
         </div>
       </section>
 
-      {/* MANDANA BAR */}
-      <div className={styles.mandanaBar} />
-
       {/* CONTENT */}
       <div className={styles.content}>
         {/* Sort bar */}

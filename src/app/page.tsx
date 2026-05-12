@@ -8,6 +8,7 @@ import styles from "./page.module.css";
 import Image from "next/image";
 import { Product } from "@/utils/types";
 import { API_ENDPOINTS } from "@/utils/constants";
+import { getProductImageUrl } from "@/utils/productImages";
 
 /* ════ STATIC PRODUCT DATA (fallback) ════ */
 interface HomeProduct {
@@ -64,7 +65,7 @@ function apiProductToHomeProduct(p: Product): HomeProduct {
     price: p.price,
     cat: p.category.slug,
     art: "mandana",
-    imageUrl: mainImage?.url,
+    imageUrl: mainImage ? getProductImageUrl(mainImage, "medium") : undefined,
     slug: p.slug,
   };
 }
@@ -266,9 +267,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ MANDANA ═══ */}
-      <div className={styles.mb} />
-
       {/* ═══ MARQUEE ═══ */}
       <div className={styles.mqWrap}>
         <div className={styles.mqTrack}>
@@ -318,7 +316,7 @@ export default function Home() {
                       height="14"
                       viewBox="0 0 18 18"
                       fill={inWish ? "#C8956C" : "none"}
-                      stroke="#6A2901"
+                      stroke="#1E1E1E"
                       strokeWidth="1"
                     >
                       <path d="M15.5 3.7a4 4 0 0 0-5.7 0L9 4.5l-.8-.8a4 4 0 0 0-5.7 5.7l.8.8L9 16l5.7-5.8.8-.8a4 4 0 0 0 0-5.7z" />
@@ -364,8 +362,6 @@ export default function Home() {
           })}
         </div>
       </section>
-
-      <div className={styles.mb} />
 
       {/* ═══════ EDITORIAL ═══════ */}
       <section className={styles.editorial}>
@@ -447,15 +443,13 @@ export default function Home() {
         </div>
       </section>
 
-      <div className={styles.mb} />
-
       {/* ═══════ PILLARS ═══════ */}
       <section className={styles.pillarsSec}>
         <div className={styles.fu}>
           <div className={styles.secLabel} style={{ color: "#c8956c" }}>
             Our Ancestral Alphabet
           </div>
-          <h2 className={styles.secTitle} style={{ color: "#f5efe6" }}>
+          <h2 className={styles.secTitle} style={{ color: "#F5F0E8" }}>
             Three arts, <em>one lineage</em>
           </h2>
         </div>
@@ -544,8 +538,6 @@ export default function Home() {
         </div>
       </section>
 
-      <div className={styles.mb} style={{ background: "#6a2901" }} />
-
       {/* ═══════ PROMISE ═══════ */}
       <div className={styles.promise}>
         <div className={`${styles.prItem} ${styles.fu}`}>
@@ -582,8 +574,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-
-      <div className={styles.mb} />
 
       {/* ═══════ EMAIL ═══════ */}
       <section className={styles.emailSec}>
