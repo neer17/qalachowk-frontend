@@ -9,6 +9,8 @@ import Image from "next/image";
 import { Product } from "@/utils/types";
 import { API_ENDPOINTS } from "@/utils/constants";
 import { getProductImageUrl } from "@/utils/productImages";
+import { ReviewsMarquee } from "@/components/reviews/ReviewsMarquee";
+import type { PublicReview } from "@/types/reviews";
 
 /* ════ STATIC PRODUCT DATA (fallback) ════ */
 interface HomeProduct {
@@ -137,6 +139,23 @@ export default function Home() {
   const { wishlistData, addWishlistItem, removeWishlistItem } = useWishlist();
   const [featuredProducts, setFeaturedProducts] =
     useState<HomeProduct[]>(FALLBACK_PRODUCTS);
+  const [reviews, setReviews] = useState<PublicReview[]>([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/v1/reviews?limit=50`,
+        );
+        if (!res.ok) return;
+        const { data } = await res.json();
+        if (Array.isArray(data)) setReviews(data);
+      } catch {
+        // keep empty
+      }
+    };
+    fetchReviews();
+  }, []);
 
   useEffect(() => {
     const fetchFeatured = async () => {
@@ -574,6 +593,9 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* ═══════ REVIEWS MARQUEE ═══════ */}
+      <ReviewsMarquee reviews={reviews} />
 
       {/* ═══════ EMAIL ═══════ */}
       <section className={styles.emailSec}>
