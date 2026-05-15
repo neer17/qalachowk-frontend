@@ -7,7 +7,6 @@ import { useCart, useWishlist } from "@/context/CartContext";
 import styles from "./page.module.css";
 import Image from "next/image";
 import { Product } from "@/utils/types";
-import { API_ENDPOINTS } from "@/utils/constants";
 import { getProductImageUrl } from "@/utils/productImages";
 import { ReviewsMarquee } from "@/components/reviews/ReviewsMarquee";
 import type { PublicReview } from "@/types/reviews";
@@ -54,6 +53,16 @@ const FALLBACK_PRODUCTS: HomeProduct[] = [
     price: 1200,
     cat: "rings",
     art: "mandana",
+  },
+  {
+    id: "hp-4",
+    name: "Warli Bracelet",
+    tag: "Warli Folk Art · Oxidised Silver",
+    desc: "A village harvest scene wraps your wrist in hand-etched silver.",
+    price: 1800,
+    cat: "bracelets",
+    art: "warli",
+    isNew: true,
   },
 ];
 
@@ -161,12 +170,12 @@ export default function Home() {
     const fetchFeatured = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${API_ENDPOINTS.PRODUCTS.URL}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}/v1/collections/favourites/products`,
         );
         if (!res.ok) return;
         const { data } = await res.json();
         if (Array.isArray(data) && data.length > 0) {
-          setFeaturedProducts(data.slice(0, 3).map(apiProductToHomeProduct));
+          setFeaturedProducts(data.slice(0, 4).map(apiProductToHomeProduct));
         }
       } catch {
         // keep fallback products
@@ -175,7 +184,7 @@ export default function Home() {
     fetchFeatured();
   }, []);
 
-  /* Intersection Observer for fade-ups */
+  /* Intersection Observer for fade-ups — re-runs when products load so new cards are observed */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -189,7 +198,7 @@ export default function Home() {
       .querySelectorAll(`.${styles.fu}`)
       .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [featuredProducts]);
 
   const handleAddToBag = (p: HomeProduct) => {
     setCartData({
@@ -298,20 +307,17 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ═══════ FEATURED COLLECTIONS ═══════ */}
+      {/* ═══════ FAVOURITES ═══════ */}
       <section className={styles.sec}>
         <div className={`${styles.secHdr} ${styles.fu}`}>
           <div>
-            <div className={styles.secLabel}>Featured Collections</div>
+            <div className={styles.secLabel}>Favourites</div>
             <h2 className={styles.secTitle}>
-              Folk art, <em>worn daily</em>
+              Pieces our patrons <em>cherish most</em>
             </h2>
           </div>
-          <Link href="/categories/all" className={styles.linkArrow}>
-            View All →
-          </Link>
         </div>
-        <div className={styles.grid3}>
+        <div className={styles.grid4}>
           {featuredProducts.map((p) => {
             const inWish = wishlistData.has(p.id);
             return (

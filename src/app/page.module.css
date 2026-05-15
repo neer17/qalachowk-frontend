@@ -310,6 +310,11 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
 .pcard {
   background: var(--p);
   border: 0.5px solid var(--bo);
@@ -685,6 +690,9 @@
   .grid3 {
     grid-template-columns: repeat(2, 1fr);
   }
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .pillarsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -710,6 +718,9 @@
 @media (max-width: 640px) {
   .grid3 {
     grid-template-columns: 1fr;
+  }
+  .grid4 {
+    grid-template-columns: repeat(2, 1fr);
   }
   .promise {
     grid-template-columns: repeat(2, 1fr);

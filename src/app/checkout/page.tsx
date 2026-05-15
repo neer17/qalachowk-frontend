@@ -611,14 +611,19 @@ export default function Checkout() {
                     className={styles.couponMsg}
                     style={{ color: "#5a7a3a" }}
                   >
-                    Discount applied successfully
+                    <Rupee />
+                    {appliedDiscountResponse.discountAmount?.toLocaleString(
+                      "en-IN",
+                    )}{" "}
+                    off applied
                   </div>
                 ) : (
                   <div
                     className={styles.couponMsg}
                     style={{ color: "var(--s)" }}
                   >
-                    Invalid discount coupon
+                    {appliedDiscountResponse.message ??
+                      "Invalid discount coupon"}
                   </div>
                 )
               ) : null}

@@ -6,11 +6,11 @@ import styles from "./page.module.css";
 import {
   HeroGlyph,
   StageSketch,
-  StageWax,
-  StagePour,
-  StageStone,
-  StageEngrave,
-  StagePolish,
+  StageRightScale,
+  StageMould,
+  StageColors,
+  StageJewelryDesign,
+  StageFinish,
   FinalPiece,
 } from "./stages";
 
@@ -20,100 +20,66 @@ const STAGES = [
     roman: "I",
     kicker: "Stage One",
     title: "The Sketch",
-    sub: "Pencil to vellum",
+    sub: "Inspiration to motifs",
     Comp: StageSketch,
     body: [
-      "Every piece begins as a thought, then a line, then a quiet conversation between the designer and the page.",
-      "The first drawing is rarely the last \u2014 proportions are tested, weights re-imagined, until the silhouette feels inevitable.",
+      "Living in Jaipur means living inside a museum that never closes — colour and craft are simply in the air I breathe. One afternoon, I sat with a Blue Pottery vase and found myself tracing its patterns with my fingertip before I even reached for a sketchbook. I began drawing — florals, geometric loops, the symmetry that Jaipur's potters have carried for centuries. ",
     ],
-    meta: {
-      Material: "Graphite, vellum",
-      Time: "2\u20134 days",
-      Tool: "No. 4 pencil",
-    },
-    prompt: "Hover to watch the sketch draw itself",
   },
   {
     id: "ii",
     roman: "II",
     kicker: "Stage Two",
-    title: "The Wax",
+    title: "Finding the Right Scale",
     sub: "Carving the form",
-    Comp: StageWax,
+    Comp: StageRightScale,
     body: [
-      "A block of jeweller\u2019s wax becomes the negative of a future heirloom. Cut, scraped, warmed, and breathed upon.",
-      "It must be exact: every gram removed here will be a gram of gold cast in its place.",
+      "Blue pottery pieces are usually made large and decorative.Turning them into wearable jewellery meant starting all over again, at a smaller scale. We searched, tested, and kept refining until the form began to feel just right.",
     ],
-    meta: { Material: "Blue wax", Time: "1 week", Tool: "Spatula, blade" },
-    prompt: "Drag across to carve",
   },
   {
     id: "iii",
     roman: "III",
     kicker: "Stage Three",
-    title: "The Cast",
-    sub: "Molten gold meets mould",
-    Comp: StagePour,
+    title: "Mould making and iteration",
+    sub: "The hardest part wasn't making it beautiful. It was making it small enough to wear.",
+    Comp: StageMould,
     body: [
-      "At 1,064\u00B0C, gold becomes a slow, honey-bright liquid. It is poured in a single, held breath \u2014 once, only once.",
-      "What emerges from the plaster is rough and hot, but it is, at last, a thing of metal.",
+      "This stage was full of trial, error, and patience.Many moulds did not work the way we hoped, but each failure taught us something new. Slowly, the process became clearer, and the tiny forms started taking shape.",
     ],
-    meta: {
-      Material: "22kt yellow gold",
-      Temp: "1064 \u00B0C",
-      Time: "45 minutes",
-    },
-    prompt: "Press and hold to pour",
   },
   {
     id: "iv",
     roman: "IV",
     kicker: "Stage Four",
-    title: "The Stone",
-    sub: "A single gemstone, set",
-    Comp: StageStone,
+    title: "Choosing the colors",
+    sub: "Some colors don't belong to trends. They belong to time.",
+    Comp: StageColors,
     body: [
-      "A 2.4-carat Burmese ruby is chosen from a tray of forty. Each prong is bent, tested, bent again.",
-      "When the bezel closes, the stone is held by hands that will never let go.",
+      "The colors came from the traditional palette of Jaipur blue pottery itself.We wanted the collection to feel rooted in the craft, not just inspired by it. So every shade was chosen to carry that familiar, timeless spirit.",
     ],
-    meta: { Stone: "Burmese ruby", Carats: "2.40 ct", Cut: "Rose / cabochon" },
-    prompt: "Drag the ruby into the bezel",
   },
   {
     id: "v",
     roman: "V",
     kicker: "Stage Five",
-    title: "The Hand",
-    sub: "Filigree, by candlelight",
-    Comp: StageEngrave,
+    title: "Jewelry design",
+    sub: "The pottery told the story. The jewellery gave it a home.",
+    Comp: StageJewelryDesign,
     body: [
-      "The finest line on a piece is no thicker than a human hair. It is engraved, not printed; felt, not specified.",
-      "Forty hours of slow, patient hand-work, the kind that is becoming rare in the world.",
+      "Once the motifs were ready, the next step was to build the jewellery around them. We had to find the right balance between beauty, wearability, and structure. Each piece was designed to let the motif breathe and still feel complete.",
     ],
-    meta: {
-      Tool: "Burin No. 2",
-      Hours: "14\u201340",
-      Margin: "\u00B1 0.05 mm",
-    },
-    prompt: "Press and trace the path",
   },
   {
     id: "vi",
     roman: "VI",
     kicker: "Stage Six",
     title: "The Finish",
-    sub: "From rouge to mirror",
-    Comp: StagePolish,
+    sub: "We chose silver because it was the most truthful choice we could make.",
+    Comp: StageFinish,
     body: [
-      "Three rouges, four buffs, a final wash in soft water. The piece is held to the light and turned, slowly, until it answers back.",
-      "Only then is it stamped, signed, and tucked into a box that smells faintly of cedar.",
+      "We experimented with silver and brass finishes before settling on silver polish. It felt cleaner, softer, and more aligned with the final look we wanted. This step gave the jewellery its final quiet elegance.",
     ],
-    meta: {
-      Compound: "Tripoli \u2192 rouge",
-      Buffs: "4 stages",
-      Stamp: "QC \u00B7 916",
-    },
-    prompt: "Drag the seam to compare",
   },
 ];
 
@@ -121,9 +87,9 @@ function Divider({ label }: { label: string }) {
   return (
     <div className={styles.divider}>
       <span className={styles.dividerL} />
-      <span className={styles.dividerGlyph}>\u2766</span>
+      <span className={styles.dividerGlyph}>{"\u2766"}</span>
       <span>{label}</span>
-      <span className={styles.dividerGlyph}>\u2766</span>
+      <span className={styles.dividerGlyph}>{"\u2766"}</span>
       <span className={styles.dividerR} />
     </div>
   );
@@ -177,21 +143,21 @@ export default function CraftJourney() {
           <div>
             <div className={styles.heroKicker}>From hand to heirloom</div>
             <h1 className={styles.heroTitle}>
-              Six
+              Blue
               <br />
-              <em>quiet</em>
+              <em>Pottery</em>
               <br />
-              hands<span className={styles.ornament}>.</span>
             </h1>
           </div>
           <div className={styles.heroSide}>
             <p>
-              &ldquo;To make a piece of jewellery is to spend a hundred small
-              hours teaching gold a single, deliberate shape.&rdquo;
+              &ldquo;Blue Pottery is a traditional craft of Jaipur. A piece of
+              blue pottery jewelry find it&apos;s roots in 14th century. It was
+              revived by Maharajah Sawai Ram Singh II in the 19th
+              century.&rdquo;
             </p>
             <div className={styles.heroMeta}>
-              <span>&mdash; Master Atelier</span>
-              <span>Six stages &middot; 60+ days</span>
+              <span>Six stages &middot; 90+ days</span>
               <span>1 finished piece</span>
             </div>
           </div>
@@ -224,7 +190,7 @@ export default function CraftJourney() {
               </StageSection>
               {i < STAGES.length - 1 && (
                 <Divider
-                  label={`Then, the ${STAGES[i + 1].title.replace("The ", "").toLowerCase()}`}
+                  label={`Then, ${STAGES[i + 1].title.replace("The ", "").toLowerCase()}`}
                 />
               )}
             </div>
@@ -242,8 +208,8 @@ export default function CraftJourney() {
           at last.
         </h2>
         <p className={styles.finaleSub}>
-          Sixty-three days, six pairs of hands, a single piece. It will outlive
-          us &mdash; and that, exactly, is the point.
+          90+ days, countless iterations, a single piece. It will outlive us
+          &mdash; and that, exactly, is the point.
         </p>
         <FinalPiece />
         <div className={styles.ctaRow}>
@@ -308,7 +274,6 @@ function StageSection({
         <div className={styles.stageText}>
           <div className={styles.stageNum}>
             <span>{stage.roman}</span>
-            <span className={styles.stageOf}>/ VI &middot; {stage.kicker}</span>
           </div>
           <div className={styles.stageKicker}>{stage.sub}</div>
           <h2 className={styles.stageTitle}>
@@ -323,18 +288,6 @@ function StageSection({
               {p}
             </p>
           ))}
-          <dl className={styles.stageMeta}>
-            {Object.entries(stage.meta).map(([k, v]) => (
-              <div key={k}>
-                <dt>{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-          </dl>
-          <div className={styles.stagePrompt}>
-            <span className={styles.promptArrow} />
-            {stage.prompt}
-          </div>
         </div>
         {Comp}
       </section>

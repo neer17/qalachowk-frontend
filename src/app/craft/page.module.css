@@ -435,6 +435,9 @@
   position: absolute;
   inset: 14px;
   z-index: 2;
+  width: calc(100% - 28px);
+  height: calc(100% - 28px);
+  object-fit: contain;
 }
 
 .sketchSvg path,
