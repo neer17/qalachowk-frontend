@@ -11,7 +11,6 @@ import SignInModal from "@/components/modal/SignIn";
 import OTPModal from "@/components/modal/OTPVerification";
 import { OtpService } from "@/lib/api/otpService";
 import { notifications } from "@mantine/notifications";
-import PeacockBrown from "@/assets/logos/peacock.svg";
 import UserStroke from "@/assets/svgs/user_stroke.svg";
 import UserFill from "@/assets/svgs/user_fill.svg";
 import Image from "next/image";
@@ -135,14 +134,7 @@ const NavigationBar: React.FC = () => {
 
         {/* Logo — left on desktop, centered on mobile */}
         <Link href="/" className={styles.brandName}>
-          <Image
-            src={PeacockBrown}
-            alt="Qala Chowk Peacock logo"
-            height={36}
-            width={36}
-            className={styles.brandLogo}
-          />
-          Qala Chowk
+          Gulchharre
         </Link>
 
         {/* Nav links — centered via absolute positioning */}

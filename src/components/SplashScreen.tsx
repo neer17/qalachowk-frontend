@@ -205,7 +205,7 @@ export default function SplashScreen() {
       {/* Brand name */}
       <div className={styles.clip}>
         <p className={`${styles.name} ${styles.item} ${styles.delay1}`}>
-          Qala Chowk
+          Gulchharre
         </p>
       </div>
 

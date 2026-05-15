@@ -45,8 +45,8 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Qala Chowk",
-  description: "Qala Chowk - Premium Indian E-commerce",
+  title: "Gulchharre",
+  description: "Gulchharre - Premium Indian E-commerce",
 };
 
 import Footer from "@/components/footer/Footer";

@@ -1,8 +1,6 @@
 import React from "react";
 import styles from "./Footer.module.css";
 import Link from "next/link";
-import Image from "next/image";
-import Peacock from "@/assets/logos/peacock.svg";
 
 export default function Footer() {
   return (
@@ -11,14 +9,7 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Logo & Tagline */}
           <div className={styles.brandColumn}>
-            <Image
-              src={Peacock}
-              alt="Qala Chowk"
-              width={40}
-              height={40}
-              style={{ marginBottom: "0.5rem" }}
-            />
-            <h2 className={styles.logoText}>Qala Chowk</h2>
+            <h2 className={styles.logoText}>Gulchharre</h2>
             <p className={styles.tagline}>
               Preserving heritage through handcrafted excellence.
             </p>
@@ -84,7 +75,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottomBar}>
-          <p>© 2026 Qala Chowk Handcrafted. All Rights Reserved.</p>
+          <p>© 2026 Gulchharre Handcrafted. All Rights Reserved.</p>
           <div className={styles.legalLinks}>
             <Link href="/privacy-policy">Privacy</Link>
             <Link href="/terms">Terms</Link>

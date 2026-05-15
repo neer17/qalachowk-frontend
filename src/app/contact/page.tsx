@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Contact Us | Qala Chowk",
+  title: "Contact Us | Gulchharre",
   description:
     "Get in touch with QalaChowk Design Studio LLP — customer care, grievance redressal, and business enquiries.",
 };

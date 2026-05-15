@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { Modal, TextInput, Button, Text, Box } from "@mantine/core";
-import Image from "next/image";
-import Peacock from "@/assets/logos/peacock.svg";
 import styles from "./SignIn.module.css";
 
 interface SignInModalProps {
@@ -56,13 +54,6 @@ export default function SignInModal({
       }}
     >
       <Box className={styles.container}>
-        <Image
-          src={Peacock}
-          alt="Qala Chowk"
-          width={48}
-          height={48}
-          style={{ marginBottom: "0.75rem" }}
-        />
         <Text className={styles.logo}>QALA CHOWK</Text>
 
         <Text className={styles.heading}>Hello there!</Text>

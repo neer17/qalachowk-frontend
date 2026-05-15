@@ -223,7 +223,7 @@ export default function CraftJourney() {
         <div className={styles.signature}>
           <span>Signed</span>
           <hr />
-          <span className={styles.sigMark}>Qala Chowk</span>
+          <span className={styles.sigMark}>Gulchharre</span>
           <hr />
           <span>QC &middot; 916</span>
         </div>
