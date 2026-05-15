@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 export function HeroGlyph() {
   return (
     <video
-      src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/hero_video.MOV"
+      src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/blue_pottery/a4505be7-966c-4482-8813-3ae15610a3dd/720p.mp4"
       className={styles.heroGlyph}
       autoPlay
       loop
@@ -90,7 +90,7 @@ export function StageRightScale() {
       <div className={`${styles.artCorner} ${styles.br}`} />
       <div className={styles.artFrame} />
       <img
-        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/right_scale.png"
+        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/blue_pottery/7aceabfa-0858-4ee0-82a8-2bfe58ce097c/medium.webp"
         style={{
           position: "absolute",
           inset: 0,
@@ -112,7 +112,7 @@ export function StageRightScale() {
       </div>
       <div className={styles.artTag}>
         <span className={styles.tagDot} />
-        Drag horizontally to carve
+        Small custom motifs
       </div>
     </div>
   );
@@ -120,7 +120,7 @@ export function StageRightScale() {
 
 export function StageMould() {
   const [pouring, setPouring] = useState(false);
-  const [fill, setFill] = useState(0);
+  const [, setFill] = useState(0);
   const [heat, setHeat] = useState(0);
   const rafRef = useRef<number>(0);
 
@@ -165,7 +165,7 @@ export function StageMould() {
       <div className={styles.artFrame} />
 
       <img
-        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/molds.png"
+        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/blue_pottery/08cdc369-b183-4143-9758-c4cb95d9770b/medium.webp"
         style={{
           position: "absolute",
           inset: 0,
@@ -186,11 +186,7 @@ export function StageMould() {
 
       <div className={styles.artTag}>
         <span className={styles.tagDot} />
-        {fill >= 1
-          ? "Cast complete"
-          : pouring
-            ? "Pouring molten gold\u2026"
-            : "Press and hold to pour"}
+        Moulds for motifs
       </div>
     </div>
   );
@@ -268,7 +264,7 @@ export function StageColors() {
       <div className={styles.artFrame} />
 
       <img
-        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/colors.jpeg"
+        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/blue_pottery/88ff9732-17ca-47dd-963b-82082f1474fb/medium.webp"
         style={{
           position: "absolute",
           inset: 0,
@@ -303,17 +299,13 @@ export function StageColors() {
 
       <div className={styles.artTag}>
         <span className={styles.tagDot} />
-        {placed
-          ? "Stone set \u00B7 2.4 ct Burmese ruby"
-          : "Drag the ruby into the bezel"}
+        Traditional metal oxide colors
       </div>
     </div>
   );
 }
 
 export function StageJewelryDesign() {
-  const [traced] = useState(0);
-
   return (
     <div className={styles.stageArt} style={{ cursor: "pointer" }}>
       <div className={`${styles.artCorner} ${styles.tl}`} />
@@ -334,9 +326,7 @@ export function StageJewelryDesign() {
       />
       <div className={styles.artTag}>
         <span className={styles.tagDot} />
-        {traced >= 0.99
-          ? "Engraved \u00B7 14 hours of handwork"
-          : "Press and trace the dotted path"}
+        Motifs being attached to the jewelry
       </div>
     </div>
   );
@@ -397,8 +387,8 @@ export function StageFinish() {
       />
 
       {/* Polished side */}
-      <img
-        src=""
+      <video
+        src="https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/craft_media_test/blue_pottery/50af6578-93cf-4e60-a679-52a6cc664b66/720p.mp4"
         style={{
           position: "absolute",
           inset: 0,
@@ -407,7 +397,10 @@ export function StageFinish() {
           objectFit: "cover",
           clipPath: `inset(0 0 0 ${split * 100}%)`,
         }}
-        alt=""
+        autoPlay
+        loop
+        muted
+        playsInline
       />
 
       {/* Slider handle */}
