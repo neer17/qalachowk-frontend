@@ -14,6 +14,7 @@ import { environments } from "@/utils/constants";
 import { useCart, useWishlist } from "@/context/CartContext";
 import { sendGAEvent } from "@next/third-parties/google";
 import { getProductImageUrl, isVideoImage } from "@/utils/productImages";
+import SplashScreen from "@/components/SplashScreen";
 
 const isProduction =
   process.env.NEXT_PUBLIC_ENVIRONMENT === environments.PRODUCTION;
@@ -377,6 +378,7 @@ export default function ProductDetailContent({
 
   return (
     <div className={styles.productDetailsContainer}>
+      <SplashScreen />
       {/* Product Overview Section */}
       <section className={styles.overviewGrid}>
         {/* Left: Product Image */}
