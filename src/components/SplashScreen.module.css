@@ -2,12 +2,11 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #fffaf5;
+  background: var(--bg);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  padding: 0 4vw;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -15,7 +14,22 @@
 }
 
 .wrapper.exiting {
-  animation: screenSlideUp 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+  animation: screenSlideUp 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.15s forwards;
+}
+
+.wrapper.exiting .item {
+  animation: itemSlideOut 0.32s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+}
+
+@keyframes itemSlideOut {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
 }
 
 @keyframes screenSlideUp {
@@ -27,18 +41,20 @@
   }
 }
 
-/* ── Content clip containers — each clips its child so the slide-up starts invisible ── */
 .clip {
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
-/* ── Individual element slide-up entrance ── */
 .item {
   opacity: 0;
   transform: translate3d(0, 100%, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  animation: itemSlideUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: itemSlideUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
 }
 
 @keyframes itemSlideUp {
@@ -52,67 +68,17 @@
   }
 }
 
-/* ── Staggered delays ── */
-.delay0 {
-  animation-delay: 0.1s;
-}
-.delay1 {
-  animation-delay: 0.3s;
-}
-.delay2 {
-  animation-delay: 0.52s;
-}
-.delay3 {
-  animation-delay: 0.7s;
-}
-
-/* ── Logo ── */
-.logo {
-  display: block;
-  margin-bottom: 28px;
-}
-
-/* ── Brand name ── */
 .name {
-  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: #6a2901;
+  font-family: var(--font-anton), "Anton", "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-size: clamp(4rem, 18vw, 22rem);
+  letter-spacing: 0.02em;
+  color: var(--magenta);
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 0.9;
   white-space: nowrap;
-}
-
-/* ── Divider ── */
-.divider {
-  width: 40px;
-  height: 1px;
-  background: #c8956c;
-  margin: 20px auto;
-  transform-origin: left;
-  transform: scaleX(0);
-  opacity: 0;
-  animation: dividerGrow 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.72s forwards;
-}
-
-@keyframes dividerGrow {
-  from {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-}
-
-/* ── Tagline ── */
-.tagline {
-  font-family: var(--font-dm-sans), "DM Sans", sans-serif;
-  font-size: clamp(0.65rem, 1.8vw, 0.78rem);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #a05920;
-  white-space: nowrap;
+  margin: 0;
+  text-shadow:
+    -0.06em 0.06em 0 var(--ink),
+    -0.12em 0.12em 0 var(--green);
 }

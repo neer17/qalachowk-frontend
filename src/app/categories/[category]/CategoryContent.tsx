@@ -43,7 +43,7 @@ export default function CategoryContent({
               cx="720"
               cy="190"
               r="200"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.11"
             />
@@ -51,7 +51,7 @@ export default function CategoryContent({
               cx="720"
               cy="190"
               r="145"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.08"
             />
@@ -59,13 +59,13 @@ export default function CategoryContent({
               cx="720"
               cy="190"
               r="90"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.06"
             />
             <polygon
               points="720,10 900,190 720,370 540,190"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.08"
               fill="none"
@@ -75,7 +75,7 @@ export default function CategoryContent({
               y1="10"
               x2="900"
               y2="370"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.3"
               opacity="0.05"
             />
@@ -84,7 +84,7 @@ export default function CategoryContent({
               y1="10"
               x2="540"
               y2="370"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.3"
               opacity="0.05"
             />

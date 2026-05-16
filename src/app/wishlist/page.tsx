@@ -58,7 +58,7 @@ export default function Wishlist() {
                 width="16"
                 height="16"
                 transform="rotate(45 24 2)"
-                stroke="#c8956c"
+                stroke="#D82788"
                 strokeWidth="0.5"
                 fill="none"
               />
@@ -68,7 +68,7 @@ export default function Wishlist() {
                 width="10"
                 height="10"
                 transform="rotate(45 24 6)"
-                stroke="#c8956c"
+                stroke="#D82788"
                 strokeWidth="0.5"
                 fill="none"
               />
@@ -77,7 +77,7 @@ export default function Wishlist() {
                 y1="2"
                 x2="24"
                 y2="46"
-                stroke="#c8956c"
+                stroke="#D82788"
                 strokeWidth="0.5"
                 strokeDasharray="2 3"
               />
@@ -86,7 +86,7 @@ export default function Wishlist() {
                 y1="24"
                 x2="46"
                 y2="24"
-                stroke="#c8956c"
+                stroke="#D82788"
                 strokeWidth="0.5"
                 strokeDasharray="2 3"
               />

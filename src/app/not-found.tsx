@@ -14,12 +14,12 @@ export default function NotFound() {
               y="10"
               width="44"
               height="44"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.8"
             />
             <polygon
               points="32,12 54,32 32,54 10,32"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.8"
               fill="none"
             />
@@ -27,7 +27,7 @@ export default function NotFound() {
               cx="32"
               cy="32"
               r="10"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.8"
               fill="none"
             />
@@ -36,7 +36,7 @@ export default function NotFound() {
               y1="10"
               x2="54"
               y2="54"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.4"
             />
             <line
@@ -44,7 +44,7 @@ export default function NotFound() {
               y1="10"
               x2="10"
               y2="54"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.4"
             />
           </svg>

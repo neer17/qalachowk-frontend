@@ -141,7 +141,7 @@ function OrderConfirmedContent() {
               cx="680"
               cy="290"
               r="260"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.12"
             />
@@ -149,7 +149,7 @@ function OrderConfirmedContent() {
               cx="680"
               cy="290"
               r="195"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.09"
             />
@@ -157,13 +157,13 @@ function OrderConfirmedContent() {
               cx="680"
               cy="290"
               r="130"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.07"
             />
             <polygon
               points="680,50 900,290 680,530 460,290"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.09"
               fill="none"
@@ -173,7 +173,7 @@ function OrderConfirmedContent() {
               y1="50"
               x2="900"
               y2="530"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.3"
               opacity="0.05"
             />
@@ -182,7 +182,7 @@ function OrderConfirmedContent() {
               y1="50"
               x2="460"
               y2="530"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.3"
               opacity="0.05"
             />
@@ -190,7 +190,7 @@ function OrderConfirmedContent() {
               cx="680"
               cy="290"
               r="44"
-              stroke="#C8956C"
+              stroke="#D82788"
               strokeWidth="0.5"
               opacity="0.13"
             />
@@ -252,26 +252,26 @@ function OrderConfirmedContent() {
                 cy="13"
                 rx="16"
                 ry="8"
-                stroke="#C8956C"
+                stroke="#D82788"
                 strokeWidth="1"
                 fill="none"
               />
               <path
                 d="M16 13 L4 5 L4 21 Z"
-                stroke="#C8956C"
+                stroke="#D82788"
                 strokeWidth="1"
                 fill="none"
               />
-              <circle cx="42" cy="10" r="2.5" fill="#C8956C" />
+              <circle cx="42" cy="10" r="2.5" fill="#D82788" />
               <path
                 d="M22 8 Q32 5 40 8"
-                stroke="#C8956C"
+                stroke="#D82788"
                 strokeWidth=".8"
                 fill="none"
               />
               <path
                 d="M22 18 Q32 21 40 18"
-                stroke="#C8956C"
+                stroke="#D82788"
                 strokeWidth=".8"
                 fill="none"
               />
@@ -291,7 +291,7 @@ function OrderConfirmedContent() {
                   height="14px"
                   viewBox="0 -960 960 960"
                   width="14px"
-                  fill="#C8956C"
+                  fill="#D82788"
                 >
                   <path d="M240-160q-50 0-85-35t-35-85H40v-440h520v140h260v240l-87 87q-15 41-51 67t-82 26q-46 0-82-26t-51-67H458q-15 41-51 67t-82 26Zm0-80q17 0 28.5-11.5T280-280q0-17-11.5-28.5T240-320q-17 0-28.5 11.5T200-280q0 17 11.5 28.5T240-240Zm400 0q17 0 28.5-11.5T680-280q0-17-11.5-28.5T640-320q-17 0-28.5 11.5T600-280q0 17 11.5 28.5T640-240ZM120-360h32q17-38 54-61t84-23q47 0 84 23t54 61h132v-360H120v360Zm560 0h34l66-66v-154H560v220h32q17-38 54-61t84-23q47 0 84 23Z" />
                 </svg>
@@ -348,7 +348,7 @@ function OrderConfirmedContent() {
                             height="20"
                             viewBox="0 0 36 36"
                             fill="none"
-                            stroke="#C8956C"
+                            stroke="#D82788"
                             strokeWidth=".75"
                           >
                             <rect

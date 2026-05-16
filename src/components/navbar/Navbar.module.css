@@ -5,53 +5,46 @@
   left: 0;
   right: 0;
   z-index: 200;
-  height: 64px;
+  height: 80px;
   display: flex;
   align-items: center;
   padding: 0 48px;
-  transition:
-    background 0.4s,
-    border-color 0.4s;
-  background: transparent;
-  border-bottom: 0.5px solid transparent;
+  background: var(--bg);
+  border-bottom: 0.5px solid var(--border);
 }
 
-.solid {
-  background: var(--p);
-  border-bottom-color: var(--bo);
-}
-
-/* Logo */
+/* Logo — layered "VIVID" echo: magenta fill + ink offset + mint green offset */
 .brandName {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: var(--font-cormorant-garamond), serif;
-  font-weight: 800;
-  font-size: 30px;
-  color: var(--p);
-  letter-spacing: 0.04em;
+  gap: 12px;
+  font-family: var(--font-anton), "Anton", "Bebas Neue", sans-serif;
+  font-weight: 400;
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--magenta);
+  text-shadow:
+    -2px 2px 0 #1a1a1a,
+    -4px 4px 0 var(--green);
   text-decoration: none;
   cursor: pointer;
-  transition: color 0.4s;
   white-space: nowrap;
+  padding-right: 6px;
+  transition: transform 0.3s ease;
+}
+
+.brandName:hover {
+  transform: translate(1px, -1px);
 }
 
 .brandLogo {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
   flex-shrink: 0;
   display: block;
-}
-
-.navbar.solid .brandLogo {
-  display: block;
   mix-blend-mode: multiply;
-}
-
-.navbar.solid .brandName {
-  color: var(--s);
 }
 
 /* Nav links — centered via absolute */
@@ -69,30 +62,18 @@
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 239, 230, 0.85);
+  color: var(--muted);
   text-decoration: none;
   transition: color 0.3s;
 }
 
-.navbar.solid .navLink {
-  color: var(--br);
-}
-
 .navLink:hover {
-  color: var(--p);
-}
-
-.navbar.solid .navLink:hover {
-  color: var(--s);
+  color: var(--ink);
 }
 
 .navLink.active {
-  color: var(--p);
-}
-
-.navbar.solid .navLink.active {
-  color: var(--s);
-  border-bottom: 1px solid var(--g);
+  color: var(--ink);
+  border-bottom: 1px solid var(--magenta);
   padding-bottom: 2px;
 }
 
@@ -107,7 +88,7 @@
 /* Icon buttons */
 .iconBtn {
   cursor: pointer;
-  color: var(--p);
+  color: var(--ink);
   transition: color 0.4s;
   display: flex;
   align-items: center;
@@ -117,19 +98,16 @@
   padding: 0;
 }
 
-.navbar.solid .iconBtn {
-  color: var(--s);
-}
-
 /* Cart badge */
 .cartBadge {
-  background: var(--t);
-  color: var(--p);
+  background: var(--magenta);
+  color: #ffffff;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 9px;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -150,8 +128,8 @@
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  background: var(--p);
-  border: 0.5px solid var(--bo);
+  background: var(--bg);
+  border: 0.5px solid var(--border);
   padding: 0.5rem 0;
   min-width: 150px;
   z-index: 100;
@@ -178,13 +156,13 @@
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--s);
+  color: var(--ink);
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .accountDropdown li:hover {
-  background-color: var(--l);
+  background-color: var(--surface);
 }
 
 /* ════ MOBILE ════ */
@@ -193,13 +171,9 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--p);
+  color: var(--ink);
   transition: color 0.4s;
   padding: 0;
-}
-
-.navbar.solid .mobileMenuButton {
-  color: var(--s);
 }
 
 .hamburgerIcon {
@@ -222,7 +196,7 @@
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-color: var(--p);
+  background-color: var(--bg);
   transform: translateX(-100%);
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
@@ -237,14 +211,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  border-bottom: 0.5px solid var(--bo);
+  border-bottom: 0.5px solid var(--border);
 }
 
 .menuTitle {
   font-family: var(--font-cormorant-garamond), serif;
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--s);
+  color: var(--ink);
 }
 
 .closeButton {
@@ -260,7 +234,7 @@
   position: absolute;
   width: 100%;
   height: 1.5px;
-  background-color: var(--s);
+  background-color: var(--ink);
   top: 50%;
   left: 0;
   transform-origin: center;
@@ -287,13 +261,13 @@
   text-transform: uppercase;
   font-size: 14px;
   text-decoration: none;
-  color: var(--s);
-  border-bottom: 0.5px solid var(--bo);
+  color: var(--ink);
+  border-bottom: 0.5px solid var(--border);
   transition: background 0.2s;
 }
 
 .menuItemMobile:hover {
-  background: var(--l);
+  background: var(--surface);
 }
 
 @media (max-width: 1024px) {

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import {
+  Anton,
   Cormorant_Garamond,
   DM_Sans,
+  Inter,
+  Kalam,
+  Patrick_Hand,
   Playfair_Display,
 } from "next/font/google";
 import "./globals.css";
@@ -44,6 +48,34 @@ const playfairDisplay = Playfair_Display({
   display: "swap",
 });
 
+const anton = Anton({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-anton",
+  display: "swap",
+});
+
+const kalam = Kalam({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-kalam",
+  display: "swap",
+});
+
+const patrickHand = Patrick_Hand({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-patrick-hand",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Gulchharre",
   description: "Gulchharre - Premium Indian E-commerce",
@@ -75,7 +107,7 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body
-        className={`${cormorantGaramond.variable} ${dmSans.variable} ${playfairDisplay.variable}`}
+        className={`${cormorantGaramond.variable} ${dmSans.variable} ${playfairDisplay.variable} ${anton.variable} ${kalam.variable} ${patrickHand.variable} ${inter.variable}`}
       >
         <MantineProvider theme={theme}>
           <AuthProvider>

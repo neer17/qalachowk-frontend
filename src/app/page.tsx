@@ -100,7 +100,7 @@ function ArtIcon({ art }: { art: "warli" | "madhubani" | "mandana" }) {
         height="36"
         viewBox="0 0 36 36"
         fill="none"
-        stroke="#C8956C"
+        stroke="#1A1A1A"
         strokeWidth=".75"
       >
         <circle cx="18" cy="9" r="5" fill="none" />
@@ -117,12 +117,12 @@ function ArtIcon({ art }: { art: "warli" | "madhubani" | "mandana" }) {
         height="36"
         viewBox="0 0 36 36"
         fill="none"
-        stroke="#C8956C"
+        stroke="#1A1A1A"
         strokeWidth=".75"
       >
         <ellipse cx="22" cy="18" rx="10" ry="7" fill="none" />
         <path d="M12 18 L4 11 L4 25 Z" fill="none" />
-        <circle cx="28" cy="15" r="2" fill="#C8956C" />
+        <circle cx="28" cy="15" r="2" fill="#D82788" />
       </svg>
     );
   }
@@ -132,7 +132,7 @@ function ArtIcon({ art }: { art: "warli" | "madhubani" | "mandana" }) {
       height="36"
       viewBox="0 0 36 36"
       fill="none"
-      stroke="#C8956C"
+      stroke="#1A1A1A"
       strokeWidth=".75"
     >
       <rect x="8" y="8" width="20" height="20" fill="none" />
@@ -340,8 +340,8 @@ export default function Home() {
                       width="14"
                       height="14"
                       viewBox="0 0 18 18"
-                      fill={inWish ? "#C8956C" : "none"}
-                      stroke="#1E1E1E"
+                      fill={inWish ? "#D82788" : "none"}
+                      stroke="#1A1A1A"
                       strokeWidth="1"
                     >
                       <path d="M15.5 3.7a4 4 0 0 0-5.7 0L9 4.5l-.8-.8a4 4 0 0 0-5.7 5.7l.8.8L9 16l5.7-5.8.8-.8a4 4 0 0 0 0-5.7z" />
@@ -428,26 +428,26 @@ export default function Home() {
               cy="13"
               rx="16"
               ry="8"
-              stroke="#C8956C"
+              stroke="#1A1A1A"
               strokeWidth="1"
               fill="none"
             />
             <path
               d="M16 13 L4 5 L4 21 Z"
-              stroke="#C8956C"
+              stroke="#1A1A1A"
               strokeWidth="1"
               fill="none"
             />
-            <circle cx="42" cy="10" r="2.5" fill="#C8956C" />
+            <circle cx="42" cy="10" r="2.5" fill="#D82788" />
             <path
               d="M22 8 Q32 5 40 8"
-              stroke="#C8956C"
+              stroke="#1A1A1A"
               strokeWidth=".8"
               fill="none"
             />
             <path
               d="M22 18 Q32 21 40 18"
-              stroke="#C8956C"
+              stroke="#1A1A1A"
               strokeWidth=".8"
               fill="none"
             />
@@ -471,10 +471,8 @@ export default function Home() {
       {/* ═══════ PILLARS ═══════ */}
       <section className={styles.pillarsSec}>
         <div className={styles.fu}>
-          <div className={styles.secLabel} style={{ color: "#c8956c" }}>
-            Our Ancestral Alphabet
-          </div>
-          <h2 className={styles.secTitle} style={{ color: "#F5F0E8" }}>
+          <div className={styles.secLabel}>Our Ancestral Alphabet</div>
+          <h2 className={styles.secTitle}>
             Three arts, <em>one lineage</em>
           </h2>
         </div>
@@ -486,7 +484,7 @@ export default function Home() {
                 height="38"
                 viewBox="0 0 38 38"
                 fill="none"
-                stroke="#C8956C"
+                stroke="#1A1A1A"
                 strokeWidth=".85"
               >
                 <circle cx="19" cy="8" r="5" />
@@ -516,12 +514,12 @@ export default function Home() {
                 height="38"
                 viewBox="0 0 38 38"
                 fill="none"
-                stroke="#C8956C"
+                stroke="#1A1A1A"
                 strokeWidth=".85"
               >
                 <ellipse cx="24" cy="19" rx="12" ry="7" />
                 <path d="M12 19 L4 12 L4 26 Z" />
-                <circle cx="31" cy="16" r="2" fill="#C8956C" />
+                <circle cx="31" cy="16" r="2" fill="#D82788" />
                 <path d="M16 13 Q24 10 31 13" strokeWidth=".75" />
                 <path d="M16 25 Q24 28 31 25" strokeWidth=".75" />
               </svg>
@@ -543,7 +541,7 @@ export default function Home() {
                 height="38"
                 viewBox="0 0 38 38"
                 fill="none"
-                stroke="#C8956C"
+                stroke="#1A1A1A"
                 strokeWidth=".85"
               >
                 <rect x="8" y="8" width="22" height="22" />

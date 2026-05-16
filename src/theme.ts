@@ -1,16 +1,16 @@
 import { createTheme, MantineColorsTuple, CSSProperties } from "@mantine/core";
 
 const brand: MantineColorsTuple = [
-  "#fdf0f3", // 0 - Crimson tint lightest
-  "#f7d5df", // 1 - Blush
-  "#eeafc0", // 2 - Rose
-  "#e484a0", // 3 - Medium rose
-  "#d15a7f", // 4 - Deep rose
-  "#b03060", // 5 - Burgundy
-  "#7d0531", // 6 - Primary crimson (button fill)
-  "#620428", // 7 - Deep crimson
-  "#49031e", // 8 - Very deep
-  "#300114", // 9 - Darkest
+  "#fdeaf2", // 0 - Magenta tint lightest
+  "#fad0e1", // 1 - Pale magenta
+  "#f5a3c5", // 2 - Soft magenta
+  "#ee76a8", // 3 - Medium magenta
+  "#e6498b", // 4 - Bright magenta
+  "#df3a83", // 5 - Vivid magenta
+  "#d82788", // 6 - Primary magenta (CTA fill, prices, accents)
+  "#b81e72", // 7 - Deep magenta
+  "#931659", // 8 - Plum
+  "#6d0f42", // 9 - Darkest magenta
 ];
 
 export const theme = createTheme({
@@ -28,8 +28,8 @@ export const theme = createTheme({
       h4: { fontSize: "1.25rem" },
     },
   },
-  black: "#1E1E1E",
-  white: "#FFFCF7",
+  black: "#1A1A1A",
+  white: "#FFFFFF",
   components: {
     Button: {
       defaultProps: {

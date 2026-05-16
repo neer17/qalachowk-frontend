@@ -1,38 +1,55 @@
 :root {
-  /* ── Core palette ── */
-  --s: #1e1e1e; /* Near-black — headings, title text */
-  --br: #6b6b6b; /* Medium gray — secondary/muted text */
-  --t: #c8956c; /* Warm Gold / accent */
-  --p: #f5f0e8; /* Warm off-white — background */
-  --l: #edeae2; /* Neutral linen — card/image surfaces */
-  --g: #b8860b; /* Dark Goldenrod / price */
-  --c: #1e1e1e; /* Near-black — body text */
-  --bo: #d5d0c8; /* Warm gray — borders */
+  /* ════════════════════════════════════════════════════════════════
+     GULCHHARRE DESIGN SYSTEM — Neutral + Magenta/Green Duotone
+     Magenta = commerce / affection (CTAs, prices, italic emphasis)
+     Green   = affirmation (active state, "new" badge, scroll line)
+     Black / white / grey carry everything else.
+     ════════════════════════════════════════════════════════════════ */
 
-  /* ── Button palette ── */
-  --btn: #7d0531; /* Deep crimson — button fills (primary CTA) */
-  --hover-outline: #b8860b; /* Gold — hover outline (complements crimson) */
+  /* ── Brand duotone accents ── */
+  --magenta: #d82788;
+  --green: #27d877;
+
+  /* ── Neutral system (new semantic names) ── */
+  --bg: #ffffff; /* Page background */
+  --surface: #f5f5f5; /* Tonal-break sections / elevated cards */
+  --ink: #1a1a1a; /* Headings, body, icons on light */
+  --muted: #6b6b6b; /* Secondary text, supporting copy */
+  --border: #e5e5e5; /* Hairlines, dividers */
+  --on-dark: #ffffff; /* Text + icons on dark surfaces */
+
+  /* ── Legacy aliases (kept so existing CSS modules keep working) ── */
+  --s: var(--ink); /* was near-black */
+  --c: var(--ink); /* was body text */
+  --p: var(--bg); /* was cream paper background */
+  --l: var(--surface); /* was lighter paper */
+  --br: var(--muted); /* was warm gray secondary */
+  --bo: var(--border); /* was bone border */
+  --t: var(--magenta); /* was warm gold accent → magenta */
+  --g: var(--magenta); /* was dark goldenrod price → magenta */
+  --btn: var(--magenta); /* was deep crimson CTA → magenta */
+  --hover-outline: var(--green); /* was gold hover → green */
 
   /* ── Extended palette ── */
-  --brand-primary: var(--s);
-  --brand-warm-white: var(--p);
+  --brand-primary: var(--ink);
+  --brand-warm-white: var(--bg);
 
   /* ── Semantic colors ── */
-  --text-muted: #888;
+  --text-muted: var(--muted);
   --color-danger: #c0392b;
-  --wishlist-hover-bg: #fff0f0;
-  --wishlist-hover-border: #e8a0a0;
+  --wishlist-hover-bg: #fdeaf2;
+  --wishlist-hover-border: var(--magenta);
 
   /* ── Borders (used by Mantine theme) ── */
-  --border-primary: var(--bo);
-  --border-focus: var(--s);
+  --border-primary: var(--border);
+  --border-focus: var(--ink);
 
   /* ── Transitions ── */
   --transition-fast: 0.2s ease;
 
   /* ── Layout ── */
-  --navbar-height: 64px;
-  --pageTopMargin: 64px;
+  --navbar-height: 80px;
+  --pageTopMargin: 80px;
 }
 
 html,
@@ -50,7 +67,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   .page {
-    padding-top: 64px;
+    padding-top: var(--navbar-height);
   }
 }
 
