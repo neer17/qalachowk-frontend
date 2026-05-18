@@ -2,33 +2,66 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: var(--bg);
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 4vw;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 100%, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   isolation: isolate;
+  animation: screenSlideIn 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .wrapper.exiting {
-  animation: screenSlideUp 0.5s cubic-bezier(0.76, 0, 0.24, 1) 0.15s forwards;
+  animation: screenSlideUp 0.85s cubic-bezier(0.76, 0, 0.24, 1) 0.72s both;
 }
 
-.wrapper.exiting .item {
-  animation: itemSlideOut 0.32s cubic-bezier(0.64, 0, 0.78, 0) forwards;
+@keyframes screenSlideIn {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-@keyframes itemSlideOut {
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 100%, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+  animation: charSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1)
+    calc(0.95s + var(--entry-delay, 0s)) forwards;
+}
+
+.wrapper.exiting .char {
+  animation: charSlideOut 0.4s cubic-bezier(0.64, 0, 0.78, 0)
+    var(--exit-delay, 0s) both;
+}
+
+@keyframes charSlideIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes charSlideOut {
   from {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
   to {
     opacity: 0;
-    transform: translate3d(0, -100%, 0);
+    transform: translate3d(0, -110%, 0);
   }
 }
 
@@ -49,35 +82,17 @@
   width: 100%;
 }
 
-.item {
-  opacity: 0;
-  transform: translate3d(0, 100%, 0);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  animation: itemSlideUp 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
-}
-
-@keyframes itemSlideUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 100%, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 .name {
   font-family: var(--font-anton), "Anton", "Bebas Neue", sans-serif;
   font-weight: 400;
-  font-size: clamp(4rem, 18vw, 22rem);
+  font-size: clamp(3.5rem, 13vw, 6rem);
   letter-spacing: 0.02em;
   color: var(--magenta);
   text-transform: uppercase;
   line-height: 0.9;
   white-space: nowrap;
   margin: 0;
+  text-align: center;
   text-shadow:
     -0.06em 0.06em 0 var(--ink),
     -0.12em 0.12em 0 var(--green);
