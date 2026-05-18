@@ -1,0 +1,105 @@
+.section {
+  padding: 72px 0 88px;
+  background: var(--bg);
+}
+
+.header {
+  padding: 0 64px;
+  margin-bottom: 40px;
+}
+
+.label {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--magenta);
+  margin-bottom: 10px;
+}
+
+.heading {
+  font-family: var(--font-cormorant-garamond), serif;
+  font-weight: 600;
+  font-size: clamp(28px, 3vw, 42px);
+  color: var(--ink);
+  line-height: 1.1;
+  margin: 0;
+}
+
+.heading em {
+  font-style: italic;
+  color: var(--magenta);
+}
+
+.holder {
+  position: relative;
+  height: 460px;
+  margin: 0 -43px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: top;
+  will-change: transform;
+}
+
+.item {
+  position: absolute;
+  width: 277px;
+  height: 383px;
+  flex-shrink: 0;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition:
+    box-shadow 0.25s,
+    border-color 0.25s;
+}
+
+.item:hover .card {
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+  border-color: var(--ink);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .holder {
+    height: 620px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 0 24px;
+  }
+
+  .item {
+    width: 206px;
+    height: 284px;
+  }
+}

@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Product } from "@/utils/types";
 import { getProductImageUrl } from "@/utils/productImages";
 import { ReviewsMarquee } from "@/components/reviews/ReviewsMarquee";
+import { CircularCards } from "@/components/circular_cards/CircularCards";
 import type { PublicReview } from "@/types/reviews";
 
 /* ════ STATIC PRODUCT DATA (fallback) ════ */
@@ -597,6 +598,9 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* ═══════ CIRCULAR CARDS ═══════ */}
+      <CircularCards />
 
       {/* ═══════ REVIEWS MARQUEE ═══════ */}
       <ReviewsMarquee reviews={reviews} />
