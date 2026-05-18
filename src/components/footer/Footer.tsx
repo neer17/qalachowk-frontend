@@ -7,12 +7,9 @@ export default function Footer() {
     <footer className={styles.footerContainer} data-purpose="main-footer">
       <div className={styles.container}>
         <div className={styles.grid}>
-          {/* Logo & Tagline */}
+          {/* Logo */}
           <div className={styles.brandColumn}>
             <h2 className={styles.logoText}>Gulchharre</h2>
-            <p className={styles.tagline}>
-              Preserving heritage through handcrafted excellence.
-            </p>
           </div>
 
           {/* Shop Links */}
@@ -51,26 +48,6 @@ export default function Footer() {
                 <Link href="/contact">Contact</Link>
               </li>
             </ul>
-          </div>
-
-          {/* Social & Newsletter */}
-          <div className={styles.newsletterColumn}>
-            <h4 className={styles.heading}>Join the Circle</h4>
-            <p className={styles.newsletterText}>
-              Subscribe for artisan stories and exclusive launches.
-            </p>
-            <div className={styles.inputGroup}>
-              <input
-                type="email"
-                placeholder="Email Address"
-                className={styles.input}
-              />
-              <button className={styles.button}>Join</button>
-            </div>
-            <div className={styles.socialLinks}>
-              <Link href="#">Instagram</Link>
-              <Link href="#">Pinterest</Link>
-            </div>
           </div>
         </div>
 

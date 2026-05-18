@@ -390,179 +390,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══════ EDITORIAL ═══════ */}
-      <section className={styles.editorial}>
-        <div className={styles.edPh}>
-          <video
-            src="https://player.vimeo.com/progressive_redirect/playback/1175431967/rendition/720p/file.mp4%20(720p).mp4?loc=external&log_user=0&signature=98d2c7062cb147ed82601f6798d076789456db8685478ca02a53d7120735785b"
-            autoPlay
-            muted
-            loop
-            playsInline
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center",
-            }}
-          />
-        </div>
-        <div className={styles.edScrim} />
-        <div className={`${styles.edContent} ${styles.fu}`}>
-          <div className={styles.edEyebrow}>The Craft Origin</div>
-          <h2 className={styles.edHeadline}>
-            Where the chowk
-            <br />
-            meets <em>the skin</em>
-          </h2>
-          {/* Fish motif */}
-          <svg
-            className={styles.fish}
-            width="52"
-            height="26"
-            viewBox="0 0 52 26"
-            fill="none"
-          >
-            <ellipse
-              cx="32"
-              cy="13"
-              rx="16"
-              ry="8"
-              stroke="#1A1A1A"
-              strokeWidth="1"
-              fill="none"
-            />
-            <path
-              d="M16 13 L4 5 L4 21 Z"
-              stroke="#1A1A1A"
-              strokeWidth="1"
-              fill="none"
-            />
-            <circle cx="42" cy="10" r="2.5" fill="#D82788" />
-            <path
-              d="M22 8 Q32 5 40 8"
-              stroke="#1A1A1A"
-              strokeWidth=".8"
-              fill="none"
-            />
-            <path
-              d="M22 18 Q32 21 40 18"
-              stroke="#1A1A1A"
-              strokeWidth=".8"
-              fill="none"
-            />
-          </svg>
-          <blockquote className={styles.edQuote}>
-            &ldquo;We don&rsquo;t wear jewellery.
-            <br />
-            We wear the memory of the earth.&rdquo;
-          </blockquote>
-          <p className={styles.edBody}>
-            Each piece begins not on a workbench, but in the oral tradition —
-            passed through artisan families who have guarded these folk arts for
-            generations.
-          </p>
-          <Link href="/craft" className={styles.btnGl}>
-            Read the Full Story →
-          </Link>
-        </div>
-      </section>
-
-      {/* ═══════ PILLARS ═══════ */}
-      <section className={styles.pillarsSec}>
-        <div className={styles.fu}>
-          <div className={styles.secLabel}>Our Ancestral Alphabet</div>
-          <h2 className={styles.secTitle}>
-            Three arts, <em>one lineage</em>
-          </h2>
-        </div>
-        <div className={styles.pillarsGrid}>
-          <div className={`${styles.pillar} ${styles.fu}`}>
-            <div className={styles.pillarIcon}>
-              <svg
-                width="38"
-                height="38"
-                viewBox="0 0 38 38"
-                fill="none"
-                stroke="#1A1A1A"
-                strokeWidth=".85"
-              >
-                <circle cx="19" cy="8" r="5" />
-                <line x1="19" y1="13" x2="19" y2="26" />
-                <line x1="12" y1="19" x2="26" y2="19" />
-                <polygon points="12,26 19,21 26,26" fill="none" />
-                <line x1="12" y1="26" x2="9" y2="34" />
-                <line x1="26" y1="26" x2="29" y2="34" />
-              </svg>
-            </div>
-            <div className={styles.pillarName}>Warli</div>
-            <div className={styles.pillarOrigin}>
-              Sahyadri Range, Maharashtra
-            </div>
-            <p className={styles.pillarDesc}>
-              Circles, triangles, lines — encoding the harmony of nature in its
-              purest geometric form.
-            </p>
-          </div>
-          <div
-            className={`${styles.pillar} ${styles.fu}`}
-            style={{ transitionDelay: ".1s" }}
-          >
-            <div className={styles.pillarIcon}>
-              <svg
-                width="38"
-                height="38"
-                viewBox="0 0 38 38"
-                fill="none"
-                stroke="#1A1A1A"
-                strokeWidth=".85"
-              >
-                <ellipse cx="24" cy="19" rx="12" ry="7" />
-                <path d="M12 19 L4 12 L4 26 Z" />
-                <circle cx="31" cy="16" r="2" fill="#D82788" />
-                <path d="M16 13 Q24 10 31 13" strokeWidth=".75" />
-                <path d="M16 25 Q24 28 31 25" strokeWidth=".75" />
-              </svg>
-            </div>
-            <div className={styles.pillarName}>Madhubani</div>
-            <div className={styles.pillarOrigin}>Mithila Region, Bihar</div>
-            <p className={styles.pillarDesc}>
-              Organic complexity celebrating divinity and the wild flora of the
-              Indian landscape.
-            </p>
-          </div>
-          <div
-            className={`${styles.pillar} ${styles.fu}`}
-            style={{ transitionDelay: ".2s" }}
-          >
-            <div className={styles.pillarIcon}>
-              <svg
-                width="38"
-                height="38"
-                viewBox="0 0 38 38"
-                fill="none"
-                stroke="#1A1A1A"
-                strokeWidth=".85"
-              >
-                <rect x="8" y="8" width="22" height="22" />
-                <polygon points="19,10 30,19 19,30 8,19" />
-                <circle cx="19" cy="19" r="4" />
-                <line x1="8" y1="8" x2="30" y2="30" strokeWidth=".5" />
-                <line x1="30" y1="8" x2="8" y2="30" strokeWidth=".5" />
-              </svg>
-            </div>
-            <div className={styles.pillarName}>Mandana</div>
-            <div className={styles.pillarOrigin}>Rajasthan</div>
-            <p className={styles.pillarDesc}>
-              Protective geometry from Rajasthan&rsquo;s walls — radial symmetry
-              inviting auspiciousness.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* ═══════ PROMISE ═══════ */}
       <div className={styles.promise}>
         <div className={`${styles.prItem} ${styles.fu}`}>
@@ -575,7 +402,7 @@ export default function Home() {
           className={`${styles.prItem} ${styles.fu}`}
           style={{ transitionDelay: ".1s" }}
         >
-          <div className={styles.prLabel}>3-Day Delivery</div>
+          <div className={styles.prLabel}>Free Delivery</div>
           <p className={styles.prText}>
             Across India, in luxury bamboo packaging
           </p>
@@ -613,7 +440,7 @@ export default function Home() {
       <section className={styles.emailSec}>
         <div className={styles.secLabel}>Join the Circle</div>
         <h2 className={styles.secTitle} style={{ marginBottom: "12px" }}>
-          Be the first to know
+          Expect silence — unless we create something extraordinary.
         </h2>
         <p className={styles.eSub}>
           Artisan stories, first access to new collections,
