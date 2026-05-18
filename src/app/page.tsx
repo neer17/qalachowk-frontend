@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart, useWishlist } from "@/context/CartContext";
@@ -211,21 +211,37 @@ export default function Home() {
     fetchFeatured();
   }, []);
 
-  /* Intersection Observer for fade-ups — re-runs when products load so new cards are observed */
+  /* Fade-up observer: created once, observes any new .fade-up elements on each
+     render so promise items observed on mount aren't disconnected when async
+     content (products, reviews) loads. */
+  const fadeObserverRef = useRef<IntersectionObserver | null>(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) e.target.classList.add(styles.vis);
+          if (e.isIntersecting) {
+            e.target.classList.add("fade-up-visible");
+            observer.unobserve(e.target);
+          }
         });
       },
       { threshold: 0.1 },
     );
-    document
-      .querySelectorAll(`.${styles.fu}`)
-      .forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [featuredProducts]);
+    fadeObserverRef.current = observer;
+    return () => {
+      observer.disconnect();
+      fadeObserverRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const observer = fadeObserverRef.current;
+    if (!observer) return;
+    document.querySelectorAll(".fade-up").forEach((el) => {
+      if (!el.classList.contains("fade-up-visible")) observer.observe(el);
+    });
+  }, [featuredProducts, reviews]);
 
   const handleAddToBag = (p: HomeProduct) => {
     setCartData({
@@ -284,20 +300,25 @@ export default function Home() {
         <div className={styles.heroScrim} />
         <div className={styles.heroContent}>
           <div>
-            <div className={styles.hEyebrow}>Handcrafted in Jaipur</div>
-            <h1 className={styles.hHeadline}>
+            <div className={`${styles.hEyebrow} fade-up`}>
+              Handcrafted in Jaipur
+            </div>
+            <h1 className={`${styles.hHeadline} fade-up`}>
               Where ancient
               <br />
               walls become
               <br />
               <em>jewels</em>
             </h1>
-            <p className={styles.hSub}>
+            <p className={`${styles.hSub} fade-up`}>
               Three living folk arts — Warli, Madhubani, Mandana — worn on the
               skin of the modern woman.
             </p>
             <div className={styles.hActions}>
-              <Link href="/categories/all" className={styles.btnLight}>
+              <Link
+                href="/collections/blue-pottery"
+                className={styles.btnLight}
+              >
                 Explore Collections
               </Link>
               <Link href="/craft" className={styles.btnGl}>
@@ -307,8 +328,10 @@ export default function Home() {
           </div>
           <div className={styles.hSide}>
             <div className={styles.hPill}>
-              <div className={styles.pillLbl}>Blue Pottery · Jaipur</div>
-              <div className={styles.pillV}>
+              <div className={`${styles.pillLbl} fade-up`}>
+                Blue Pottery · Jaipur
+              </div>
+              <div className={`${styles.pillV} fade-up`}>
                 Three folk traditions,
                 <br />
                 one lineage
@@ -336,10 +359,10 @@ export default function Home() {
 
       {/* ═══════ FAVOURITES ═══════ */}
       <section className={styles.sec}>
-        <div className={`${styles.secHdr} ${styles.fu}`}>
+        <div className={styles.secHdr}>
           <div>
-            <div className={styles.secLabel}>Favourites</div>
-            <h2 className={styles.secTitle}>
+            <div className={`${styles.secLabel} fade-up`}>Favourites</div>
+            <h2 className={`${styles.secTitle} fade-up`}>
               Pieces our patrons <em>cherish most</em>
             </h2>
           </div>
@@ -350,7 +373,7 @@ export default function Home() {
             return (
               <div
                 key={p.id}
-                className={`${styles.pcard} ${styles.fu}`}
+                className={styles.pcard}
                 onClick={() => handleCardClick(p)}
               >
                 {/* Image area */}
@@ -417,14 +440,14 @@ export default function Home() {
 
       {/* ═══════ PROMISE ═══════ */}
       <div className={styles.promise}>
-        <div className={`${styles.prItem} ${styles.fu}`}>
+        <div className={`${styles.prItem} fade-up`}>
           <div className={styles.prLabel}>Truly Handcrafted</div>
           <p className={styles.prText}>
             Every piece made by hand by artisans in Jaipur
           </p>
         </div>
         <div
-          className={`${styles.prItem} ${styles.fu}`}
+          className={`${styles.prItem} fade-up`}
           style={{ transitionDelay: ".1s" }}
         >
           <div className={styles.prLabel}>Free Delivery</div>
@@ -433,7 +456,7 @@ export default function Home() {
           </p>
         </div>
         <div
-          className={`${styles.prItem} ${styles.fu}`}
+          className={`${styles.prItem} fade-up`}
           style={{ transitionDelay: ".2s" }}
         >
           <div className={styles.prLabel}>Living Craft</div>
@@ -442,7 +465,7 @@ export default function Home() {
           </p>
         </div>
         <div
-          className={`${styles.prItem} ${styles.fu}`}
+          className={`${styles.prItem} fade-up`}
           style={{ transitionDelay: ".3s" }}
         >
           <div className={styles.prLabel}>Made with Intention</div>
@@ -465,18 +488,21 @@ export default function Home() {
       <section className={styles.emailSec}>
         {waitlistStatus === "success" ? (
           <>
-            <div className={styles.secLabel}>You&rsquo;re In</div>
-            <h2 className={styles.secTitle}>
+            <div className={`${styles.secLabel} fade-up`}>You&rsquo;re In</div>
+            <h2 className={`${styles.secTitle} fade-up`}>
               Welcome to the <em>founding circle</em>.
             </h2>
           </>
         ) : (
           <>
-            <div className={styles.secLabel}>Join the Circle</div>
-            <h2 className={styles.secTitle} style={{ marginBottom: "12px" }}>
+            <div className={`${styles.secLabel} fade-up`}>Join the Circle</div>
+            <h2
+              className={`${styles.secTitle} fade-up`}
+              style={{ marginBottom: "12px" }}
+            >
               Expect silence — unless we create something extraordinary.
             </h2>
-            <p className={styles.eSub}>
+            <p className={`${styles.eSub} fade-up`}>
               Artisan stories, first access to new collections,
               <br />
               and the occasional letter from Jaipur.

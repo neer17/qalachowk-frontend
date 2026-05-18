@@ -57,8 +57,8 @@ export function CircularCards() {
   return (
     <section className={styles.section} ref={sectionRef}>
       <div className={styles.header}>
-        <div className={styles.label}>The process</div>
-        <h2 className={styles.heading}>
+        <div className={`${styles.label} fade-up`}>The process</div>
+        <h2 className={`${styles.heading} fade-up`}>
           Failures <em>to Finish</em>
         </h2>
       </div>

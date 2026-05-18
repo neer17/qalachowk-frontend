@@ -38,8 +38,8 @@ export function ArtisanStories({ stories = STORIES }: ArtisanStoriesProps) {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <div className={styles.label}>Behind the piece</div>
-        <h2 className={styles.heading}>
+        <div className={`${styles.label} fade-up`}>Behind the piece</div>
+        <h2 className={`${styles.heading} fade-up`}>
           Artisan <em>Stories</em>
         </h2>
       </div>

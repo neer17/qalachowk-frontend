@@ -26,7 +26,10 @@ export default function CategoryContent({
   const titleCategory =
     displayCategory === "all"
       ? "The Artisan"
-      : displayCategory.charAt(0).toUpperCase() + displayCategory.slice(1);
+      : displayCategory
+          .split("-")
+          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+          .join(" ");
 
   return (
     <div className={styles.page}>
@@ -96,7 +99,7 @@ export default function CategoryContent({
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>
             <div className={styles.eyebrow}>
-              {displayCategory.toUpperCase()} Collection
+              {displayCategory.split("-").join(" ").toUpperCase()} Collection
             </div>
             <h1 className={styles.pageTitle}>
               {titleCategory} <em>Collection</em>

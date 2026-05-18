@@ -97,8 +97,8 @@ export function ReviewsMarquee({ reviews }: ReviewsMarqueeProps) {
   return (
     <section className={styles.section}>
       <div className={styles.header}>
-        <div className={styles.label}>What Our Customers Say</div>
-        <h2 className={styles.heading}>
+        <div className={`${styles.label} fade-up`}>What Our Customers Say</div>
+        <h2 className={`${styles.heading} fade-up`}>
           Worn with <em>love</em>
         </h2>
       </div>

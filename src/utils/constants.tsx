@@ -79,6 +79,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/products/categories",
     METHOD: "GET",
   },
+  COLLECTION_PRODUCTS_BY_SLUG: {
+    URL: "/v1/collections",
+    METHOD: "GET",
+  },
   SEND_OTP: {
     URL: "/v1/auth/send-otp",
     METHOD: "POST",
