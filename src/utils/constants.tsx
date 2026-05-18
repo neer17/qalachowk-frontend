@@ -131,6 +131,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/auth/me",
     METHOD: "GET",
   },
+  WAITLIST_SIGNUP: {
+    URL: "/v1/waitlist",
+    METHOD: "POST",
+  },
 };
 
 export const USER_ROLES = {

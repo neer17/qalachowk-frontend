@@ -12,6 +12,7 @@ import { ReviewsMarquee } from "@/components/reviews/ReviewsMarquee";
 import { CircularCards } from "@/components/circular_cards/CircularCards";
 import { ArtisanStories } from "@/components/artisan_stories/ArtisanStories";
 import type { PublicReview } from "@/types/reviews";
+import { WaitlistService } from "@/lib/api/waitlistService";
 
 /* ════ STATIC PRODUCT DATA (fallback) ════ */
 interface HomeProduct {
@@ -151,6 +152,30 @@ export default function Home() {
   const [featuredProducts, setFeaturedProducts] =
     useState<HomeProduct[]>(FALLBACK_PRODUCTS);
   const [reviews, setReviews] = useState<PublicReview[]>([]);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistHoney, setWaitlistHoney] = useState("");
+  const [waitlistStatus, setWaitlistStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [waitlistError, setWaitlistError] = useState("");
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (waitlistStatus === "loading") return;
+    setWaitlistStatus("loading");
+    setWaitlistError("");
+    const { ok, error } = await WaitlistService.signup({
+      email: waitlistEmail,
+      website: waitlistHoney,
+    });
+    if (!ok) {
+      setWaitlistStatus("error");
+      setWaitlistError(error || "Something went wrong.");
+      return;
+    }
+    setWaitlistStatus("success");
+    setWaitlistEmail("");
+  };
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -438,24 +463,64 @@ export default function Home() {
 
       {/* ═══════ EMAIL ═══════ */}
       <section className={styles.emailSec}>
-        <div className={styles.secLabel}>Join the Circle</div>
-        <h2 className={styles.secTitle} style={{ marginBottom: "12px" }}>
-          Expect silence — unless we create something extraordinary.
-        </h2>
-        <p className={styles.eSub}>
-          Artisan stories, first access to new collections,
-          <br />
-          and the occasional letter from Jaipur.
-        </p>
-        <div className={styles.eForm}>
-          <input
-            className={styles.eInput}
-            type="email"
-            placeholder="your@email.com"
-          />
-          <button className={styles.eBtn}>Notify Me</button>
-        </div>
-        <p className={styles.eNote}>No spam. Just craft.</p>
+        {waitlistStatus === "success" ? (
+          <>
+            <div className={styles.secLabel}>You&rsquo;re In</div>
+            <h2 className={styles.secTitle}>
+              Welcome to the <em>founding circle</em>.
+            </h2>
+          </>
+        ) : (
+          <>
+            <div className={styles.secLabel}>Join the Circle</div>
+            <h2 className={styles.secTitle} style={{ marginBottom: "12px" }}>
+              Expect silence — unless we create something extraordinary.
+            </h2>
+            <p className={styles.eSub}>
+              Artisan stories, first access to new collections,
+              <br />
+              and the occasional letter from Jaipur.
+            </p>
+            <form
+              className={styles.eForm}
+              onSubmit={handleWaitlistSubmit}
+              noValidate
+            >
+              <input
+                className={styles.eInput}
+                type="email"
+                placeholder="your@email.com"
+                value={waitlistEmail}
+                onChange={(e) => setWaitlistEmail(e.target.value)}
+                disabled={waitlistStatus === "loading"}
+                required
+                aria-label="Email address"
+              />
+              <input
+                className={styles.eHoneypot}
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                value={waitlistHoney}
+                onChange={(e) => setWaitlistHoney(e.target.value)}
+              />
+              <button
+                className={styles.eBtn}
+                type="submit"
+                disabled={waitlistStatus === "loading"}
+              >
+                {waitlistStatus === "loading" ? "Sending..." : "Notify Me"}
+              </button>
+            </form>
+            {waitlistError ? (
+              <p className={styles.eError}>{waitlistError}</p>
+            ) : (
+              <p className={styles.eNote}>No spam. Just craft.</p>
+            )}
+          </>
+        )}
       </section>
     </div>
   );
