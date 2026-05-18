@@ -151,6 +151,29 @@ export const environments = {
 
 export const GST_RATE = 0.03; // 3% GST on all jewellery/handicrafts (CGST 1.5% + SGST 1.5%)
 
+export const CIRCULAR_CARD_IMAGES: { id: string; imageUrl: string }[] = [
+  {
+    id: "cc-4",
+    imageUrl:
+      "https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/circular_cards/caba5809-c195-45fd-850e-32d083c0760b/small.webp",
+  },
+  {
+    id: "cc-3",
+    imageUrl:
+      "https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/circular_cards/fb3ffaa7-a9be-446f-ad6c-40707c87dbeb/small.webp",
+  },
+  {
+    id: "cc-2",
+    imageUrl:
+      "https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/circular_cards/c82ec471-77a4-4e2c-bf9e-bf71a55ec102/small.webp",
+  },
+  {
+    id: "cc-1",
+    imageUrl:
+      "https://fufjeihntairffrizntr.supabase.co/storage/v1/object/public/crafts_media/circular_cards/a9a68120-e664-4f9b-bad2-a4cf54f69209/small.webp",
+  },
+];
+
 export const collections = {
   BLUE_POTTERY: {
     RINGS: [

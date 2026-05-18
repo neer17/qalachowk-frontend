@@ -10,6 +10,7 @@ import { Product } from "@/utils/types";
 import { getProductImageUrl } from "@/utils/productImages";
 import { ReviewsMarquee } from "@/components/reviews/ReviewsMarquee";
 import { CircularCards } from "@/components/circular_cards/CircularCards";
+import { ArtisanStories } from "@/components/artisan_stories/ArtisanStories";
 import type { PublicReview } from "@/types/reviews";
 
 /* ════ STATIC PRODUCT DATA (fallback) ════ */
@@ -598,6 +599,9 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* ═══════ ARTISAN STORIES ═══════ */}
+      <ArtisanStories />
 
       {/* ═══════ CIRCULAR CARDS ═══════ */}
       <CircularCards />
