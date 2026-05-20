@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Shipping Policy | Gulchharre",
+  title: "Shipping Policy | QalaChowk",
   description:
     "Shipping and delivery information for orders placed on qalachowk.com, operated by QalaChowk Design Studio LLP.",
 };
@@ -33,7 +33,7 @@ export default function ShippingPolicy() {
             </p>
             <p>
               International shipping is not available at this time. We are
-              working to bring Gulchharre to the world — follow us for updates.
+              working to bring QalaChowk to the world — follow us for updates.
             </p>
           </div>
         </section>

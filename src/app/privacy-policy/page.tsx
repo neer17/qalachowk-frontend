@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Privacy Policy | Gulchharre",
+  title: "Privacy Policy | QalaChowk",
   description:
     "Privacy Policy of QalaChowk Design Studio LLP — how we collect, use, and protect your personal data.",
 };

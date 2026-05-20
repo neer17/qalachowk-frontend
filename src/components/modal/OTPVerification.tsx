@@ -44,7 +44,7 @@ export default function OTPModal({
       withCloseButton
     >
       <Box className={styles.container}>
-        <Text className={styles.logo}>QALA CHOWK</Text>
+        <Text className={styles.logo}>QALACHOWK</Text>
 
         <Text className={styles.heading}>Verify with OTP</Text>
 

@@ -134,7 +134,7 @@ const NavigationBar: React.FC = () => {
 
         {/* Logo — left on desktop, centered on mobile */}
         <Link href="/" className={styles.brandName}>
-          Gulchharre
+          QalaChowk
         </Link>
 
         {/* Nav links — centered via absolute positioning */}

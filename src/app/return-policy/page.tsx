@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Return & Refund Policy | Gulchharre",
+  title: "Return & Refund Policy | QalaChowk",
   description:
     "Return and Refund Policy for products purchased on qalachowk.com, operated by QalaChowk Design Studio LLP.",
 };

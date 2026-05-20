@@ -9,7 +9,7 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Logo */}
           <div className={styles.brandColumn}>
-            <h2 className={styles.logoText}>Gulchharre</h2>
+            <h2 className={styles.logoText}>QalaChowk</h2>
           </div>
 
           {/* Shop Links */}
@@ -52,7 +52,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.bottomBar}>
-          <p>© 2026 Gulchharre Handcrafted. All Rights Reserved.</p>
+          <p>© 2026 QalaChowk Handcrafted. All Rights Reserved.</p>
           <div className={styles.legalLinks}>
             <Link href="/privacy-policy">Privacy</Link>
             <Link href="/terms">Terms</Link>

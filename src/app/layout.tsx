@@ -77,8 +77,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Gulchharre",
-  description: "Gulchharre - Premium Indian E-commerce",
+  title: "QalaChowk",
+  description: "QalaChowk - Premium Indian E-commerce",
 };
 
 import Footer from "@/components/footer/Footer";

@@ -1,5 +1,5 @@
 export const BRAND = {
-  name: "Gulchharre",
+  name: "QalaChowk",
   tagline: "Preserving heritage through handcrafted excellence",
   gstin: "08AABFQ4036B1ZP",
   address:
