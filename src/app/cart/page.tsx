@@ -171,7 +171,13 @@ export default function CartPage() {
                   <span className={styles.summaryTotalPrice}>
                     ₹ {getTotalPrice().toLocaleString("en-IN")}
                   </span>
-                  <div className={styles.summaryGstNote}>Incl. 3% GST</div>
+                  <div className={styles.summaryGstNote}>
+                    Includes ₹{" "}
+                    {Math.round((getTotalPrice() * 3) / 103).toLocaleString(
+                      "en-IN",
+                    )}{" "}
+                    taxes
+                  </div>
                 </div>
               </div>
 
