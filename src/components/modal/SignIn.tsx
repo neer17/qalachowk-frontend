@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Modal, TextInput, Button, Text, Box } from "@mantine/core";
+import Image from "next/image";
+import Gulchharre from "@/assets/svgs/gulchharre.svg";
 import styles from "./SignIn.module.css";
 
 interface SignInModalProps {
@@ -54,7 +56,7 @@ export default function SignInModal({
       }}
     >
       <Box className={styles.container}>
-        <Text className={styles.logo}>QALACHOWK</Text>
+        <Image src={Gulchharre} alt="Gulchharre" className={styles.logoImg} />
 
         <Text className={styles.heading}>Hello there!</Text>
 

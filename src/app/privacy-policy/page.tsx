@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Privacy Policy | QalaChowk",
+  title: "Privacy Policy | Gulchharre",
   description:
     "Privacy Policy of QalaChowk Design Studio LLP — how we collect, use, and protect your personal data.",
 };
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
               </tr>
               <tr>
                 <td>Essential Cookies</td>
-                <td>QalaChowk</td>
+                <td>Gulchharre</td>
                 <td>
                   Session management, authentication tokens, cart persistence
                 </td>

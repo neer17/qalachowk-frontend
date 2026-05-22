@@ -1,6 +1,8 @@
 "use client";
 
 import { Modal, Text, Button, Box, PinInput, Group } from "@mantine/core";
+import Image from "next/image";
+import Gulchharre from "@/assets/svgs/gulchharre.svg";
 import styles from "./OTPVerification.module.css";
 import { useState } from "react";
 
@@ -44,7 +46,7 @@ export default function OTPModal({
       withCloseButton
     >
       <Box className={styles.container}>
-        <Text className={styles.logo}>QALACHOWK</Text>
+        <Image src={Gulchharre} alt="Gulchharre" className={styles.logoImg} />
 
         <Text className={styles.heading}>Verify with OTP</Text>
 

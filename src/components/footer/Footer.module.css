@@ -36,18 +36,21 @@
   text-align: center;
 }
 
-.logoText {
-  font-family: var(--font-anton), "Anton", "Bebas Neue", sans-serif;
-  font-size: 2.25rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+.logoLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 18px;
-  color: var(--magenta);
-  text-shadow:
-    -2px 2px 0 #ffffff,
-    -4px 4px 0 var(--green);
-  line-height: 1;
+  text-decoration: none;
+}
+
+.logoImg {
+  height: auto;
+  width: min(85%, 320px);
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 .tagline {
@@ -216,6 +219,9 @@
   }
   .legalLinks {
     margin-top: 0;
+  }
+  .logoImg {
+    width: min(100%, 420px);
   }
 }
 

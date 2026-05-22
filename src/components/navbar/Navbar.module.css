@@ -5,106 +5,146 @@
   left: 0;
   right: 0;
   z-index: 200;
-  height: 80px;
+  height: 72px;
   display: flex;
   align-items: center;
-  padding: 0 48px;
-  background: var(--bg);
-  border-bottom: 0.5px solid var(--border);
+  padding: 0 32px;
+  background: transparent;
+  border-bottom: 0.5px solid transparent;
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease;
 }
 
-/* Logo — layered "VIVID" echo: magenta fill + ink offset + mint green offset */
+.navbar.visible {
+  background: #ffffff;
+  border-bottom-color: var(--border);
+}
+
+/* ── Left: Menu trigger ── */
+.menuTrigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 10px 4px;
+  margin: 0;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  border-radius: 2px;
+  transition: color 0.2s ease;
+}
+
+.menuTrigger:hover {
+  color: var(--magenta);
+}
+
+.menuTrigger:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 4px;
+  color: var(--magenta);
+}
+
+.menuTriggerIcon {
+  position: relative;
+  width: 18px;
+  height: 12px;
+  display: inline-block;
+}
+
+.menuTriggerIcon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.menuTriggerIcon span:nth-child(1) {
+  top: 3px;
+}
+
+.menuTriggerIcon span:nth-child(2) {
+  bottom: 3px;
+}
+
+.menuTriggerLabel {
+  display: inline;
+}
+
+/* ── Center: Brand ── */
 .brandName {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-family: var(--font-anton), "Anton", "Bebas Neue", sans-serif;
-  font-weight: 400;
-  font-size: 40px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  color: var(--magenta);
-  text-shadow:
-    -2px 2px 0 #1a1a1a,
-    -4px 4px 0 var(--green);
   text-decoration: none;
   cursor: pointer;
-  white-space: nowrap;
-  padding-right: 6px;
   transition: transform 0.3s ease;
 }
 
 .brandName:hover {
-  transform: translate(1px, -1px);
+  transform: translateX(-50%) translateY(-1px);
 }
 
-.brandLogo {
-  width: 48px;
-  height: 48px;
-  object-fit: contain;
-  flex-shrink: 0;
+.brandLogoImg {
+  height: 44px;
+  width: auto;
+  max-width: min(45vw, 360px);
   display: block;
-  mix-blend-mode: multiply;
+  object-fit: contain;
 }
 
-/* Nav links — centered via absolute */
-.navLinks {
-  display: flex;
-  gap: 40px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.navLink {
-  font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.navLink:hover {
-  color: var(--ink);
-}
-
-.navLink.active {
-  color: var(--ink);
-  border-bottom: 1px solid var(--magenta);
-  padding-bottom: 2px;
-}
-
-/* Right actions */
+/* ── Right: Icons ── */
 .navRight {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 4px;
 }
 
-/* Icon buttons */
 .iconBtn {
   cursor: pointer;
   color: var(--ink);
-  transition: color 0.4s;
-  display: flex;
+  transition: color 0.2s ease;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   background: none;
   border: none;
-  padding: 0;
+  padding: 11px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 4px;
 }
 
-/* Cart badge */
+.iconBtn:hover {
+  color: var(--magenta);
+}
+
+.iconBtn:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+  color: var(--magenta);
+}
+
 .cartBadge {
   background: var(--magenta);
   color: #ffffff;
-  width: 16px;
+  min-width: 16px;
   height: 16px;
-  border-radius: 50%;
+  padding: 0 4px;
+  border-radius: 999px;
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 9px;
   font-weight: 600;
@@ -112,131 +152,84 @@
   align-items: center;
   justify-content: center;
   position: absolute;
-  top: -6px;
-  right: -8px;
+  top: 4px;
+  right: 4px;
   pointer-events: none;
 }
 
-/* Account dropdown */
-.actionButtonContainer {
-  position: relative;
-  display: flex;
-  align-items: center;
+/* ════ SLIDE-OUT MENU PANEL ════ */
+.menuBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.28);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+  z-index: 900;
 }
 
-.accountDropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  background: var(--bg);
-  border: 0.5px solid var(--border);
-  padding: 0.5rem 0;
-  min-width: 150px;
-  z-index: 100;
+.backdropOpen {
+  opacity: 1;
+  visibility: visible;
 }
 
-.accountDropdown::before {
-  content: "";
-  position: absolute;
-  top: -12px;
-  left: 0;
-  right: 0;
-  height: 12px;
-}
-
-.accountDropdown ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.accountDropdown li {
-  padding: 0.5rem 1rem;
-  font-family: var(--font-dm-sans), sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.accountDropdown li:hover {
-  background-color: var(--surface);
-}
-
-/* ════ MOBILE ════ */
-.mobileMenuButton {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--ink);
-  transition: color 0.4s;
-  padding: 0;
-}
-
-.hamburgerIcon {
-  width: 24px;
-  height: 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.hamburgerBar {
-  width: 100%;
-  height: 1.5px;
-  background-color: currentColor;
-}
-
-.mobileMenu {
+.menuPanel {
   position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
-  width: 100vw;
-  background-color: var(--bg);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease-in-out;
-  z-index: 1000;
-}
-
-.open {
-  transform: translateX(0);
-}
-
-.menuHeader {
+  width: 360px;
+  max-width: 86vw;
+  background: #f7f4ee;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px;
-  border-bottom: 0.5px solid var(--border);
+  flex-direction: column;
+  padding: 28px 36px 32px;
+  transform: translateX(-100%);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1000;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
-.menuTitle {
-  font-family: var(--font-cormorant-garamond), serif;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--ink);
+.menuPanelOpen {
+  transform: translateX(0);
+  box-shadow: 24px 0 48px -24px rgba(0, 0, 0, 0.18);
 }
 
+/* Close X */
 .closeButton {
+  align-self: flex-start;
   background: none;
   border: none;
   cursor: pointer;
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 44px;
+  height: 44px;
+  margin: -11px 0 25px -11px;
+  color: var(--ink);
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: var(--magenta);
+}
+
+.closeButton:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 2px;
+  color: var(--magenta);
 }
 
 .closeBar {
   position: absolute;
-  width: 100%;
-  height: 1.5px;
-  background-color: var(--ink);
+  width: 22px;
+  height: 1px;
+  background-color: currentColor;
   top: 50%;
-  left: 0;
+  left: 50%;
+  margin-left: -11px;
   transform-origin: center;
 }
 
@@ -248,49 +241,157 @@
   transform: rotate(-45deg);
 }
 
-.menuItemsMobile {
+/* Menu items */
+.menuList {
   display: flex;
   flex-direction: column;
+  gap: 6px;
+  flex: 1;
 }
 
-.menuItemMobile {
-  padding: 16px 24px;
-  font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  font-size: 15px;
-  text-decoration: none;
+.menuItem {
+  position: relative;
+  font-family: var(--font-cormorant-garamond), serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: 0.005em;
   color: var(--ink);
-  border-bottom: 0.5px solid var(--border);
-  transition: background 0.2s;
+  text-decoration: none;
+  padding: 6px 0 6px 18px;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: color 0.2s ease;
 }
 
-.menuItemMobile:hover {
-  background: var(--surface);
+.menuPanelOpen .menuItem {
+  animation: menuItemEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(180ms + var(--idx, 0) * 70ms);
 }
 
-@media (max-width: 1024px) {
+.menuItem:hover,
+.menuItemActive {
+  color: var(--magenta);
+}
+
+.menuItem:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 4px;
+  color: var(--magenta);
+  border-radius: 2px;
+}
+
+.menuItemDot {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--magenta);
+  transform: translateY(-50%) scale(0);
+  transition: transform 0.25s ease;
+}
+
+.menuItem:hover .menuItemDot,
+.menuItemActive .menuItemDot {
+  transform: translateY(-50%) scale(1);
+}
+
+/* Footer */
+.menuFooter {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 0.5px solid rgba(26, 26, 26, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(-12px);
+}
+
+.menuPanelOpen .menuFooter {
+  animation: menuItemEnter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(180ms + var(--idx, 0) * 70ms);
+}
+
+.menuFooterLink {
+  background: none;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.menuFooterLink:hover {
+  color: var(--magenta);
+}
+
+.menuFooterLink:focus-visible {
+  outline: 2px solid var(--magenta);
+  outline-offset: 4px;
+  color: var(--magenta);
+}
+
+@keyframes menuItemEnter {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .menuPanel {
+    transition: transform 0.01s linear;
+  }
+  .menuPanelOpen .menuItem,
+  .menuPanelOpen .menuFooter {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 768px) {
   .navbar {
-    padding: 0 24px;
+    padding: 0 18px;
+    height: 64px;
   }
 
-  .navLinks {
+  .brandLogoImg {
+    height: 28px;
+    max-width: 46vw;
+  }
+
+  .brandName {
+    left: 40%;
+  }
+
+  .menuTriggerLabel {
     display: none;
   }
 
-  .mobileMenuButton {
-    display: flex;
-  }
-
-  /* Center the logo on mobile */
-  .brandName {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-60%);
-  }
-
   .navRight {
-    gap: 10px;
+    gap: 2px;
+  }
+
+  .menuPanel {
+    width: 320px;
+    padding: 24px 28px 28px;
+  }
+
+  .menuItem {
+    font-size: 26px;
   }
 }

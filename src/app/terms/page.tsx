@@ -1,7 +1,7 @@
 import styles from "@/styles/legal.module.css";
 
 export const metadata = {
-  title: "Terms & Conditions | QalaChowk",
+  title: "Terms & Conditions | Gulchharre",
   description:
     "Terms and Conditions governing the use of qalachowk.com, operated by QalaChowk Design Studio LLP.",
 };
