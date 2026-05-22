@@ -47,30 +47,30 @@ export default function CategoryContent({
               cy="190"
               r="200"
               stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.11"
+              strokeWidth="0.75"
+              opacity="0.22"
             />
             <circle
               cx="720"
               cy="190"
               r="145"
               stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.08"
+              strokeWidth="0.75"
+              opacity="0.16"
             />
             <circle
               cx="720"
               cy="190"
               r="90"
               stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.06"
+              strokeWidth="0.75"
+              opacity="0.12"
             />
             <polygon
               points="720,10 900,190 720,370 540,190"
               stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.08"
+              strokeWidth="0.75"
+              opacity="0.16"
               fill="none"
             />
             <line
@@ -79,8 +79,8 @@ export default function CategoryContent({
               x2="900"
               y2="370"
               stroke="#D82788"
-              strokeWidth="0.3"
-              opacity="0.05"
+              strokeWidth="0.5"
+              opacity="0.1"
             />
             <line
               x1="900"
@@ -88,13 +88,11 @@ export default function CategoryContent({
               x2="540"
               y2="370"
               stroke="#D82788"
-              strokeWidth="0.3"
-              opacity="0.05"
+              strokeWidth="0.5"
+              opacity="0.1"
             />
           </svg>
         </div>
-
-        <div className={styles.headerScrim} />
 
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>

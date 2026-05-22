@@ -211,7 +211,7 @@
 
 /* Price display */
 .qc-price {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 17px;
   color: var(--g);
 }

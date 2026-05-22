@@ -202,7 +202,7 @@
 }
 
 .summaryTotalPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--g);
@@ -398,7 +398,7 @@
   }
 
   .mobileTotalPrice {
-    font-family: var(--font-cormorant-garamond), serif;
+    font-family: var(--font-dm-sans), sans-serif;
     font-size: 20px;
     font-weight: 600;
     color: var(--g);

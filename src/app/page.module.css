@@ -407,7 +407,7 @@
   justify-content: space-between;
 }
 .pcPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 16px;
   color: var(--magenta);
   font-weight: 700;

@@ -376,7 +376,7 @@
 }
 
 .itemPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 15px;
   color: var(--g);
   font-weight: 600;
@@ -439,13 +439,13 @@
 }
 
 .pricingValue {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 15px;
   color: var(--c);
 }
 
 .pricingFree {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-style: italic;
   font-size: 14px;
   color: var(--t);
@@ -467,7 +467,7 @@
 }
 
 .totalValue {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-weight: 600;
   font-size: 20px;
   color: var(--g);

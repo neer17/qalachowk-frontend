@@ -865,7 +865,7 @@ export default function Checkout() {
                   <circle cx="4" cy="12" r="1" />
                   <circle cx="9" cy="12" r="1" />
                 </svg>
-                <span>Delivered in 3 days across India</span>
+                <span>Free & Fast Shipping</span>
               </div>
               <div className={styles.assuranceItem}>
                 <svg
@@ -881,7 +881,7 @@ export default function Checkout() {
                   <path d="M5 5V4a2 2 0 0 1 4 0v1" />
                   <circle cx="7" cy="9" r="1" fill="var(--t)" />
                 </svg>
-                <span>Luxury bamboo gift packaging included</span>
+                <span>Plastic free keepsake packaging</span>
               </div>
             </div>
           </div>

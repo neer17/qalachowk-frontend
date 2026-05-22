@@ -51,8 +51,9 @@ export default async function ProductDetailPage({
     notFound();
   }
 
-  const similarProducts = product.collectionId
-    ? await getSimilarProducts(product.collectionId)
+  const primaryCollectionId = product.collectionIds?.[0];
+  const similarProducts = primaryCollectionId
+    ? await getSimilarProducts(primaryCollectionId)
     : [];
 
   return (

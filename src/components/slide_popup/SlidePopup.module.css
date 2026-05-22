@@ -110,7 +110,7 @@ body.no-scroll {
 }
 
 .amountValue {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--g);
@@ -144,7 +144,7 @@ body.no-scroll {
 }
 
 .checkoutBtnPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 14px;
   opacity: 0.8;
 }
