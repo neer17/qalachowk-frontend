@@ -164,10 +164,10 @@
 .pillV {
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--bg);
-  opacity: 0.85;
-  line-height: 1.4;
+  opacity: 0.95;
+  line-height: 1.45;
 }
 .scrollH {
   writing-mode: vertical-rl;
@@ -394,10 +394,9 @@
 }
 .pcDesc {
   font-family: var(--font-cormorant-garamond), serif;
-  font-style: italic;
-  font-size: 14px;
+  font-size: 15px;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 12px;
   font-weight: 500;
 }
@@ -597,10 +596,10 @@
 }
 .prText {
   font-family: var(--font-cormorant-garamond), serif;
-  font-style: italic;
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* ════ EMAIL ════ */

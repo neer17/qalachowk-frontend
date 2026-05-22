@@ -97,9 +97,9 @@
 .productTitle {
   font-family: var(--font-cormorant-garamond), serif;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--s);
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .productPrice {
@@ -182,9 +182,9 @@
 /* ── Inline CTA (appears on hover) ── */
 .pcCta {
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.12em;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--s);
   background: none;

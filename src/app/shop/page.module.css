@@ -60,9 +60,9 @@
 }
 
 .pageSubtitle {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--br);
-  line-height: 1.7;
+  line-height: 1.65;
   max-width: 440px;
   margin: 0;
 }
@@ -77,9 +77,9 @@
 }
 
 .pillLabel {
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   color: var(--t);
   margin-bottom: 8px;
 }
@@ -211,7 +211,7 @@
 }
 
 .loadingText {
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--t);

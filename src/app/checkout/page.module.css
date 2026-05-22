@@ -153,7 +153,7 @@
 .couponInput::placeholder {
   text-transform: none;
   letter-spacing: 0;
-  opacity: 0.6;
+  opacity: 0.8;
   color: var(--br);
   font-weight: 400;
 }

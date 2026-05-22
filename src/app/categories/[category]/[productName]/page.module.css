@@ -188,11 +188,11 @@
 }
 
 .productProse {
-  font-family: var(--font-dm-sans), sans-serif;
+  font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
-  font-size: 16px;
+  font-size: 18px;
   color: var(--br);
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .actionsContainer {
@@ -452,11 +452,11 @@
   color: var(--s);
 }
 .craftStepDesc {
-  font-family: var(--font-dm-sans), sans-serif;
+  font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
-  font-size: 15px;
+  font-size: 17px;
   color: var(--br);
-  line-height: 1.7;
+  line-height: 1.65;
   padding: 0 16px;
 }
 
