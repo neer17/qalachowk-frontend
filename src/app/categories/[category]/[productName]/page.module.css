@@ -76,7 +76,6 @@
 
 .emblaThumbsContainer {
   display: flex;
-  margin-left: -10px;
 }
 
 .emblaThumbsSlide {
@@ -99,7 +98,7 @@
 }
 
 .emblaThumbsSlideSelected {
-  border-color: var(--s);
+  border-color: var(--t);
 }
 
 .mobileImageCarousel {
@@ -181,7 +180,7 @@
 
 .productPrice {
   font-family: var(--font-dm-sans), sans-serif;
-  color: var(--s);
+  color: var(--t);
   font-size: 22px;
   margin-top: 8px;
   font-weight: 600;

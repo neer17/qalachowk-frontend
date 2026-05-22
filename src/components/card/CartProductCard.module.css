@@ -76,7 +76,7 @@ a.imageContainer:hover {
 .productPrice {
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 18px;
-  color: var(--s);
+  color: var(--t);
   margin: 0;
 }
 
