@@ -35,67 +35,6 @@ export default function CategoryContent({
     <div className={styles.page}>
       {/* EDITORIAL HEADER */}
       <section className={styles.header}>
-        <div className={styles.headerBg}>
-          <svg
-            className={styles.headerBgSvg}
-            viewBox="0 0 900 380"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle
-              cx="720"
-              cy="190"
-              r="200"
-              stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.11"
-            />
-            <circle
-              cx="720"
-              cy="190"
-              r="145"
-              stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.08"
-            />
-            <circle
-              cx="720"
-              cy="190"
-              r="90"
-              stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.06"
-            />
-            <polygon
-              points="720,10 900,190 720,370 540,190"
-              stroke="#D82788"
-              strokeWidth="0.5"
-              opacity="0.08"
-              fill="none"
-            />
-            <line
-              x1="540"
-              y1="10"
-              x2="900"
-              y2="370"
-              stroke="#D82788"
-              strokeWidth="0.3"
-              opacity="0.05"
-            />
-            <line
-              x1="900"
-              y1="10"
-              x2="540"
-              y2="370"
-              stroke="#D82788"
-              strokeWidth="0.3"
-              opacity="0.05"
-            />
-          </svg>
-        </div>
-
-        <div className={styles.headerScrim} />
-
         <div className={styles.headerContent}>
           <div className={styles.headerLeft}>
             <div className={styles.eyebrow}>

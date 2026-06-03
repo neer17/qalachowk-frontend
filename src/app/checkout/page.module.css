@@ -3,7 +3,9 @@
   background-color: var(--p);
   min-height: calc(100vh - var(--navbar-height));
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 /* ── Progress Steps ── */
@@ -21,11 +23,11 @@
   align-items: center;
   gap: 10px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--br);
-  opacity: 0.45;
+  opacity: 0.55;
   transition: opacity 0.3s;
 }
 
@@ -96,10 +98,10 @@
 }
 
 .formSectionNum {
-  font-family: var(--font-cormorant-garamond), serif;
-  font-style: italic;
-  font-size: 13px;
-  color: var(--t);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--s);
   width: 28px;
   height: 28px;
   border: 0.5px solid var(--bo);
@@ -118,11 +120,9 @@
 }
 
 .formSectionSub {
-  font-family: var(--font-cormorant-garamond), serif;
-  font-style: italic;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 13px;
   color: var(--br);
-  opacity: 0.7;
   margin-left: auto;
 }
 
@@ -141,20 +141,20 @@
   border-radius: 4px 0 0 4px;
   padding: 12px 14px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 14px;
+  font-weight: 400;
+  font-size: 15px;
   color: var(--c);
   outline: none;
   transition: border-color 0.2s;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
 .couponInput::placeholder {
   text-transform: none;
   letter-spacing: 0;
-  opacity: 0.55;
-  color: var(--t);
+  opacity: 0.8;
+  color: var(--br);
   font-weight: 400;
 }
 
@@ -166,11 +166,11 @@
   background: var(--l);
   border: 0.5px solid var(--bo);
   border-radius: 0 4px 4px 0;
-  padding: 12px 20px;
+  padding: 12px 22px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--s);
   cursor: pointer;
@@ -190,10 +190,10 @@
 }
 
 .couponMsg {
-  margin-top: 8px;
+  margin-top: 10px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums lining-nums;
 }
 
 /* Payment options */
@@ -257,8 +257,7 @@
 
 .payLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  font-size: 15px;
   color: var(--s);
   flex: 1;
 }
@@ -272,8 +271,8 @@
 
 .payIconTag {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--br);
   background: var(--l);
@@ -291,10 +290,11 @@
   padding: 17px;
   margin-top: 32px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  letter-spacing: 0.18em;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
   cursor: pointer;
   transition: background 0.2s;
   display: flex;
@@ -319,13 +319,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: 14px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.1em;
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--br);
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
 /* ── Right: Summary Side ── */
@@ -356,12 +356,11 @@
 
 .summaryCount {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--br);
-  opacity: 0.6;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .summaryItems {
@@ -422,8 +421,8 @@
 .bundleThresholdCard {
   margin: 6px 0 0 0;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 11px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.55;
   color: var(--br);
 }
 
@@ -445,25 +444,30 @@
 
 .totalLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 14px;
   color: var(--br);
 }
 
 .totalVal {
-  font-family: var(--font-cormorant-garamond), serif;
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum", "lnum";
   color: var(--s);
 }
 
 .totalValDiscount {
-  font-weight: 700;
-  font-size: 17px;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 .totalValItalic {
+  font-family: var(--font-dm-sans), sans-serif;
   font-style: italic;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 0.005em;
   color: var(--br);
 }
 
@@ -476,28 +480,29 @@
 
 .totalLabelGrand {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.1em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--s);
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .totalValGrand {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 22px;
   font-weight: 600;
-  color: var(--g);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum", "lnum";
+  letter-spacing: -0.01em;
+  color: var(--s);
   display: block;
   text-align: right;
 }
 
 .totalNote {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
   color: var(--br);
-  opacity: 0.6;
   margin-top: 4px;
   text-align: right;
 }
@@ -520,8 +525,7 @@
   align-items: center;
   gap: 12px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  font-size: 14px;
   color: var(--br);
 }
 

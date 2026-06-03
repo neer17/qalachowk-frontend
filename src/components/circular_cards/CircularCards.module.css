@@ -98,6 +98,10 @@
     padding: 0 24px;
   }
 
+  .holder {
+    touch-action: pan-y;
+  }
+
   .item {
     width: 206px;
     height: 284px;

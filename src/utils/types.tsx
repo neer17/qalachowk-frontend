@@ -52,7 +52,7 @@ export interface Product {
   category: Category;
   imageSizes?: string;
   slug: string;
-  collectionId?: string;
+  collectionIds?: string[];
   merchandising?: ProductMerchandising;
 }
 

@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./Footer.module.css";
 import Link from "next/link";
+import Image from "next/image";
+import Gulchharre from "@/assets/svgs/gulchharre.svg";
 
 export default function Footer() {
   return (
@@ -9,7 +11,13 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Logo */}
           <div className={styles.brandColumn}>
-            <h2 className={styles.logoText}>Gulchharre</h2>
+            <Link href="/" aria-label="Gulchharre" className={styles.logoLink}>
+              <Image
+                src={Gulchharre}
+                alt="Gulchharre"
+                className={styles.logoImg}
+              />
+            </Link>
           </div>
 
           {/* Shop Links */}

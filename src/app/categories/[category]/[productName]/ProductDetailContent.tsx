@@ -5,7 +5,6 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import Image from "next/image";
 import ScrollbarCarouselCards from "@/components/card/ScrollbarCarouselCards";
-import RegularCard from "@/components/card/Card";
 import SlidePopup from "@/components/slide_popup/SlidePopup";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaCarouselType } from "embla-carousel";
@@ -606,7 +605,7 @@ export default function ProductDetailContent({
                 <path d="M9 2L11 7L16 9L11 11L9 16L7 11L2 9L7 7L9 2Z" />
               </svg>
             </span>
-            <span>Know how your jewellery was made</span>
+            <span>See how your jewellery was made</span>
             <span className={styles.craftJourneyArrow}>&rarr;</span>
           </Link>
 
@@ -747,6 +746,24 @@ export default function ProductDetailContent({
         </div>
       </div>
 
+      {(() => {
+        const relatedProducts = similarProducts.filter(
+          (p) => p.id !== product?.id && p.images?.length > 0,
+        );
+        if (relatedProducts.length === 0) return null;
+        return (
+          <section className={styles.relatedSection}>
+            <div className={styles.bundleHeader}>
+              <span className={styles.bundleEyebrow}>From this collection</span>
+            </div>
+            <ScrollbarCarouselCards
+              products={relatedProducts}
+              imageSizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 83vw"
+            />
+          </section>
+        );
+      })()}
+
       {product.merchandising?.completeTheLook?.length ? (
         <section className={styles.completeLookSection}>
           <div className={styles.bundleHeader}>
@@ -766,50 +783,6 @@ export default function ProductDetailContent({
           </div>
         </section>
       ) : null}
-
-      {similarProducts.filter(
-        (p) => p.id !== product?.id && p.images?.length > 0,
-      ).length > 0 && (
-        <div className={styles.moreProductsLargerScreen}>
-          <h2>More from this collection</h2>
-          <div className={styles.moreProductsCardsWrapper}>
-            {similarProducts
-              .filter((p) => p.id !== product?.id && p.images?.length > 0)
-              .map((similarProduct) => (
-                <div
-                  className={styles.moreProductsCardContainer}
-                  key={similarProduct.id}
-                >
-                  <Link
-                    href={`/categories/${similarProduct.category.slug}/${similarProduct.slug}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <RegularCard
-                      productDescription={similarProduct.name}
-                      price={similarProduct.price}
-                      sizes="20vw"
-                      imageName={similarProduct.name}
-                      imageSrc={getProductImageUrl(
-                        similarProduct.images[0],
-                        "medium",
-                      )}
-                    />
-                  </Link>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
-
-      {similarProducts.filter((p) => p.id !== product?.id).length > 0 && (
-        <div className={styles.moreProductsSmallerScreen}>
-          <h2>More from this collection</h2>
-          <ScrollbarCarouselCards
-            products={similarProducts.filter((p) => p.id !== product?.id)}
-            imageSizes="(min-width: 768px) 100vw 50vw"
-          />
-        </div>
-      )}
 
       <SlidePopup
         isOpen={showCartPopup}

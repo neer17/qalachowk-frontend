@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
               </tr>
               <tr>
                 <td>Essential Cookies</td>
-                <td>QalaChowk</td>
+                <td>Gulchharre</td>
                 <td>
                   Session management, authentication tokens, cart persistence
                 </td>

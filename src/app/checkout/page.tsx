@@ -28,6 +28,72 @@ import {
   ProductService,
 } from "@/lib/api/productService";
 
+interface RazorpayCheckoutResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: "INR";
+  name: string;
+  description: string;
+  order_id: string;
+  prefill: {
+    name: string;
+    email?: string;
+    contact?: string;
+  };
+  notes?: Record<string, string>;
+  theme?: { color: string };
+  handler: (response: RazorpayCheckoutResponse) => void;
+  modal?: { ondismiss?: () => void };
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+  }
+}
+
+class PaymentCancelledError extends Error {
+  constructor() {
+    super("Payment was cancelled");
+    this.name = "PaymentCancelledError";
+  }
+}
+
+function loadRazorpayCheckout(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (window.Razorpay) {
+      resolve();
+      return;
+    }
+
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+    );
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener(
+        "error",
+        () => reject(new Error("Unable to load payment checkout")),
+        { once: true },
+      );
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Unable to load payment checkout"));
+    document.body.appendChild(script);
+  });
+}
+
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
   const { login, user: authUser } = useAuth();
@@ -50,7 +116,6 @@ export default function Checkout() {
 
   const [isStateLoaded] = useState(true);
 
-  const [selectedPayment, setSelectedPayment] = useState<string>("upi");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [cartRecommendations, setCartRecommendations] =
     useState<CartRecommendationsResponse>({
@@ -59,6 +124,7 @@ export default function Checkout() {
 
   const formRef = useRef<DeliveryFormRef>(null);
   const checkoutTracked = useRef(false);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   // Timer effect
   useEffect(() => {
@@ -155,6 +221,12 @@ export default function Checkout() {
 
     void loadCartRecommendations();
   }, [cartData]);
+
+  // Any cart change invalidates the in-flight idempotency key — the backend
+  // would otherwise return the prior CREATED PaymentAttempt with stale items.
+  useEffect(() => {
+    idempotencyKeyRef.current = null;
+  }, [cartData, appliedDiscountCode, appliedDiscountResponse]);
 
   const handleDeleteItem = async (id: string) => {
     await deleteCartData(id);
@@ -365,6 +437,7 @@ export default function Checkout() {
         country: ACTIVE_COUNTRIES.INDIA,
         pinCode: shippingPinCode || "",
         phone: shippingPhone,
+        countryCode: "+91",
       };
       let billingAddressObj;
       if (useDifferentBilling === true) {
@@ -378,6 +451,7 @@ export default function Checkout() {
           country: ACTIVE_COUNTRIES.INDIA,
           pinCode: billingPinCode!,
           phone: billingPhone!,
+          countryCode: "+91",
         };
       }
 
@@ -429,47 +503,123 @@ export default function Checkout() {
       const orderData = {
         userId: userIdForOrder,
         items,
-        paymentId: "PAYMENT_ID_PLACEHOLDER",
         email: email,
         ...(appliedDiscountResponse?.isValid && {
           discountCode: appliedDiscountCode,
         }),
-        paymentMethod: "PREPAID" as const,
-        paymentStatus: "PAID" as const,
         shippingAddress: {
+          firstName: shippingAddressObj.firstName,
+          lastName: shippingAddressObj.lastName,
           address: shippingAddressObj.address,
           city: shippingAddressObj.city,
+          street: shippingAddressObj.street,
           state: shippingAddressObj.state,
           country: shippingAddressObj.country,
           pinCode: shippingAddressObj.pinCode,
+          phone: shippingAddressObj.phone,
+          countryCode: shippingAddressObj.countryCode,
+          addressType: "SHIPPING" as const,
+          isDefault: false,
         },
         ...(useDifferentBilling === true && {
           billingAddress: {
+            firstName: billingAddressObj!.firstName,
+            lastName: billingAddressObj!.lastName,
             address: billingAddressObj!.address,
             city: billingAddressObj!.city,
+            street: billingAddressObj!.street,
             state: billingAddressObj!.state,
             country: billingAddressObj!.country,
             pinCode: billingAddressObj!.pinCode,
+            phone: billingAddressObj!.phone,
+            countryCode: billingAddressObj!.countryCode,
+            addressType: "BILLING" as const,
+            isDefault: false,
           },
         }),
       };
 
-      const orderDetails = await OrderService.createOrder(orderData);
-      const orderId = orderDetails.orderId;
-      const orderNumber = (
-        orderDetails as { orderId: string; orderNumber?: string }
-      ).orderNumber;
+      await loadRazorpayCheckout();
 
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = crypto.randomUUID();
+      }
+      const idempotencyKey = idempotencyKeyRef.current;
+
+      const razorpayOrder = await OrderService.createRazorpayOrder(
+        orderData,
+        idempotencyKey,
+      );
+
+      const paymentResponse = await new Promise<RazorpayCheckoutResponse>(
+        (resolve, reject) => {
+          if (!window.Razorpay) {
+            reject(new Error("Payment checkout failed to load"));
+            return;
+          }
+
+          const checkout = new window.Razorpay({
+            key: razorpayOrder.keyId,
+            amount: razorpayOrder.amount,
+            currency: razorpayOrder.currency,
+            name: "Qala Chowk",
+            description: "Order payment",
+            order_id: razorpayOrder.razorpayOrderId,
+            prefill: razorpayOrder.prefill,
+            notes: {
+              paymentAttemptId: razorpayOrder.paymentAttemptId,
+            },
+            theme: { color: "#1e1e1e" },
+            handler: resolve,
+            modal: {
+              ondismiss: () => reject(new PaymentCancelledError()),
+            },
+          });
+
+          checkout.open();
+        },
+      );
+
+      const orderDetails = await OrderService.verifyRazorpayPayment({
+        paymentAttemptId: razorpayOrder.paymentAttemptId,
+        razorpay_order_id: paymentResponse.razorpay_order_id,
+        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+        razorpay_signature: paymentResponse.razorpay_signature,
+      });
+      const orderId = orderDetails.orderId;
+      const orderNumber = orderDetails.orderNumber;
+
+      idempotencyKeyRef.current = null;
       await clearCart();
       router.push(
         `/order-confirmed?orderId=${orderId}${orderNumber ? `&orderNumber=${encodeURIComponent(orderNumber)}` : ""}`,
       );
       return;
     } catch (error) {
+      // User dismissed the Razorpay modal: keep the same idempotency key so
+      // re-clicking Pay Now resumes the same attempt instead of creating a
+      // duplicate Razorpay order.
+      if (error instanceof PaymentCancelledError) {
+        notifications.show({
+          title: "Payment cancelled",
+          message: "You can complete the payment to place your order.",
+          color: "yellow",
+          position: "top-right",
+        });
+        return;
+      }
+
+      // Verify/create failure: the backend marks the attempt FAILED and
+      // releases stock, so retries must use a fresh key.
+      idempotencyKeyRef.current = null;
+
       console.error("Error in order creation: ", { error });
       notifications.show({
         title: "Error",
-        message: "Failed to place your order. Please try again.",
+        message:
+          error instanceof Error && error.message
+            ? error.message
+            : "Failed to place your order. Please try again.",
         color: "red",
         position: "top-right",
       });
@@ -629,60 +779,6 @@ export default function Checkout() {
               ) : null}
             </div>
 
-            {/* Payment Method Section */}
-            <div className={styles.formSection}>
-              <div className={styles.formSectionHead}>
-                <div className={styles.formSectionNum}>4</div>
-                <div className={styles.formSectionTitle}>Payment Method</div>
-                <span className={styles.formSectionSub}>
-                  Prepaid orders only
-                </span>
-              </div>
-              <div className={styles.paymentOpts}>
-                {[
-                  {
-                    id: "upi",
-                    label: "UPI / GPay / PhonePe",
-                    tags: ["GPay", "PhonePe", "Paytm"],
-                  },
-                  {
-                    id: "card",
-                    label: "Credit / Debit Card",
-                    tags: ["Visa", "MC", "Rupay"],
-                  },
-                  {
-                    id: "netbanking",
-                    label: "Net Banking",
-                    tags: ["All Banks"],
-                  },
-                ].map((opt) => (
-                  <div
-                    key={opt.id}
-                    className={`${styles.paymentOpt} ${selectedPayment === opt.id ? styles.paymentOptSelected : ""}`}
-                    onClick={() => setSelectedPayment(opt.id)}
-                    role="radio"
-                    aria-checked={selectedPayment === opt.id}
-                    tabIndex={0}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && setSelectedPayment(opt.id)
-                    }
-                  >
-                    <div className={styles.payRadio}>
-                      <div className={styles.payRadioDot} />
-                    </div>
-                    <div className={styles.payLabel}>{opt.label}</div>
-                    <div className={styles.payIcons}>
-                      {opt.tags.map((tag) => (
-                        <span key={tag} className={styles.payIconTag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Place Order Button */}
             <button
               className={styles.placeOrderBtn}
@@ -829,7 +925,11 @@ export default function Checkout() {
                     <Rupee />
                     {total.toLocaleString("en-IN")}
                   </span>
-                  <div className={styles.totalNote}>Incl. 3% GST</div>
+                  <div className={styles.totalNote}>
+                    Includes <Rupee />
+                    {Math.round((total * 3) / 103).toLocaleString("en-IN")}{" "}
+                    taxes
+                  </div>
                 </div>
               </div>
             </div>
@@ -865,7 +965,7 @@ export default function Checkout() {
                   <circle cx="4" cy="12" r="1" />
                   <circle cx="9" cy="12" r="1" />
                 </svg>
-                <span>Delivered in 3 days across India</span>
+                <span>Free & Fast Shipping</span>
               </div>
               <div className={styles.assuranceItem}>
                 <svg
@@ -881,7 +981,7 @@ export default function Checkout() {
                   <path d="M5 5V4a2 2 0 0 1 4 0v1" />
                   <circle cx="7" cy="9" r="1" fill="var(--t)" />
                 </svg>
-                <span>Luxury bamboo gift packaging included</span>
+                <span>Plastic free keepsake packaging</span>
               </div>
             </div>
           </div>

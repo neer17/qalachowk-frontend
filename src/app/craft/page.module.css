@@ -286,9 +286,9 @@
 .stageBody {
   font-family: var(--font-cormorant-garamond), serif;
   font-size: 22px;
-  line-height: 1.45;
-  color: var(--br);
-  font-weight: 400;
+  line-height: 1.5;
+  color: var(--s);
+  font-weight: 500;
   margin: 0;
 }
 
@@ -301,8 +301,8 @@
   gap: 40px;
   margin-top: 40px;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 10px;
-  letter-spacing: 0.22em;
+  font-size: 11px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--br);
 }
@@ -720,8 +720,8 @@
 .finaleSub {
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
-  font-size: 24px;
-  line-height: 1.45;
+  font-size: 21px;
+  line-height: 1.5;
   color: var(--br);
   max-width: 580px;
   margin: 0 auto 60px;

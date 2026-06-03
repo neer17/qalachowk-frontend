@@ -229,7 +229,7 @@
 }
 
 .itemPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 16px;
   color: var(--g);
   margin: 0;
@@ -237,9 +237,9 @@
 
 .itemQty {
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.15em;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--t);
   margin: 0;
@@ -323,13 +323,13 @@
 }
 
 .summaryValue {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 15px;
   color: var(--c);
 }
 
 .summaryShipping {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 13px;
   font-style: italic;
   color: var(--t);
@@ -354,7 +354,7 @@
 }
 
 .totalValue {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--g);
@@ -510,7 +510,7 @@
 }
 
 .historyTotal {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 16px;
   color: var(--g);
 }

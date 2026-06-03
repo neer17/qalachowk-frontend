@@ -158,9 +158,9 @@
 
 .summaryLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 9px;
-  letter-spacing: 0.2em;
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--br);
 }
@@ -202,7 +202,7 @@
 }
 
 .summaryTotalPrice {
-  font-family: var(--font-cormorant-garamond), serif;
+  font-family: var(--font-dm-sans), sans-serif;
   font-size: 22px;
   font-weight: 600;
   color: var(--g);
@@ -264,8 +264,10 @@
 .bundlePreview p,
 .thresholdMessage {
   margin: 6px 0 0 0;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 14px;
   color: var(--br);
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .quickAddCard {
@@ -297,7 +299,7 @@
   padding: 10px 14px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 10px;
+  font-size: 11px;
   cursor: pointer;
 }
 
@@ -398,7 +400,7 @@
   }
 
   .mobileTotalPrice {
-    font-family: var(--font-cormorant-garamond), serif;
+    font-family: var(--font-dm-sans), sans-serif;
     font-size: 20px;
     font-weight: 600;
     color: var(--g);

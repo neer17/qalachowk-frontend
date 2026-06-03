@@ -205,7 +205,17 @@ const DeliveryForm = forwardRef<DeliveryFormRef, DeliveryFormProps>(
     useEffect(() => {
       if (!isFormLoaded) return;
       if (user) {
-        if (user.phone) form.setFieldValue("shippingPhone", user.phone);
+        // Backend may store phone with the country code prefixed (e.g.
+        // "919876543210") because the navbar OTP flow sends `91${phone}`.
+        // The form's shippingPhone validator requires exactly 10 digits, and
+        // the field is disabled for signed-in users — without normalization
+        // submit fails silently against a greyed-out input.
+        if (user.phone) {
+          const last10 = user.phone.replace(/\D/g, "").slice(-10);
+          if (last10.length === 10) {
+            form.setFieldValue("shippingPhone", last10);
+          }
+        }
         if (user.firstName)
           form.setFieldValue("shippingFirstName", user.firstName);
         if (user.lastName)

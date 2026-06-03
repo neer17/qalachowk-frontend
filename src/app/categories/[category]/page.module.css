@@ -11,43 +11,17 @@
 /* ════ EDITORIAL HEADER ════ */
 .header {
   position: relative;
-  height: 44vh;
-  min-height: 340px;
+  background: var(--l);
+  min-height: 320px;
   overflow: hidden;
   display: flex;
   align-items: center;
-}
-
-.headerBg {
-  position: absolute;
-  inset: 0;
-  background: var(--l);
-  overflow: hidden;
-}
-
-.headerBgSvg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.headerScrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    105deg,
-    rgba(30, 30, 30, 0.6) 0%,
-    rgba(30, 30, 30, 0.35) 45%,
-    rgba(30, 30, 30, 0.1) 70%,
-    transparent 100%
-  );
+  padding: 80px 0 64px;
 }
 
 .headerContent {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   padding: 0 64px;
   width: 100%;
   display: grid;
@@ -57,17 +31,18 @@
 }
 
 .headerLeft {
-  max-width: 560px;
+  max-width: 600px;
 }
 
 /* ── Eyebrow ── */
 .eyebrow {
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 10px;
+  font-weight: 500;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--t);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -76,18 +51,18 @@
   content: "";
   display: block;
   width: 32px;
-  height: 0.5px;
+  height: 1px;
   background: var(--t);
 }
 
 /* ── Title ── */
 .pageTitle {
   font-family: var(--font-cormorant-garamond), serif;
-  font-weight: 600;
-  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
   color: var(--s);
-  line-height: 1.05;
-  margin: 0 0 14px;
+  line-height: 1.1;
+  margin: 0 0 16px;
   letter-spacing: -0.01em;
 }
 .pageTitle em {
@@ -100,11 +75,11 @@
 .pageSubtitle {
   font-family: var(--font-cormorant-garamond), serif;
   font-style: italic;
-  font-size: 16px;
+  font-size: 17px;
   color: var(--br);
   line-height: 1.65;
   margin: 0;
-  max-width: 420px;
+  max-width: 440px;
 }
 
 /* ── Right: glass pill + scroll indicator ── */
@@ -117,25 +92,27 @@
 
 .glassPill {
   background: var(--p);
-  border: 0.5px solid var(--bo);
-  border-radius: 2px;
-  padding: 16px 22px;
-  text-align: right;
+  border: 1px solid var(--bo);
+  border-radius: 4px;
+  padding: 18px 26px;
+  text-align: center;
+  min-width: 96px;
 }
 
 .pillLabel {
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 9px;
-  letter-spacing: 0.22em;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--t);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .pillCount {
   font-family: var(--font-cormorant-garamond), serif;
-  font-weight: 600;
-  font-size: 28px;
+  font-weight: 500;
+  font-size: 32px;
   color: var(--s);
   line-height: 1;
 }
@@ -145,18 +122,19 @@
   transform: rotate(180deg);
   font-family: var(--font-dm-sans), sans-serif;
   font-size: 9px;
+  font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(30, 30, 30, 0.35);
+  color: var(--br);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .scrollLine {
-  width: 0.5px;
+  width: 1px;
   height: 36px;
-  background: rgba(30, 30, 30, 0.2);
+  background: var(--bo);
   position: relative;
   overflow: hidden;
 }
@@ -220,8 +198,8 @@
 
 .sortSelect {
   font-family: var(--font-dm-sans), sans-serif;
-  font-weight: 300;
-  font-size: 10px;
+  font-weight: 400;
+  font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--s);
@@ -340,16 +318,17 @@
 
 @media (max-width: 640px) {
   .header {
-    height: auto;
-    min-height: 260px;
-    padding: 48px 0 40px;
-    align-items: flex-end;
+    min-height: 240px;
+    padding: 56px 0 40px;
   }
   .headerContent {
     padding: 0 24px;
   }
   .pageTitle {
-    font-size: clamp(24px, 7vw, 36px);
+    font-size: clamp(28px, 8vw, 40px);
+  }
+  .pageSubtitle {
+    font-size: 15px;
   }
   .content {
     padding: 32px 16px 48px;
