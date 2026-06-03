@@ -4,6 +4,35 @@ import { refreshSession } from "@/lib/api/common";
 import type { components } from "@/types/api";
 export type CreateOrderRequest = components["schemas"]["OrderInput"];
 export type CreateOrderResponse = components["schemas"]["OrderResponse"];
+export type CreateRazorpayOrderRequest = Omit<
+  CreateOrderRequest,
+  "paymentId" | "paymentStatus" | "paymentMethod"
+>;
+
+export interface RazorpayCreateOrderResponse {
+  paymentAttemptId: string;
+  razorpayOrderId: string;
+  keyId: string;
+  amount: number;
+  currency: "INR";
+  prefill: {
+    name: string;
+    email?: string;
+    contact?: string;
+  };
+}
+
+export interface RazorpayVerifyPaymentRequest {
+  paymentAttemptId: string;
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+export interface RazorpayVerifyPaymentResponse {
+  orderId: string;
+  orderNumber?: string;
+}
 
 export interface OrderAddress {
   address: string;
@@ -163,6 +192,64 @@ export const OrderService = {
 
     if (!response.ok) {
       throw new Error("Request failed");
+    }
+
+    return response.json();
+  },
+
+  createRazorpayOrder: async (
+    orderData: CreateRazorpayOrderRequest,
+    idempotencyKey: string,
+  ): Promise<RazorpayCreateOrderResponse> => {
+    const endpoint = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.RAZORPAY_CREATE_ORDER.URL}`;
+    const request = () =>
+      fetch(endpoint, {
+        method: API_ENDPOINTS.RAZORPAY_CREATE_ORDER.METHOD,
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKey,
+        },
+        body: JSON.stringify(orderData),
+        credentials: "include",
+      });
+
+    let response = await request();
+    if (response.status === 401) {
+      const refreshed = await refreshSession();
+      if (!refreshed) throw new Error("Not authenticated");
+      response = await request();
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Unable to create payment order");
+    }
+
+    return response.json();
+  },
+
+  verifyRazorpayPayment: async (
+    paymentData: RazorpayVerifyPaymentRequest,
+  ): Promise<RazorpayVerifyPaymentResponse> => {
+    const endpoint = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.RAZORPAY_VERIFY.URL}`;
+    const request = () =>
+      fetch(endpoint, {
+        method: API_ENDPOINTS.RAZORPAY_VERIFY.METHOD,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentData),
+        credentials: "include",
+      });
+
+    let response = await request();
+    if (response.status === 401) {
+      const refreshed = await refreshSession();
+      if (!refreshed) throw new Error("Not authenticated");
+      response = await request();
+    }
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Unable to verify payment");
     }
 
     return response.json();

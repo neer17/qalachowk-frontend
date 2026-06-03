@@ -58,6 +58,14 @@ export const API_ENDPOINTS = {
     URL: "/v1/orders",
     METHOD: "GET",
   },
+  RAZORPAY_CREATE_ORDER: {
+    URL: "/v1/payments/razorpay/create-order",
+    METHOD: "POST",
+  },
+  RAZORPAY_VERIFY: {
+    URL: "/v1/payments/razorpay/verify",
+    METHOD: "POST",
+  },
   VALIDATE_DISCOUNT_CODE: {
     URL: "/v1/orders/validate-discount-code",
     METHOD: "POST",

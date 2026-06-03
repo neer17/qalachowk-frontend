@@ -28,6 +28,72 @@ import {
   ProductService,
 } from "@/lib/api/productService";
 
+interface RazorpayCheckoutResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+
+interface RazorpayOptions {
+  key: string;
+  amount: number;
+  currency: "INR";
+  name: string;
+  description: string;
+  order_id: string;
+  prefill: {
+    name: string;
+    email?: string;
+    contact?: string;
+  };
+  notes?: Record<string, string>;
+  theme?: { color: string };
+  handler: (response: RazorpayCheckoutResponse) => void;
+  modal?: { ondismiss?: () => void };
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => { open: () => void };
+  }
+}
+
+class PaymentCancelledError extends Error {
+  constructor() {
+    super("Payment was cancelled");
+    this.name = "PaymentCancelledError";
+  }
+}
+
+function loadRazorpayCheckout(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (window.Razorpay) {
+      resolve();
+      return;
+    }
+
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+    );
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(), { once: true });
+      existingScript.addEventListener(
+        "error",
+        () => reject(new Error("Unable to load payment checkout")),
+        { once: true },
+      );
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error("Unable to load payment checkout"));
+    document.body.appendChild(script);
+  });
+}
+
 export default function Checkout() {
   const { cartData, deleteCartData, getTotalPrice, clearCart } = useCart();
   const { login, user: authUser } = useAuth();
@@ -59,6 +125,7 @@ export default function Checkout() {
 
   const formRef = useRef<DeliveryFormRef>(null);
   const checkoutTracked = useRef(false);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   // Timer effect
   useEffect(() => {
@@ -155,6 +222,12 @@ export default function Checkout() {
 
     void loadCartRecommendations();
   }, [cartData]);
+
+  // Any cart change invalidates the in-flight idempotency key — the backend
+  // would otherwise return the prior CREATED PaymentAttempt with stale items.
+  useEffect(() => {
+    idempotencyKeyRef.current = null;
+  }, [cartData, appliedDiscountCode, appliedDiscountResponse]);
 
   const handleDeleteItem = async (id: string) => {
     await deleteCartData(id);
@@ -365,6 +438,7 @@ export default function Checkout() {
         country: ACTIVE_COUNTRIES.INDIA,
         pinCode: shippingPinCode || "",
         phone: shippingPhone,
+        countryCode: "+91",
       };
       let billingAddressObj;
       if (useDifferentBilling === true) {
@@ -378,6 +452,7 @@ export default function Checkout() {
           country: ACTIVE_COUNTRIES.INDIA,
           pinCode: billingPinCode!,
           phone: billingPhone!,
+          countryCode: "+91",
         };
       }
 
@@ -429,47 +504,123 @@ export default function Checkout() {
       const orderData = {
         userId: userIdForOrder,
         items,
-        paymentId: "PAYMENT_ID_PLACEHOLDER",
         email: email,
         ...(appliedDiscountResponse?.isValid && {
           discountCode: appliedDiscountCode,
         }),
-        paymentMethod: "PREPAID" as const,
-        paymentStatus: "PAID" as const,
         shippingAddress: {
+          firstName: shippingAddressObj.firstName,
+          lastName: shippingAddressObj.lastName,
           address: shippingAddressObj.address,
           city: shippingAddressObj.city,
+          street: shippingAddressObj.street,
           state: shippingAddressObj.state,
           country: shippingAddressObj.country,
           pinCode: shippingAddressObj.pinCode,
+          phone: shippingAddressObj.phone,
+          countryCode: shippingAddressObj.countryCode,
+          addressType: "SHIPPING" as const,
+          isDefault: false,
         },
         ...(useDifferentBilling === true && {
           billingAddress: {
+            firstName: billingAddressObj!.firstName,
+            lastName: billingAddressObj!.lastName,
             address: billingAddressObj!.address,
             city: billingAddressObj!.city,
+            street: billingAddressObj!.street,
             state: billingAddressObj!.state,
             country: billingAddressObj!.country,
             pinCode: billingAddressObj!.pinCode,
+            phone: billingAddressObj!.phone,
+            countryCode: billingAddressObj!.countryCode,
+            addressType: "BILLING" as const,
+            isDefault: false,
           },
         }),
       };
 
-      const orderDetails = await OrderService.createOrder(orderData);
-      const orderId = orderDetails.orderId;
-      const orderNumber = (
-        orderDetails as { orderId: string; orderNumber?: string }
-      ).orderNumber;
+      await loadRazorpayCheckout();
 
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = crypto.randomUUID();
+      }
+      const idempotencyKey = idempotencyKeyRef.current;
+
+      const razorpayOrder = await OrderService.createRazorpayOrder(
+        orderData,
+        idempotencyKey,
+      );
+
+      const paymentResponse = await new Promise<RazorpayCheckoutResponse>(
+        (resolve, reject) => {
+          if (!window.Razorpay) {
+            reject(new Error("Payment checkout failed to load"));
+            return;
+          }
+
+          const checkout = new window.Razorpay({
+            key: razorpayOrder.keyId,
+            amount: razorpayOrder.amount,
+            currency: razorpayOrder.currency,
+            name: "Qala Chowk",
+            description: "Order payment",
+            order_id: razorpayOrder.razorpayOrderId,
+            prefill: razorpayOrder.prefill,
+            notes: {
+              paymentAttemptId: razorpayOrder.paymentAttemptId,
+            },
+            theme: { color: "#1e1e1e" },
+            handler: resolve,
+            modal: {
+              ondismiss: () => reject(new PaymentCancelledError()),
+            },
+          });
+
+          checkout.open();
+        },
+      );
+
+      const orderDetails = await OrderService.verifyRazorpayPayment({
+        paymentAttemptId: razorpayOrder.paymentAttemptId,
+        razorpay_order_id: paymentResponse.razorpay_order_id,
+        razorpay_payment_id: paymentResponse.razorpay_payment_id,
+        razorpay_signature: paymentResponse.razorpay_signature,
+      });
+      const orderId = orderDetails.orderId;
+      const orderNumber = orderDetails.orderNumber;
+
+      idempotencyKeyRef.current = null;
       await clearCart();
       router.push(
         `/order-confirmed?orderId=${orderId}${orderNumber ? `&orderNumber=${encodeURIComponent(orderNumber)}` : ""}`,
       );
       return;
     } catch (error) {
+      // User dismissed the Razorpay modal: keep the same idempotency key so
+      // re-clicking Pay Now resumes the same attempt instead of creating a
+      // duplicate Razorpay order.
+      if (error instanceof PaymentCancelledError) {
+        notifications.show({
+          title: "Payment cancelled",
+          message: "You can complete the payment to place your order.",
+          color: "yellow",
+          position: "top-right",
+        });
+        return;
+      }
+
+      // Verify/create failure: the backend marks the attempt FAILED and
+      // releases stock, so retries must use a fresh key.
+      idempotencyKeyRef.current = null;
+
       console.error("Error in order creation: ", { error });
       notifications.show({
         title: "Error",
-        message: "Failed to place your order. Please try again.",
+        message:
+          error instanceof Error && error.message
+            ? error.message
+            : "Failed to place your order. Please try again.",
         color: "red",
         position: "top-right",
       });
