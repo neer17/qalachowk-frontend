@@ -116,7 +116,6 @@ export default function Checkout() {
 
   const [isStateLoaded] = useState(true);
 
-  const [selectedPayment, setSelectedPayment] = useState<string>("upi");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [cartRecommendations, setCartRecommendations] =
     useState<CartRecommendationsResponse>({
@@ -778,60 +777,6 @@ export default function Checkout() {
                   </div>
                 )
               ) : null}
-            </div>
-
-            {/* Payment Method Section */}
-            <div className={styles.formSection}>
-              <div className={styles.formSectionHead}>
-                <div className={styles.formSectionNum}>4</div>
-                <div className={styles.formSectionTitle}>Payment Method</div>
-                <span className={styles.formSectionSub}>
-                  Prepaid orders only
-                </span>
-              </div>
-              <div className={styles.paymentOpts}>
-                {[
-                  {
-                    id: "upi",
-                    label: "UPI / GPay / PhonePe",
-                    tags: ["GPay", "PhonePe", "Paytm"],
-                  },
-                  {
-                    id: "card",
-                    label: "Credit / Debit Card",
-                    tags: ["Visa", "MC", "Rupay"],
-                  },
-                  {
-                    id: "netbanking",
-                    label: "Net Banking",
-                    tags: ["All Banks"],
-                  },
-                ].map((opt) => (
-                  <div
-                    key={opt.id}
-                    className={`${styles.paymentOpt} ${selectedPayment === opt.id ? styles.paymentOptSelected : ""}`}
-                    onClick={() => setSelectedPayment(opt.id)}
-                    role="radio"
-                    aria-checked={selectedPayment === opt.id}
-                    tabIndex={0}
-                    onKeyDown={(e) =>
-                      e.key === "Enter" && setSelectedPayment(opt.id)
-                    }
-                  >
-                    <div className={styles.payRadio}>
-                      <div className={styles.payRadioDot} />
-                    </div>
-                    <div className={styles.payLabel}>{opt.label}</div>
-                    <div className={styles.payIcons}>
-                      {opt.tags.map((tag) => (
-                        <span key={tag} className={styles.payIconTag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Place Order Button */}
