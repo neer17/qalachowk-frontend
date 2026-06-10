@@ -20,6 +20,10 @@ export interface RazorpayCreateOrderResponse {
     email?: string;
     contact?: string;
   };
+  // Dev-only. When true, the backend has overridden `amount` to a small
+  // smoke-test value to validate live Razorpay keys without spending real
+  // money. Frontend should warn the user before opening Checkout.
+  liveSmokeTestActive?: boolean;
 }
 
 export interface RazorpayVerifyPaymentRequest {
@@ -253,5 +257,22 @@ export const OrderService = {
     }
 
     return response.json();
+  },
+
+  // Fire-and-forget. Called when the user dismisses the Razorpay modal so the
+  // backend can release the held stock immediately instead of waiting for the
+  // 15-min reservation TTL. Network failures are swallowed — the stock-TTL cron
+  // is the safety net.
+  abandonRazorpayPayment: (paymentAttemptId: string): void => {
+    const endpoint = `${process.env["NEXT_PUBLIC_BACKEND_BASE_URL"]}${API_ENDPOINTS.RAZORPAY_ABANDON.URL}`;
+    fetch(endpoint, {
+      method: API_ENDPOINTS.RAZORPAY_ABANDON.METHOD,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ paymentAttemptId }),
+      credentials: "include",
+      keepalive: true,
+    }).catch(() => {
+      /* fire-and-forget */
+    });
   },
 };

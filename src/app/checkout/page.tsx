@@ -551,6 +551,30 @@ export default function Checkout() {
         idempotencyKey,
       );
 
+      // Live-keys smoke test: backend has forced the charge to a token amount
+      // (typically ₹1). Confirm with the dev before opening Razorpay so a real
+      // card isn't charged the token amount by mistake.
+      if (razorpayOrder.liveSmokeTestActive) {
+        const realTotal = getTotalPrice();
+        const confirmed = window.confirm(
+          `LIVE PAYMENT TEST MODE\n\n` +
+            `Cart total: ₹${realTotal.toFixed(2)}\n` +
+            `You will be charged: ₹${(razorpayOrder.amount / 100).toFixed(2)}\n\n` +
+            `Continue with the live test charge?`,
+        );
+        if (!confirmed) {
+          OrderService.abandonRazorpayPayment(razorpayOrder.paymentAttemptId);
+          idempotencyKeyRef.current = null;
+          notifications.show({
+            title: "Test charge cancelled",
+            message: "No payment was made.",
+            color: "yellow",
+            position: "top-right",
+          });
+          return;
+        }
+      }
+
       const paymentResponse = await new Promise<RazorpayCheckoutResponse>(
         (resolve, reject) => {
           if (!window.Razorpay) {
@@ -568,11 +592,22 @@ export default function Checkout() {
             prefill: razorpayOrder.prefill,
             notes: {
               paymentAttemptId: razorpayOrder.paymentAttemptId,
+              ...(razorpayOrder.liveSmokeTestActive
+                ? { liveSmokeTest: "true" }
+                : {}),
             },
             theme: { color: "#1e1e1e" },
             handler: resolve,
             modal: {
-              ondismiss: () => reject(new PaymentCancelledError()),
+              ondismiss: () => {
+                // Tell the backend the user walked away so it can release the
+                // held stock now instead of waiting for the 15-min TTL.
+                OrderService.abandonRazorpayPayment(
+                  razorpayOrder.paymentAttemptId,
+                );
+                idempotencyKeyRef.current = null;
+                reject(new PaymentCancelledError());
+              },
             },
           });
 
@@ -596,13 +631,10 @@ export default function Checkout() {
       );
       return;
     } catch (error) {
-      // User dismissed the Razorpay modal: keep the same idempotency key so
-      // re-clicking Pay Now resumes the same attempt instead of creating a
-      // duplicate Razorpay order.
       if (error instanceof PaymentCancelledError) {
         notifications.show({
           title: "Payment cancelled",
-          message: "You can complete the payment to place your order.",
+          message: "Try again whenever you're ready.",
           color: "yellow",
           position: "top-right",
         });

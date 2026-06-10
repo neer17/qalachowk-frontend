@@ -66,6 +66,10 @@ export const API_ENDPOINTS = {
     URL: "/v1/payments/razorpay/verify",
     METHOD: "POST",
   },
+  RAZORPAY_ABANDON: {
+    URL: "/v1/payments/razorpay/abandon",
+    METHOD: "POST",
+  },
   VALIDATE_DISCOUNT_CODE: {
     URL: "/v1/orders/validate-discount-code",
     METHOD: "POST",
