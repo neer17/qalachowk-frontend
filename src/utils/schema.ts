@@ -12,6 +12,7 @@ const envSchema = Joi.object({
   NEXT_PUBLIC_USER_DATA_EXPIRATION_DURATION_IN_MILLISECONDS:
     Joi.string().default(60 * 60 * 1000), // 1 hour in milliseconds
   NEXT_PUBLIC_SKIP_OTP_VERIFICATION: Joi.boolean().default(false),
+  NEXT_PUBLIC_COMING_SOON_MODE: Joi.boolean().default(false),
   NEXT_PUBLIC_GA_MEASUREMENT_ID: Joi.string().when("NEXT_PUBLIC_ENVIRONMENT", {
     is: "production",
     then: Joi.string().required(),
